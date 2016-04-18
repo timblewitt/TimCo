@@ -1,4 +1,5 @@
 # timco-vm
-&lt;a href="https://azuredeploy.net/" target="_blank"&gt;
-    &lt;img src="http://azuredeploy.net/deploybutton.png"/&gt;
-&lt;/a&gt;
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/timblewitt/timco-vm/master/azuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
