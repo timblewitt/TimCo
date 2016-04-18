@@ -1,0 +1,21 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "timco-vm1Name": {
+            "value": "timco-tst1"
+        },
+        "timco-vm1AdminUserName": {
+            "value": "tim"
+        },
+        "timco-pip1DnsName": {
+            "value": "timco-tst1"
+        },
+        "timco-vm1DataDisk1SizeGB": {
+            "value": "100"
+        },
+        "timco-domainName": {
+            "value": "timcodom.local"
+        }
+    }
+}
