@@ -50,12 +50,6 @@
     "timco-pip1DnsName": {
       "type": "string",
       "minLength": 1
-    },
-    "_artifactsLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
-      }
     }
   },
   "variables": {
