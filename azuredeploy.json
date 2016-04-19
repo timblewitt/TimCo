@@ -17,14 +17,6 @@
       "type": "string",
       "minLength": 1
     },
-    "timco-pip1DnsName": {
-      "type": "string",
-      "minLength": 1
-    },
-    "timco-domainName": {
-      "type": "string",
-      "minLength": 1
-    },
     "timco-vm1AdminUserName": {
       "type": "string",
       "minLength": 1
@@ -55,17 +47,9 @@
       "type": "string",
       "defaultValue": "20"
     },
-    "_artifactsLocation": {
+    "timco-pip1DnsName": {
       "type": "string",
-      "metadata": {
-        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
-      }
-    },
-    "_artifactsLocationSasToken": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Auto-generated token to access _artifactsLocation"
-      }
+      "minLength": 1
     }
   },
   "variables": {
@@ -234,24 +218,14 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "modulesUrl": "[concat(parameters('_artifactsLocation'), '/', 'dsc.zip')]",
-                            "sasToken": "[parameters('_artifactsLocationSasToken')]",
+                            "ModulesUrl": "https://github.com/timblewitt/timco-vm/blob/test2/timco-dsc1Configuration.ps1.zip",
                             "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
-                          "properties": {
-                            "nodeName": "[parameters('timco-vm1Name')]",
-                            "domainName": "[parameters('timco-domainName')]",
-                            "adminCreds": {
-                              "userName": "[parameters('timco-vm1AdminUserName')]",
-                              "password": "PrivateSettingsRef:timco-vm1AdminPassword"
+                            "properties": {
+                                "nodeName": "[parameters('timco-vm1Name')]"
                             }
-                            }
-                          },
-                      "protectedSettings": {
-                        "items": {
-                          "timco-vm1AdminPassword": "[parameters('timco-vm1AdminPassword')]"
-                        }
-                        }
-                      }
+                        },
+                        "protectedSettings": { }
+                    }
                 }
             ]
         },
