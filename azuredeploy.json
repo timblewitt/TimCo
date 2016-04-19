@@ -56,12 +56,6 @@
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
       }
-    },
-    "_artifactsLocationSasToken": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Auto-generated token to access _artifactsLocation"
-      }
     }
   },
   "variables": {
@@ -230,8 +224,7 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "modulesUrl": "[concat(parameters('_artifactsLocation'), '/', 'dsc.zip')]",
-                            "sasToken": "[parameters('_artifactsLocationSasToken')]",
+                            "ModulesUrl": "https://raw.github.com/timblewitt/timco-vm/test2/DSC.zip",
                             "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
                             "properties": {
                                 "nodeName": "[parameters('timco-vm1Name')]"
