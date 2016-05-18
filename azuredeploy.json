@@ -11,18 +11,37 @@
         "Standard_GRS",
         "Standard_RAGRS",
         "Premium_LRS"
-      ]
+      ],
+      "metadata": {
+        "description": "Storage account type to store new VM."
+      }
     },
     "timco-vm1Name": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "metadata": {
+        "description": "Name of VM."
+      }
+    },
+    "timco-pip1DnsName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
+      }
     },
     "timco-vm1AdminUserName": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "metadata": {
+        "description": "Admin username for the VM."
+      }
     },
     "timco-vm1AdminPassword": {
-      "type": "securestring"
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the VM."
+      }
     },
     "timco-vm1WindowsOSVersion": {
       "type": "string",
@@ -32,7 +51,10 @@
         "2012-Datacenter",
         "2012-R2-Datacenter",
         "Windows-Server-Technical-Preview"
-      ]
+      ],
+      "metadata": {
+        "description": "Windows version for the VM."
+      }
     },
     "timco-vm1VmSize": {
       "type": "string",
@@ -41,16 +63,19 @@
         "Standard_A0",
         "Standard_A1",
         "Standard_D1"
-      ]
+      ],
+      "metadata": {
+        "description": "Size of VM."
+      }
     },
     "timco-vm1DataDisk1SizeGB": {
       "type": "string",
-      "defaultValue": "20"
-    },
-    "timco-pip1DnsName": {
-      "type": "string",
-      "minLength": 1
+      "defaultValue": "20",
+      "metadata": {
+        "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
+      }
     }
+
   },
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
