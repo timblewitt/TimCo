@@ -74,9 +74,22 @@
       "metadata": {
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
-    }
-
+    },
+    "timco-modulesUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/timblewitt/timco-vm/raw/master/timco-dsc1.ps1.zip",
+      "metadata": {
+        "description": "Location of DSC configuration files."
+      }
+    },
+    "timco-dsc1ConfigurationFunction": 
+      "type": "string",
+      "defaultValue": "timco-dsc1.ps1\\Main",
+      "metadata": {
+        "description": "DSC configuration function."
+      }
   },
+  
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vnet1Prefix": "10.0.0.0/16",
@@ -92,8 +105,7 @@
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', variables('timco-vnet1Subnet1Name'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
-    "timco-pip1Name": "timco-pip1",
-    "timco-dsc1ConfigurationFunction": "timco-dsc1Configuration.ps1\\Main"
+    "timco-pip1Name": "timco-pip1"
   },
     "resources": [
         {
@@ -243,9 +255,9 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "ModulesUrl": "https://github.com/timblewitt/timco-vm/raw/master/timco-dsc1Configuration.ps1.zip",
+                            "ModulesUrl": "[parameters('timco-modulesUrl')]",
                             "SasToken": "",
-                            "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
+                            "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
                             "properties": {
                                 "nodeName": "[parameters('timco-vm1Name')]"
                             }
