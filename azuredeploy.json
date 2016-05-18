@@ -87,7 +87,7 @@
     },
     "timco-dsc1ConfigurationFunction": {
       "type": "string",
-      "defaultValue": "timco-dsc1.ps1\\Main",
+      "defaultValue": "timco-dsc1.ps1\\\Main",
       "metadata": {
         "description": "DSC configuration function."
       }
