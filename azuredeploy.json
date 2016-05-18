@@ -19,12 +19,14 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
+      "defaultValue": "timco-tst1",
       "metadata": {
         "description": "Name of VM."
       }
     },
     "timco-pip1DnsName": {
       "type": "string",
+      "defaultValue": "timco-tst1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
@@ -32,6 +34,7 @@
     },
     "timco-vm1AdminUserName": {
       "type": "string",
+      "defaultValue": "timco-admin",
       "minLength": 1,
       "metadata": {
         "description": "Admin username for the VM."
