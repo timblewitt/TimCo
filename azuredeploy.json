@@ -82,7 +82,7 @@
         "description": "Location of DSC configuration files."
       }
     },
-    "timco-dsc1ConfigurationFunction": 
+    "timco-dsc1ConfigurationFunction": {
       "type": "string",
       "defaultValue": "timco-dsc1.ps1\\Main",
       "metadata": {
