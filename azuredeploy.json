@@ -74,7 +74,7 @@
       "metadata": {
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
-    },
+    }
 
   },
   "variables": {
