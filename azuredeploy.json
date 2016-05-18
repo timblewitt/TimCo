@@ -218,7 +218,8 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "ModulesUrl": "https://github.com/timblewitt/timco-vm/blob/test2/timco-dsc1Configuration.ps1.zip",
+                            "ModulesUrl": "https://github.com/timblewitt/timco-vm/raw/test2/timco-dsc1Configuration.ps1.zip",
+                            "SasToken": "",
                             "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
                             "properties": {
                                 "nodeName": "[parameters('timco-vm1Name')]"
