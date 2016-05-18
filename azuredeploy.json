@@ -88,6 +88,7 @@
       "metadata": {
         "description": "DSC configuration function."
       }
+    }
   },
   
   "variables": {
