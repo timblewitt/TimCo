@@ -85,7 +85,7 @@
         "description": "Location of DSC configuration files."
       }
     },
-    "timco-dsc2ConfigurationFunction": {
+    "timco-dsc1ConfigurationFunction": {
       "type": "string",
       "defaultValue": "timco-dsc1.ps1\\Main",
       "metadata": {
@@ -97,10 +97,10 @@
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vnet1Prefix": "10.0.0.0/16",
-    "timco-vnet1Subnet1Name": "Subnet-1",
-    "timco-vnet1Subnet1Prefix": "10.0.0.0/24",
-    "timco-vnet1Subnet2Name": "Subnet-2",
-    "timco-vnet1Subnet2Prefix": "10.0.1.0/24",
+    "timco-vnet1Subnet1Name": "Subnet1-FrontEnd",
+    "timco-vnet1Subnet1Prefix": "10.0.1.0/24",
+    "timco-vnet1Subnet2Name": "Subnet2-BackEnd",
+    "timco-vnet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
     "timco-vm1ImageOffer": "WindowsServer",
     "timco-vm1OSDiskName": "timco-vm1OSDisk",
@@ -110,7 +110,7 @@
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
     "timco-pip1Name": "timco-pip1",
-    "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main"
+    "timco-dsc2ConfigurationFunction": "timco-dsc1.ps1\\Main"
   },
     "resources": [
         {
@@ -260,9 +260,9 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "ModulesUrl": "[parameters('timco-modulesUrl')]",
-                            "SasToken": "",
-                            "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
+                            "modulesUrl": "[parameters('timco-modulesUrl')]",
+                            "sasToken": "",
+                            "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
                             "properties": {
                                 "nodeName": "[parameters('timco-vm1Name')]"
                             }
