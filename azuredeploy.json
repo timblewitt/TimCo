@@ -86,7 +86,7 @@
         "Subnet2-BackEnd"
       ],
       "metadata": {
-        "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
+        "description": "Subnet for VM. Front-end or back-end?"
       }
     },
     "timco-modulesUrl": {
