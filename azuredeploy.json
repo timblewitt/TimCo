@@ -109,8 +109,7 @@
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', variables('timco-vnet1Subnet1Name'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
-    "timco-pip1Name": "timco-pip1",
-    "timco-dsc2ConfigurationFunction": "timco-dsc1.ps1\\Main"
+    "timco-pip1Name": "timco-pip1"
   },
     "resources": [
         {
