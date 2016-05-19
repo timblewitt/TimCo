@@ -109,7 +109,8 @@
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', variables('timco-vnet1Subnet1Name'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
-    "timco-pip1Name": "timco-pip1"
+    "timco-pip1Name": "timco-pip1",
+    "timco-dsc2ConfigurationFunction": "timco-dsc1Configuration.ps1\\Main"
   },
     "resources": [
         {
@@ -261,7 +262,7 @@
                         "settings": {
                             "ModulesUrl": "[parameters('timco-modulesUrl')]",
                             "SasToken": "",
-                            "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
+                            "configurationFunction": "[variables('timco-dsc2ConfigurationFunction')]",
                             "properties": {
                                 "nodeName": "[parameters('timco-vm1Name')]"
                             }
