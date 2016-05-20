@@ -291,7 +291,7 @@
                         },
                         "protectedSettings": {
                             "Items": {
-                                "AdminPassword": "[parameters('timco-vm1AdminUserName')]"    
+                                "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
                             }
                         }
                     }
