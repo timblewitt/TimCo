@@ -19,14 +19,14 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "timco-tst1",
+      "defaultValue": "timco-ad-adc1",
       "metadata": {
         "description": "Name of VM."
       }
     },
     "timco-pip1DnsName": {
       "type": "string",
-      "defaultValue": "timco-tst1",
+      "defaultValue": "adc1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
@@ -73,14 +73,14 @@
     },
     "timco-vm1DataDisk1SizeGB": {
       "type": "string",
-      "defaultValue": "20",
+      "defaultValue": "50",
       "metadata": {
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
     },
     "timco-vm1SubNet": {
       "type": "string",
-      "defaultValue": "Subnet1-FrontEnd",
+      "defaultValue": "Subnet2-BackEnd",
       "allowedValues": [
         "Subnet1-FrontEnd",
         "Subnet2-BackEnd"
@@ -91,7 +91,7 @@
     },
     "timco-modulesUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/WG-SRV1/timco-dsc1.zip",
+      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
       "metadata": {
         "description": "Location of DSC configuration files."
       }
