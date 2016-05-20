@@ -73,14 +73,14 @@
     },
     "timco-vm1DataDisk1SizeGB": {
       "type": "string",
-      "defaultValue": "20",
+      "defaultValue": "50",
       "metadata": {
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
     },
     "timco-vm1SubNet": {
       "type": "string",
-      "defaultValue": "Subnet1-FrontEnd",
+      "defaultValue": "Subnet2-BackEnd",
       "allowedValues": [
         "Subnet1-FrontEnd",
         "Subnet2-BackEnd"
