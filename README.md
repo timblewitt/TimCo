@@ -1,2 +1,2 @@
 # TimCo
-Tim Blewitt's test code for sample company TimCo.
+Sample VM deployments for a sample company TimCo.
