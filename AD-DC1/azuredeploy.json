@@ -19,14 +19,14 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "timco-tst1",
+      "defaultValue": "timco-ad-dc1",
       "metadata": {
         "description": "Name of VM."
       }
     },
     "timco-pip1DnsName": {
       "type": "string",
-      "defaultValue": "timco-tst1",
+      "defaultValue": "dc1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
@@ -91,7 +91,7 @@
     },
     "timco-modulesUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/WG-SRV1/timco-dsc1.zip",
+      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-DC1/timco-dsc1.zip",
       "metadata": {
         "description": "Location of DSC configuration files."
       }
