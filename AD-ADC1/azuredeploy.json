@@ -89,6 +89,12 @@
         "description": "Subnet for VM. Front-end or back-end?"
       }
     },
+    "timco-domainName": {
+      "type": "string",
+      "defaultValue": "timco.local",
+      "metadata": {
+        "description": "FQDN of the AD Domain created."
+      }
     "timco-modulesUrl": {
       "type": "string",
       "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
