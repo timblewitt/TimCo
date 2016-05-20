@@ -1,4 +1,4 @@
-﻿{
+{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
@@ -95,6 +95,7 @@
       "metadata": {
         "description": "FQDN of the AD Domain created."
       }
+    },
     "timco-modulesUrl": {
       "type": "string",
       "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
@@ -280,7 +281,7 @@
                             "sasToken": "",
                             "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
                             "properties": {
-                                "NodeName": "[parameters('timco-vm1Name')]"
+                                "NodeName": "[parameters('timco-vm1Name')]",
                                 "DomainName": "[parameters('timco-domainName')]",
                                 "AdminCreds": {
                                     "UserName": "[parameters('timco-vm1AdminUserName')]",
