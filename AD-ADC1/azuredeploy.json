@@ -280,7 +280,7 @@
                             "sasToken": "",
                             "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
                             "properties": {
-                                "nodeName": "[parameters('timco-vm1Name')]"
+                                "NodeName": "[parameters('timco-vm1Name')]"
                                 "DomainName": "[parameters('timco-domainName')]",
                                 "AdminCreds": {
                                     "UserName": "[parameters('timco-vm1AdminUserName')]",
