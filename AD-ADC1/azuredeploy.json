@@ -26,7 +26,7 @@
     },
     "timco-pip1DnsName": {
       "type": "string",
-      "defaultValue": "tcadc1",
+      "defaultValue": "adc1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
@@ -102,20 +102,6 @@
         "description": "The location of resources such as templates and DSC modules that the script is dependent"
       },
       "defaultValue": "https://raw.githubusercontent.com/timblewitt/TimCo/test1/AD-ADC1/"
-    },
-    "timco-modulesUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
-      "metadata": {
-        "description": "Location of DSC configuration files."
-      }
-    },
-    "timco-dsc1ConfigurationFunction": {
-      "type": "string",
-      "defaultValue": "timco-dsc1.ps1\\Main",
-      "metadata": {
-        "description": "DSC configuration function."
-      }
     }
   },
   
@@ -133,7 +119,7 @@
     "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'timco-vnet1')]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
-    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
+    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
     "timco-pip1Name": "timco-pip1"
   },
     "resources": [
@@ -299,7 +285,8 @@
                         "protectedSettings": {
                             "Items": {
                                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
-                            }
+                            },
+                            "DataBlobUri": "[concat(parameters('assetLocation'),'timco-dsc1.psd1')]"
                         }
                     }
                 }
