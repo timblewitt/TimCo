@@ -98,7 +98,7 @@
     },    
     "timco-modulesUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
+      "defaultValue": "https://github.com/timblewitt/TimCo/raw/test1/AD-ADC1/timco-dsc1.zip",
       "metadata": {
         "description": "Location of DSC configuration files."
       }
