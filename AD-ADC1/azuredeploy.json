@@ -95,6 +95,13 @@
       "metadata": {
         "description": "FQDN of the AD Domain created."
       }
+    },    
+    "assetLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of resources such as templates and DSC modules that the script is dependent"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/timblewitt/TimCo/test1/AD-ADC1/"
     },
     "timco-modulesUrl": {
       "type": "string",
@@ -277,7 +284,7 @@
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "modulesUrl": "[parameters('timco-modulesUrl')]",
+                            "modulesURL": "[concat(parameters('assetLocation'),'timco-dsc1.zip')]",
                             "sasToken": "",
                             "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
                             "properties": {
