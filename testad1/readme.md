@@ -15,7 +15,7 @@ Or, download all these files. Tweak the DSC configuration, DSC configuration dat
 - WMF 5.0 (or WMF 4.0 with PowerShellGet installed)
 
 ##Deploy On Azure
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftimblewitt%2FTimCo%2Ftest1%2Ftestad%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftimblewitt%2FTimCo%2Ftest1%2Ftestad1%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
