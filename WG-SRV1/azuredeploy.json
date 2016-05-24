@@ -26,7 +26,7 @@
     },
     "timco-pip1DnsName": {
       "type": "string",
-      "defaultValue": "srv1",
+      "defaultValue": "tcsrv1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
@@ -119,7 +119,7 @@
     "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'timco-vnet1')]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
-    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
+    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-pip1Name": "timco-pip1"
   },
     "resources": [
