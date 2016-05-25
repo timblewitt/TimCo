@@ -95,31 +95,13 @@
       "metadata": {
         "description": "FQDN of the AD Domain created."
       }
-    },    
-    "timco-modulesUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/timblewitt/TimCo/raw/test1/AD-ADC1/timco-dsc1.zip",
-      "metadata": {
-        "description": "Location of DSC configuration files."
-      }
-    },
-    "assetLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "The location of resources such as templates and DSC modules that the script is dependent"
-      },
-      "defaultValue": "https://raw.githubusercontent.com/timblewitt/TimCo/test1/AD-ADC1/"
-    },
-    "timco-dsc1ConfigurationFunction": {
-      "type": "string",
-      "defaultValue": "timco-dsc1.ps1\\Main",
-      "metadata": {
-        "description": "DSC configuration function."
-      }
-    }
+    }  
   },
   
   "variables": {
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
+    "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vnet1Prefix": "10.0.0.0/16",
     "timco-vnet1Subnet1Name": "Subnet1-FrontEnd",
@@ -284,9 +266,9 @@
                         "typeHandlerVersion": "2.17",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "modulesUrl": "[parameters('timco-modulesUrl')]",
+                            "modulesUrl": "[variables('timco-modulesUrl')]",
                             "sasToken": "",
-                            "configurationFunction": "[parameters('timco-dsc1ConfigurationFunction')]",
+                            "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
                             "properties": {
                                 "NodeName": "[parameters('timco-vm1Name')]",
                                 "DomainName": "[parameters('timco-domainName')]",
@@ -300,7 +282,7 @@
                             "Items": {
                                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
                             },
-                            "DataBlobUri": "[concat(parameters('assetLocation'),'timco-dsc1.psd1')]"
+                            "DataBlobUri": "[concat(variables('timco-assetLocation'),'timco-dsc1.psd1')]"
                         }
                     }
                 }
