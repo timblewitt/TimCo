@@ -102,6 +102,7 @@
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
+    "timco-dscConfigurationData": "timco-dsc1.psd1",
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vnet1Prefix": "10.0.0.0/16",
     "timco-vnet1Subnet1Name": "Subnet1-FrontEnd",
@@ -282,7 +283,7 @@
                             "Items": {
                                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
                             },
-                            "DataBlobUri": "[concat(variables('timco-assetLocation'),'timco-dsc1.psd1')]"
+                            "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData')]"
                         }
                     }
                 }
