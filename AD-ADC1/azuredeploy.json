@@ -283,7 +283,7 @@
                             "Items": {
                                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
                             },
-                            "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData')]"
+                            "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData'))]"
                         }
                     }
                 }
