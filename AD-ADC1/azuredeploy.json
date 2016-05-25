@@ -82,10 +82,10 @@
     },
     "timco-vm1SubNet": {
       "type": "string",
-      "defaultValue": "BackEnd - 10.0.2.0",
+      "defaultValue": "BackEnd-10.0.2.0-Subnet",
       "allowedValues": [
-        "FrontEnd - 10.0.1.0",
-        "BackEnd - 10.0.2.0"
+        "FrontEnd-10.0.1.0-Subnet",
+        "BackEnd-10.0.2.0-Subnet"
       ],
       "metadata": {
         "description": "Subnet for VM. Front-end or back-end?"
@@ -114,9 +114,9 @@
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dscConfigurationData": "timco-dsc1.psd1",
     "timco-vnet1Prefix": "10.0.0.0/16",
-    "timco-vnet1Subnet1Name": "FrontEnd - 10.0.1.0",
+    "timco-vnet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
     "timco-vnet1Subnet1Prefix": "10.0.1.0/24",
-    "timco-vnet1Subnet2Name": "BackEnd - 10.0.2.0",
+    "timco-vnet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
     "timco-vnet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
     "timco-vm1ImageOffer": "WindowsServer",
