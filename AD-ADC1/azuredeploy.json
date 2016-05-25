@@ -93,7 +93,7 @@
     },
     "timco-vm1IPAddress": {
       "type": "string",
-      "defaultValue": "10.0.2.4",
+      "defaultValue": "10.0.2.11",
       "metadata": {
         "description": "Static IP address of VM."
       }
