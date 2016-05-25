@@ -281,7 +281,7 @@
                     "properties": {
                         "publisher": "Microsoft.Powershell",
                         "type": "DSC",
-                        "typeHandlerVersion": "2.9",
+                        "typeHandlerVersion": "2.17",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "modulesUrl": "[parameters('timco-modulesUrl')]",
