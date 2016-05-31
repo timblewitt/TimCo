@@ -220,6 +220,12 @@
         "hardwareProfile": {
           "vmSize": "[parameters('timco-vm1VmSize')]"
         },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/')]"
+          }
+        },
         "osProfile": {
           "computerName": "[parameters('timco-vm1Name')]",
           "adminUsername": "[parameters('timco-vm1AdminUsername')]",
