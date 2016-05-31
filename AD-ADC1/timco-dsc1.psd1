@@ -3,6 +3,7 @@
         @{ 
             Nodename = 'localhost'
             PSDscAllowDomainUser = $true
+            AdminCreds = 'tim'
         }
     )
 
