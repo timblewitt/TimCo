@@ -21,8 +21,7 @@ George,P@ssw0rd,Marketing,Specialist
 Harriet,P@ssw0rd,Operations,Specialist
 '@
 
-  OUData = 'OU=Managed',
-           'OU=Computers,OU=Managed',
+  OUData = 'OU=Computers,OU=Managed',
            'OU=Users,OU=Managed',
            'OU=SysAdmins,OU=Users,OU=Managed',
            'OU=AppAdmins,OU=Users,OU=Managed',
