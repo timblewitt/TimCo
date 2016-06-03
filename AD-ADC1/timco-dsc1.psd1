@@ -19,16 +19,22 @@
            'OU=Workstations,OU=Computers,OU=Managed'
 
   UserData = @'
-UserName,Password,Dept,Title,Path
-Alice,P@ssw0rd,Accounting,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
-Bob,P@ssw0rd,IT,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
-Charlie,P@ssw0rd,Marketing,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
-Debbie,P@ssw0rd,Operations,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
-Eddie,P@ssw0rd,Accounting,Specialist,'OU=AppAdmins,OU=Users,OU=Managed'
-Frieda,P@ssw0rd,IT,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
-George,P@ssw0rd,Marketing,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
-Harriet,P@ssw0rd,Operations,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
+UserName,Password,GivenName,Surname,Dept,Title,Path
+AA1,P@ssw0rd,Andrew,Aardvark,Accounting,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
+BB1,P@ssw0rd,Beth,Buffalo,IT,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
+CC1,P@ssw0rd,Chris,Crocodile,Marketing,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
+DD1,P@ssw0rd,Doris,Operations,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
+EE1,P@ssw0rd,Edward,Elephant,Accounting,Specialist,'OU=AppAdmins,OU=Users,OU=Managed'
+FF1,P@ssw0rd,Florence,Flamingo,IT,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
+GG1,P@ssw0rd,Graham,Gazelle,Marketing,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
+HH1,P@ssw0rd,Helen,Hippo,Operations,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
 '@
 
+  GroupData = @'
+GroupName,Category,GroupScope,Path,MembersToInclude,Description
+G_SysAdmins,Security,Global,'OU=SysAdmins,OU=Users,OU=Managed',(AA1,BB1),'Global group for SysAdmins'
+G_AppAdmins,Security,Global,'OU=AppAdmins,OU=Users,OU=Managed',(CC1,DD1,EE1),'Global group for AppAdmins'
+G_AppUsers,Security,Global,'OU=AppUsers,OU=Users,OU=Managed',(FF1,GG1,HH1),'Global group for AppUsers'
+'@
     }
 } 
