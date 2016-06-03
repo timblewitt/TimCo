@@ -19,15 +19,15 @@
            'OU=Workstations,OU=Computers,OU=Managed'
 
   UserData = @'
-UserName,Password,Dept,Title
-Alice,P@ssw0rd,Accounting,Manager
-Bob,P@ssw0rd,IT,Manager
-Charlie,P@ssw0rd,Marketing,Manager
-Debbie,P@ssw0rd,Operations,Manager
-Eddie,P@ssw0rd,Accounting,Specialist
-Frieda,P@ssw0rd,IT,Specialist
-George,P@ssw0rd,Marketing,Specialist
-Harriet,P@ssw0rd,Operations,Specialist
+UserName,Password,Dept,Title,Path
+Alice,P@ssw0rd,Accounting,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
+Bob,P@ssw0rd,IT,Manager,'OU=SysAdmins,OU=Users,OU=Managed'
+Charlie,P@ssw0rd,Marketing,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
+Debbie,P@ssw0rd,Operations,Manager,'OU=AppAdmins,OU=Users,OU=Managed'
+Eddie,P@ssw0rd,Accounting,Specialist,'OU=AppAdmins,OU=Users,OU=Managed'
+Frieda,P@ssw0rd,IT,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
+George,P@ssw0rd,Marketing,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
+Harriet,P@ssw0rd,Operations,Specialist,'OU=AppUsers,OU=Users,OU=Managed'
 '@
 
     }
