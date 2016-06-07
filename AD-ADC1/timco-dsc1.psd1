@@ -2,8 +2,7 @@
   AllNodes = @( 
     @{ 
       Nodename = 'localhost'
-      PSDscAllowDomainUser = $true
-      AdminCreds = 'tim'
+#      PSDscAllowDomainUser = $true
     }
   )
 
