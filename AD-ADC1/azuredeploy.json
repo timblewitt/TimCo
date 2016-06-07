@@ -125,7 +125,7 @@
     "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'timco-vnet1')]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
-    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), 'nic1')]",
+    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-pip1Name": "timco-pip1"
   },
   
