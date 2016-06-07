@@ -23,7 +23,7 @@ UserName,Password,GivenName,Surname,Dept,Title,Path
 AA1,P@ssw0rd,Andrew,Aardvark,Accounting,Manager,"OU=SysAdmins,OU=Users,OU=Managed"
 BB1,P@ssw0rd,Beth,Buffalo,IT,Manager,"OU=SysAdmins,OU=Users,OU=Managed"
 CC1,P@ssw0rd,Chris,Crocodile,Marketing,Manager,"OU=AppAdmins,OU=Users,OU=Managed"
-DD1,P@ssw0rd,Doris,Operations,Manager,"OU=AppAdmins,OU=Users,OU=Managed"
+DD1,P@ssw0rd,Doris,DikDik,Operations,Manager,"OU=AppAdmins,OU=Users,OU=Managed"
 EE1,P@ssw0rd,Edward,Elephant,Accounting,Specialist,"OU=AppAdmins,OU=Users,OU=Managed"
 FF1,P@ssw0rd,Florence,Flamingo,IT,Specialist,"OU=AppUsers,OU=Users,OU=Managed"
 GG1,P@ssw0rd,Graham,Gazelle,Marketing,Specialist,"OU=AppUsers,OU=Users,OU=Managed"
