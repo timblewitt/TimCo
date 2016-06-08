@@ -18,6 +18,19 @@
         "description": "Storage account type to store new VM."
       }
     },
+    "timco-domainName": {
+      "type": "string",
+      "defaultValue": "timco.local",
+      "metadata": {
+        "description": "FQDN of the AD Domain created."
+      }
+    },
+    "timco-vm1SafeModePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Safe mode password for the VM as a domain controller"
+      }
+    },
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
@@ -96,19 +109,6 @@
       "defaultValue": "10.0.2.11",
       "metadata": {
         "description": "Static IP address of VM."
-      }
-    },
-    "timco-domainName": {
-      "type": "string",
-      "defaultValue": "timco.local",
-      "metadata": {
-        "description": "FQDN of the AD Domain created."
-      }
-    },
-    "timco-vm1SafeModePassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Safe mode password for the VM as a domain controller"
       }
     }
   },
@@ -300,7 +300,10 @@
                   "UserName": "[parameters('timco-vm1AdminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
                 },
-                "SafeModePassword": "PrivateSettingsRef:SafePassword"
+                "SafeModeCreds": {
+                  "UserName": "Administrator",
+                  "Password": "PrivateSettingsRef:SafeModePassword"
+                }
               }
             },
             "protectedSettings": {
