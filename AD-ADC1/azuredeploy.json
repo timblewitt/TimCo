@@ -1,8 +1,8 @@
-{
+﻿{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  
+
   "contentVersion": "1.0.0.0",
-  
+
   "parameters": {
     "timcostoraccType": {
       "type": "string",
@@ -104,9 +104,15 @@
       "metadata": {
         "description": "FQDN of the AD Domain created."
       }
-    }  
+    },
+    "timco-vm1SafeModePassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Safe mode password for the VM as a domain controller"
+      }
+    }
   },
-  
+
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
@@ -128,9 +134,9 @@
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-pip1Name": "timco-pip1"
   },
-  
+
   "resources": [
-    {   
+    {
       "name": "[variables('timcostoraccName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
@@ -293,12 +299,14 @@
                 "AdminCreds": {
                   "UserName": "[parameters('timco-vm1AdminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
-                }
+                },
+                "SafeModePassword": "PrivateSettingsRef:SafePassword"
               }
             },
             "protectedSettings": {
               "Items": {
-                "AdminPassword": "[parameters('timco-vm1AdminPassword')]"    
+                "AdminPassword": "[parameters('timco-vm1AdminPassword')]",
+                "SafePassword": "[parameters('timco-vm1SafeModePassword')]"
               },
               "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData'))]"
             }
@@ -323,7 +331,7 @@
       }
     }
   ],
-    
+
   "outputs": {
   }
 }
