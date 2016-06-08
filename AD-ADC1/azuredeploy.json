@@ -309,7 +309,7 @@
             "protectedSettings": {
               "Items": {
                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]",
-                "SafePassword": "[parameters('timco-vm1SafeModePassword')]"
+                "SafeModePassword": "[parameters('timco-vm1SafeModePassword')]"
               },
               "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData'))]"
             }
