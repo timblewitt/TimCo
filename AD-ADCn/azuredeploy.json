@@ -39,7 +39,7 @@
         "description": "Name of VM."
       }
     },
-    "timco-pip1DnsName": {
+    "timco-vm1Pip1DnsName": {
       "type": "string",
       "defaultValue": "tcadc2",
       "minLength": 1,
@@ -139,7 +139,7 @@
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
-    "timco-pip1Name": "timco-pip1"
+    "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]"
   },
 
   "resources": [
@@ -157,18 +157,18 @@
       }
     },
     {
-      "name": "[variables('timco-pip1Name')]",
+      "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "timco-pip1"
+        "displayName": "timco-vm1Pip1"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('timco-pip1DnsName')]"
+          "domainNameLabel": "[parameters('timco-vm1Pip1DnsName')]"
         }
       }
     },
@@ -178,7 +178,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-pip1Name'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
       "tags": {
         "displayName": "timco-vm1Nic1"
@@ -194,7 +194,7 @@
                 "id": "[variables('timco-vm1SubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-pip1Name'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-vm1Pip1Name'))]"
               }
             }
           }
