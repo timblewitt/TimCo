@@ -122,8 +122,8 @@
 
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADCn/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADCn/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dscConfigurationData": "timco-dsc1.psd1",
     "timco-vnet1Prefix": "10.0.0.0/16",
