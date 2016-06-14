@@ -22,7 +22,7 @@
       "type": "string",
       "defaultValue": "timco.local",
       "metadata": {
-        "description": "FQDN of the AD Domain created."
+        "description": "FQDN of the AD Domain joined."
       }
     },
     "timco-vm1SafeModePassword": {
@@ -34,17 +34,31 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "timco-ad-adc1",
+      "defaultValue": "timco-ad-adc2",
       "metadata": {
         "description": "Name of VM."
       }
     },
-    "timco-pip1DnsName": {
+    "timco-vm1Pip1DnsName": {
       "type": "string",
-      "defaultValue": "tcadc1",
+      "defaultValue": "tcadc2",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
+      }
+    },
+    "timco-vm1IPAddress": {
+      "type": "string",
+      "defaultValue": "10.0.2.12",
+      "metadata": {
+        "description": "Static IP address of VM."
+      }
+    },
+    "timco-vm1DNSServer": {
+      "type": "string",
+      "defaultValue": "10.0.2.11",
+      "metadata": {
+        "description": "IP address of DNS Server."
       }
     },
     "timco-vm1AdminUserName": {
@@ -93,6 +107,13 @@
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
     },
+    "timco-vm1vNet": {
+      "type": "string",
+      "defaultValue": "timco-vnet1",
+      "metadata": {
+        "description": "Existing vNet"
+      }
+    },
     "timco-vm1SubNet": {
       "type": "string",
       "defaultValue": "BackEnd-10.0.2.0-Subnet",
@@ -103,22 +124,15 @@
       "metadata": {
         "description": "Subnet for VM. Front-end or back-end?"
       }
-    },
-    "timco-vm1IPAddress": {
-      "type": "string",
-      "defaultValue": "10.0.2.11",
-      "metadata": {
-        "description": "Static IP address of VM."
-      }
     }
   },
 
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADCn/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADCn/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
-    "timco-dscConfigurationData": "timco-dsc1.psd1",
+    "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
     "timco-vnet1Prefix": "10.0.0.0/16",
     "timco-vnet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
     "timco-vnet1Subnet1Prefix": "10.0.1.0/24",
@@ -126,13 +140,13 @@
     "timco-vnet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
     "timco-vm1ImageOffer": "WindowsServer",
-    "timco-vm1OSDiskName": "timco-vm1OSDisk",
-    "timco-vm1dataDisk1Name": "timco-vm1dataDisk1",
+    "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
+    "timco-vm1dataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
     "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'timco-vnet1')]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
-    "timco-pip1Name": "timco-pip1"
+    "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]"
   },
 
   "resources": [
@@ -150,34 +164,19 @@
       }
     },
     {
-      "name": "timco-vnet1",
-      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('timco-vm1Pip1Name')]",
+      "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "timco-vnet1"
+        "displayName": "timco-vm1Pip1"
       },
       "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('timco-vnet1Prefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[variables('timco-vnet1Subnet1Name')]",
-            "properties": {
-              "addressPrefix": "[variables('timco-vnet1Subnet1Prefix')]"
-            }
-          },
-          {
-            "name": "[variables('timco-vnet1Subnet2Name')]",
-            "properties": {
-              "addressPrefix": "[variables('timco-vnet1Subnet2Prefix')]"
-            }
-          }
-        ]
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('timco-vm1Pip1DnsName')]"
+        }
       }
     },
     {
@@ -186,8 +185,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', 'timco-vnet1')]",
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-pip1Name'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
       "tags": {
         "displayName": "timco-vm1Nic1"
@@ -203,7 +201,7 @@
                 "id": "[variables('timco-vm1SubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-pip1Name'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-vm1Pip1Name'))]"
               }
             }
           }
@@ -295,6 +293,7 @@
               "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
               "properties": {
                 "NodeName": "[parameters('timco-vm1Name')]",
+                "DNSServerAddress": "[parameters('timco-vm1DNSServer')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-vm1AdminUserName')]",
@@ -311,27 +310,11 @@
                 "AdminPassword": "[parameters('timco-vm1AdminPassword')]",
                 "SafeModePassword": "[parameters('timco-vm1SafeModePassword')]"
               },
-              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData'))]"
+              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dsc1ConfigurationData'))]"
             }
           }
         }
       ]
-    },
-    {
-      "name": "[variables('timco-pip1Name')]",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "timco-pip1"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('timco-pip1DnsName')]"
-        }
-      }
     }
   ],
 
