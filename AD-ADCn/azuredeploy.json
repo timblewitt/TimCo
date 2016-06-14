@@ -47,6 +47,20 @@
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
       }
     },
+    "timco-vm1IPAddress": {
+      "type": "string",
+      "defaultValue": "10.0.2.12",
+      "metadata": {
+        "description": "Static IP address of VM."
+      }
+    },
+    "timco-vm1DNSServer": {
+      "type": "string",
+      "defaultValue": "10.0.2.11",
+      "metadata": {
+        "description": "IP address of DNS Server."
+      }
+    },
     "timco-vm1AdminUserName": {
       "type": "string",
       "defaultValue": "timco-admin",
@@ -109,13 +123,6 @@
       ],
       "metadata": {
         "description": "Subnet for VM. Front-end or back-end?"
-      }
-    },
-    "timco-vm1IPAddress": {
-      "type": "string",
-      "defaultValue": "10.0.2.12",
-      "metadata": {
-        "description": "Static IP address of VM."
       }
     }
   },
@@ -286,6 +293,7 @@
               "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
               "properties": {
                 "NodeName": "[parameters('timco-vm1Name')]",
+                "DNSServerAddress": "[parameters('timco-vm1DNSServer')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-vm1AdminUserName')]",
