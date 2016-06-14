@@ -1,0 +1,10 @@
+﻿@{ 
+  AllNodes = @( 
+    @{ 
+      Nodename = 'localhost'
+    }
+  )
+
+  NonNodeData = @{
+  }
+} 
