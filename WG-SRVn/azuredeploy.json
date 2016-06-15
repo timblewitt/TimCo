@@ -80,11 +80,11 @@
         "description": "Size of data disk.  This is NOT the temporary D drive that is added for temporary use."
       }
     },
-    "timco-vm1vNet": {
+    "timco-vm1VNet": {
       "type": "string",
       "defaultValue": "timco-vnet1",
       "metadata": {
-        "description": "Existing vNet"
+        "description": "Existing VNet"
       }
     },
     "timco-vm1SubNet": {
@@ -109,9 +109,9 @@
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
     "timco-vm1ImageOffer": "WindowsServer",
     "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
-    "timco-vm1dataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
-    "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('timco-vm1vNet'))]",
-    "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
+    "timco-vm1DataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
+    "timco-vm1VNetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('timco-vm1VNet'))]",
+    "timco-vm1SubnetRef": "[concat(variables('timco-vm1VNetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]"
@@ -153,7 +153,6 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', parameters('timco-vm1vNet'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
       "tags": {
@@ -220,7 +219,7 @@
           },
           "dataDisks": [
             {
-              "name": "timco-vm1datadisk1",
+              "name": "timco-vm1Datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "vhd": {
