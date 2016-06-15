@@ -130,8 +130,8 @@
 
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRV1/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRV1/",
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRVn/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRVn/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
