@@ -22,7 +22,14 @@
       "type": "string",
       "defaultValue": "timco.local",
       "metadata": {
-        "description": "FQDN of the AD Domain joined."
+        "description": "FQDN of the AD Domain to be joined."
+      }
+    },
+    "timco-OUPath": {
+      "type": "string",
+      "defaultValue": "OU=Servers,OU=Computers,OU=Managed",
+      "metadata": {
+        "description": "Path of OU for computer account."
       }
     },
     "timco-domainAdminName": {
@@ -282,6 +289,7 @@
               "properties": {
                 "NodeName": "[parameters('timco-vm1Name')]",
                 "DomainName": "[parameters('timco-domainName')]",
+                "OUPath": "[parameters('timco-OUPath')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-domainAdminName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
