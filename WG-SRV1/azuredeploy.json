@@ -99,17 +99,17 @@
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/WG-SRV1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
-    "timco-vnet1Name": "timco-vnet1",
-    "timco-vnet1Prefix": "10.0.0.0/16",
-    "timco-vnet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
-    "timco-vnet1Subnet1Prefix": "10.0.1.0/24",
-    "timco-vnet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
-    "timco-vnet1Subnet2Prefix": "10.0.2.0/24",
+    "timco-vNet1Name": "timco-vnet1",
+    "timco-vNet1Prefix": "10.0.0.0/16",
+    "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
+    "timco-vNet1Subnet1Prefix": "10.0.1.0/24",
+    "timco-vNet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
+    "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
     "timco-vm1ImageOffer": "WindowsServer",
     "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
-    "timco-vm1dataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
-    "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('timco-vNet1Name'))]",
+    "timco-vm1DataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
+    "timco-vm1VNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('timco-vNet1Name'))]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
@@ -142,20 +142,20 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('timco-vnet1Prefix')]"
+            "[variables('timco-vNet1Prefix')]"
           ]
         },
         "subnets": [
           {
-            "name": "[variables('timco-vnet1Subnet1Name')]",
+            "name": "[variables('timco-vNet1Subnet1Name')]",
             "properties": {
-              "addressPrefix": "[variables('timco-vnet1Subnet1Prefix')]"
+              "addressPrefix": "[variables('timco-vNet1Subnet1Prefix')]"
             }
           },
           {
-            "name": "[variables('timco-vnet1Subnet2Name')]",
+            "name": "[variables('timco-vNet1Subnet2Name')]",
             "properties": {
-              "addressPrefix": "[variables('timco-vnet1Subnet2Prefix')]"
+              "addressPrefix": "[variables('timco-vNet1Subnet2Prefix')]"
             }
           }
         ]
@@ -168,7 +168,7 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "timco-vm1Pip1"
+        "displayName": "[variables('timco-vm1Pip1Name')]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -187,7 +187,7 @@
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
       "tags": {
-        "displayName": "timco-vm1Nic1"
+        "displayName": "[variables('timco-vm1Nic1Name')]"
       },
       "properties": {
         "ipConfigurations": [
@@ -216,7 +216,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
       ],
       "tags": {
-        "displayName": "timco-vm1"
+        "displayName": "[parameters('timco-vm1Name')]"
       },
       "properties": {
         "hardwareProfile": {
@@ -250,11 +250,11 @@
           },
           "dataDisks": [
             {
-              "name": "timco-vm1datadisk1",
+              "name": "timco-vm1Datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "vhd": {
-                "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1dataDisk1Name'), '.vhd')]"
+                "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
               },
               "createOption": "Empty"
             }
