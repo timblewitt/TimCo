@@ -82,7 +82,7 @@
     },
     "timco-vm1SubNet": {
       "type": "string",
-      "defaultValue": "BackEnd-10.0.2.0-Subnet",
+      "defaultValue": "FrontEnd-10.0.1.0-Subnet",
       "allowedValues": [
         "FrontEnd-10.0.1.0-Subnet",
         "BackEnd-10.0.2.0-Subnet"
