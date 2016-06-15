@@ -21,9 +21,9 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "timco-wg-srv1",
+      "defaultValue": "timco-srv1",
       "metadata": {
-        "description": "Name of VM."
+        "description": "Name of the VM."
       }
     },
     "timco-vm1Pip1DnsName": {
