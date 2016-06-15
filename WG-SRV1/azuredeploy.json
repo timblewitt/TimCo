@@ -99,6 +99,7 @@
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/WG-SRV1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
+    "timco-vnet1Name": "timco-vnet1",
     "timco-vnet1Prefix": "10.0.0.0/16",
     "timco-vnet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
     "timco-vnet1Subnet1Prefix": "10.0.1.0/24",
@@ -108,7 +109,7 @@
     "timco-vm1ImageOffer": "WindowsServer",
     "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
     "timco-vm1dataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
-    "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'timco-vnet1')]",
+    "timco-vm1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('timco-vNet1Name'))]",
     "timco-vm1SubnetRef": "[concat(variables('timco-vm1VnetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
@@ -123,20 +124,20 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "timcostoracc"
+        "displayName": "[variables('timcostoraccName')]"
       },
       "properties": {
         "accountType": "[parameters('timcostoraccType')]"
       }
     },
     {
-      "name": "timco-vnet1",
+      "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "timco-vnet1"
+        "displayName": "[variables('timco-vNet1Name')]"
       },
       "properties": {
         "addressSpace": {
@@ -182,7 +183,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', 'timco-vnet1')]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
       "tags": {
