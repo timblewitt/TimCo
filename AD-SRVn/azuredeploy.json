@@ -27,7 +27,7 @@
     },
     "timco-OUPath": {
       "type": "string",
-      "defaultValue": "OU=Servers,OU=Computers,OU=Managed",
+      "defaultValue": "OU=Servers,OU=Computers,OU=Managed,dc=timco,dc=local",
       "metadata": {
         "description": "Path of OU for computer account."
       }
