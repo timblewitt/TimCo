@@ -27,7 +27,7 @@
     },
     "timco-OUPath": {
       "type": "string",
-      "defaultValue": "OU=Servers;OU=Computers;OU=Managed,;DC=timco;DC=local",
+      "defaultValue": "OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
       "metadata": {
         "description": "Path of OU for computer account."
       }
@@ -125,205 +125,212 @@
       "metadata": {
         "description": "Subnet for VM. Front-end or back-end?"
       }
-    }
-  },
-
-  "variables": {
-    "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-apiVersion": "2015-06-15",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRVn/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRVn/",
-    "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
-    "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
-    "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
-    "timco-vm1ImageOffer": "WindowsServer",
-    "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
-    "timco-vm1DataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
-    "timco-vm1VNetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('timco-vm1VNet'))]",
-    "timco-vm1SubnetRef": "[concat(variables('timco-vm1VNetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
-    "timco-vm1StorageAccountContainerName": "vhds",
-    "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
-    "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]",
-    "timco-domainJoinOptions": "3"
-  },
-
-  "resources": [
-    {
-      "name": "[variables('timcostoraccName')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "[variables('timcostoraccName')]"
-      },
-      "properties": {
-        "accountType": "[parameters('timcostoraccType')]"
+    },
+    "timco-vm1DNSServer": {
+      "type": "string",
+      "defaultValue": "10.0.2.11",
+      "metadata": {
+        "description": "IP address of DNS Server."
       }
     },
-    {
-      "name": "[variables('timco-vm1Pip1Name')]",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "[variables('timco-vm1Pip1Name')]"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('timco-vm1Pip1DnsName')]"
+
+    "variables": {
+      "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
+      "timco-apiVersion": "2015-06-15",
+      "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRVn/timco-dsc1.zip",
+      "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRVn/",
+      "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
+      "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
+      "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
+      "timco-vm1ImageOffer": "WindowsServer",
+      "timco-vm1OSDiskName": "[concat(parameters('timco-vm1Name'), '-OSDisk')]",
+      "timco-vm1DataDisk1Name": "[concat(parameters('timco-vm1Name'), '-DataDisk1')]",
+      "timco-vm1VNetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('timco-vm1VNet'))]",
+      "timco-vm1SubnetRef": "[concat(variables('timco-vm1VNetID'), '/subnets/', parameters('timco-vm1SubNet'))]",
+      "timco-vm1StorageAccountContainerName": "vhds",
+      "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
+      "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]",
+      "timco-domainJoinOptions": "3"
+    },
+
+    "resources": [
+      {
+        "name": "[variables('timcostoraccName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "[variables('timco-apiVersion')]",
+        "dependsOn": [ ],
+        "tags": {
+          "displayName": "[variables('timcostoraccName')]"
+        },
+        "properties": {
+          "accountType": "[parameters('timcostoraccType')]"
         }
-      }
-    },
-    {
-      "name": "[variables('timco-vm1Nic1Name')]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
-      ],
-      "tags": {
-        "displayName": "[variables('timco-vm1Nic1Name')]"
       },
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "subnet": {
-                "id": "[variables('timco-vm1SubnetRef')]"
+      {
+        "name": "[variables('timco-vm1Pip1Name')]",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "[variables('timco-apiVersion')]",
+        "dependsOn": [ ],
+        "tags": {
+          "displayName": "[variables('timco-vm1Pip1Name')]"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[parameters('timco-vm1Pip1DnsName')]"
+          }
+        }
+      },
+      {
+        "name": "[variables('timco-vm1Nic1Name')]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "[variables('timco-apiVersion')]",
+        "dependsOn": [
+          "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
+        ],
+        "tags": {
+          "displayName": "[variables('timco-vm1Nic1Name')]"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "[variables('timco-vm1SubnetRef')]"
+                },
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-vm1Pip1Name'))]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[parameters('timco-vm1Name')]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "[variables('timco-apiVersion')]",
+        "dependsOn": [
+          "[concat('Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
+          "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
+        ],
+        "tags": {
+          "displayName": "[parameters('timco-vm1Name')]"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "[parameters('timco-vm1VmSize')]"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/')]"
+            }
+          },
+          "osProfile": {
+            "computerName": "[parameters('timco-vm1Name')]",
+            "adminUsername": "[parameters('timco-vm1AdminUsername')]",
+            "adminPassword": "[parameters('timco-vm1AdminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "[variables('timco-vm1ImagePublisher')]",
+              "offer": "[variables('timco-vm1ImageOffer')]",
+              "sku": "[parameters('timco-vm1WindowsOSVersion')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "timco-vm1OSDisk",
+              "vhd": {
+                "uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
               },
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('timco-vm1Pip1Name'))]"
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "timco-vm1Datadisk1",
+                "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
+                "lun": 1,
+                "vhd": {
+                  "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
+                },
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('timco-vm1Nic1Name'))]"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "name": "timco-dsc1",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "[variables('timco-apiVersion')]",
+            "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+            ],
+            "tags": {
+              "displayName": "timco-dsc1"
+            },
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.17",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "modulesUrl": "[variables('timco-modulesUrl')]",
+                "sasToken": "",
+                "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
+                "properties": {
+                  "NodeName": "[parameters('timco-vm1Name')]",
+                  "DNSServerAddress": "[parameters('timco-vm1DNSServer')]"
+                }
               }
             }
           }
         ]
-      }
-    },
-    {
-      "name": "[parameters('timco-vm1Name')]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
-      "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
-      ],
-      "tags": {
-        "displayName": "[parameters('timco-vm1Name')]"
       },
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('timco-vm1VmSize')]"
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/')]"
-          }
-        },
-        "osProfile": {
-          "computerName": "[parameters('timco-vm1Name')]",
-          "adminUsername": "[parameters('timco-vm1AdminUsername')]",
-          "adminPassword": "[parameters('timco-vm1AdminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('timco-vm1ImagePublisher')]",
-            "offer": "[variables('timco-vm1ImageOffer')]",
-            "sku": "[parameters('timco-vm1WindowsOSVersion')]",
-            "version": "latest"
+      {
+        "apiVersion": "[variables('timco-apiVersion')]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "JsonADDomainExtension",
+          "typeHandlerVersion": "1.3",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "Name": "[parameters('timco-domainName')]",
+            "OUPath": "[parameters('timco-ouPath')]",
+            "User": "[concat(parameters('timco-domainName'), '\\', parameters('timco-domainAdminName'))]",
+            "Restart": "true",
+            "Options": "[variables('timco-domainJoinOptions')]"
           },
-          "osDisk": {
-            "name": "timco-vm1OSDisk",
-            "vhd": {
-              "uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "name": "timco-vm1Datadisk1",
-              "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
-              "lun": 1,
-              "vhd": {
-                "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
-              },
-              "createOption": "Empty"
-            }
-          ]
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('timco-vm1Nic1Name'))]"
-            }
-          ]
-        }
-      },
-      "resources": [
-        {
-          "name": "timco-dsc1",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "[variables('timco-apiVersion')]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
-          ],
-          "tags": {
-            "displayName": "timco-dsc1"
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.17",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "modulesUrl": "[variables('timco-modulesUrl')]",
-              "sasToken": "",
-              "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
-              "properties": {
-                "NodeName": "[parameters('timco-vm1Name')]"
-              }
-            }
+          "protectedsettings": {
+            "Password": "[parameters('timco-domainAdminPassword')]"
           }
         }
-      ]
-    },
-    {
-      "apiVersion": "[variables('timco-apiVersion')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "JsonADDomainExtension",
-        "typeHandlerVersion": "1.3",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "Name": "[parameters('timco-domainName')]",
-          "OUPath": "[parameters('timco-ouPath')]",
-          "User": "[concat(parameters('timco-domainName'), '\\', parameters('timco-domainAdminName'))]",
-          "Restart": "true",
-          "Options": "[variables('timco-domainJoinOptions')]"
-        },
-        "protectedsettings": {
-          "Password": "[parameters('timco-domainAdminPassword')]"
-        }
       }
+
+    ],
+
+    "outputs": {
     }
-
-  ],
-
-  "outputs": {
   }
-}
