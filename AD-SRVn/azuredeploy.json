@@ -150,7 +150,7 @@
       "timco-vm1StorageAccountContainerName": "vhds",
       "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
       "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]",
-      "timco-domainJoinOptions": "3"
+      "timco-domainJoinOptions": 3
     },
 
     "resources": [
