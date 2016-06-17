@@ -115,6 +115,7 @@
 
   "variables": {
     "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
+    "timco-apiVersion": "2015-06-15",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-ADC1/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
@@ -141,7 +142,7 @@
       "name": "[variables('timcostoraccName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('timco-apiVersion')]",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timcostoraccName')]"
@@ -154,7 +155,7 @@
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('timco-apiVersion')]",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vNet1Name')]"
@@ -185,7 +186,7 @@
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('timco-apiVersion')]",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
@@ -201,7 +202,7 @@
       "name": "[variables('timco-vm1Nic1Name')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('timco-apiVersion')]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
@@ -231,7 +232,7 @@
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('timco-apiVersion')]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
@@ -294,7 +295,7 @@
           "name": "timco-dsc1",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "[variables('timco-apiVersion')]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
