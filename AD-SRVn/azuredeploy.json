@@ -139,6 +139,7 @@
     "timco-apiVersion": "2015-06-15",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRVn/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRVn/",
+    "timco-dsc1ConfigurationName": "timco-dsc1",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
@@ -275,7 +276,7 @@
       },
       "resources": [
         {
-          "name": "timco-dsc1",
+          "name": "[parameters('timco-dsc1ConfigurationName')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "[variables('timco-apiVersion')]",
