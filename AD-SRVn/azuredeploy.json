@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
 
   "contentVersion": "1.0.0.0",
@@ -276,7 +276,7 @@
       },
       "resources": [
         {
-          "name": "[variables('timco-dsc1ConfigurationName')]",
+          "name": "[parameters('timco-dsc1ConfigurationName')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "[variables('timco-apiVersion')]",
@@ -284,7 +284,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
           "tags": {
-            "displayName": "[variables('timco-dsc1ConfigurationName')]"
+            "displayName": "[parameters('timco-dsc1ConfigurationName')]"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -310,7 +310,7 @@
       "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions/', variables('timco-dsc1ConfigurationName'))]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -323,12 +323,11 @@
           "User": "[concat(parameters('timco-domainAdminName'),'@',parameters('timco-domainName'))]",
           "Restart": "true",
           "NumberOfRetries": 30,
-          "RetryIntervalInMilliseconds": 10000,
           "Options": "[variables('timco-domainJoinOptions')]"
         },
         "protectedsettings": {
           "Password": "[parameters('timco-domainAdminPassword')]"
-        } 
+        }
       }
     }
 
