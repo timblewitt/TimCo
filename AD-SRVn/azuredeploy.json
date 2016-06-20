@@ -1,4 +1,4 @@
-{
+﻿{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
 
   "contentVersion": "1.0.0.0",
@@ -139,7 +139,6 @@
     "timco-apiVersion": "2015-06-15",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-SRVn/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-SRVn/",
-    "timco-dsc1ConfigurationName": "timco-dsc1",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
     "timco-vm1ImagePublisher": "MicrosoftWindowsServer",
@@ -276,15 +275,15 @@
       },
       "resources": [
         {
-          "name": "[variables('timco-dsc1ConfigurationName')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "timco-dsc1",
+          "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "[variables('timco-apiVersion')]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
           "tags": {
-            "displayName": "[variables('timco-dsc1ConfigurationName')]"
+            "displayName": "timco-dsc1"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -322,8 +321,7 @@
           "OUPath": "[parameters('timco-ouPath')]",
           "User": "[concat(parameters('timco-domainAdminName'),'@',parameters('timco-domainName'))]",
           "Restart": "true",
-          "NumberOfRetries": 30,
-          "RetryIntervalInMilliseconds": 10000,
+          "NumberOfRetries":  30,
           "Options": "[variables('timco-domainJoinOptions')]"
         },
         "protectedsettings": {
