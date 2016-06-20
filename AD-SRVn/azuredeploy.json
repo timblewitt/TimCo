@@ -323,6 +323,7 @@
           "User": "[concat(parameters('timco-domainAdminName'),'@',parameters('timco-domainName'))]",
           "Restart": "true",
           "NumberOfRetries": 30,
+          "RetryIntervalInMilliseconds": 10000,
           "Options": "[variables('timco-domainJoinOptions')]"
         },
         "protectedsettings": {
