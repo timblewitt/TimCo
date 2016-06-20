@@ -276,7 +276,7 @@
       },
       "resources": [
         {
-          "name": "[parameters('timco-dsc1ConfigurationName')]",
+          "name": "[variables('timco-dsc1ConfigurationName')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "[variables('timco-apiVersion')]",
@@ -284,7 +284,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
           "tags": {
-            "displayName": "[parameters('timco-dsc1ConfigurationName')]"
+            "displayName": "[variables('timco-dsc1ConfigurationName')]"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
