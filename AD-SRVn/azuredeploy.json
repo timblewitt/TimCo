@@ -276,7 +276,7 @@
       "resources": [
         {
           "name": "timco-dsc1",
-          "type": "extensions",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "[variables('timco-apiVersion')]",
           "dependsOn": [
