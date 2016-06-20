@@ -310,7 +310,7 @@
       "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+        "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('timco-dsc1ConfigurationName'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
