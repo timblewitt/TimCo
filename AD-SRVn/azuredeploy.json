@@ -321,6 +321,7 @@
           "OUPath": "[parameters('timco-ouPath')]",
           "User": "[concat(parameters('timco-domainAdminName'),'@',parameters('timco-domainName'))]",
           "Restart": "true",
+          "NumberOfRetries": 30,
           "Options": "[variables('timco-domainJoinOptions')]"
         },
         "protectedsettings": {
