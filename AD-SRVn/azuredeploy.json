@@ -328,7 +328,7 @@
         },
         "protectedsettings": {
           "Password": "[parameters('timco-domainAdminPassword')]"
-        }
+        } 
       }
     }
 
