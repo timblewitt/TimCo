@@ -284,7 +284,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
           "tags": {
-            "displayName": "timco-dsc1"
+            "displayName": "[parameters('timco-dsc1ConfigurationName')]"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
