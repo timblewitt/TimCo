@@ -1,10 +1,10 @@
-﻿{
+{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
 
   "contentVersion": "1.0.0.0",
 
   "parameters": {
-    "timcostoraccType": {
+    "timco-vm1StorAccType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
       "allowedValues": [
@@ -55,7 +55,7 @@
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
-        "Windows-Server-Technical-Preview"
+        "2016-Datacenter"
       ],
       "metadata": {
         "description": "Windows version for the VM."
@@ -101,8 +101,7 @@
   },
 
   "variables": {
-    "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-apiVersion": "2015-06-15",
+    "timco-vm1StorAccName": "[concat('timcosa', uniqueString(resourceGroup().id, parameters('timco-vm1Name')))]",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/WG-SRV1/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/WG-SRV1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
@@ -120,23 +119,23 @@
 
   "resources": [
     {
-      "name": "[variables('timcostoraccName')]",
+      "name": "[variables('timco-vm1StorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "[variables('timcostoraccName')]"
+        "displayName": "[variables('timco-vm1StorAccName')]"
       },
       "properties": {
-        "accountType": "[parameters('timcostoraccType')]"
+        "accountType": "[parameters('timco-vm1StorAccType')]"
       }
     },
     {
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-09-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
@@ -152,7 +151,7 @@
       "name": "[variables('timco-vm1Nic1Name')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-09-01",
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
@@ -180,9 +179,9 @@
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-03-30",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
       ],
       "tags": {
@@ -195,7 +194,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/')]"
+            "storageUri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/')]"
           }
         },
         "osProfile": {
@@ -213,7 +212,7 @@
           "osDisk": {
             "name": "timco-vm1OSDisk",
             "vhd": {
-              "uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
+              "uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -224,7 +223,7 @@
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "vhd": {
-                "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
+                "Uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
               },
               "createOption": "Empty"
             }
@@ -243,7 +242,7 @@
           "name": "timco-dsc1",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "[variables('timco-apiVersion')]",
+          "apiVersion": "2016-03-30",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
