@@ -1,10 +1,10 @@
-﻿{
+{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
 
   "contentVersion": "1.0.0.0",
 
   "parameters": {
-    "timcostoraccType": {
+    "timco-vm1StorAccType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
       "allowedValues": [
@@ -55,7 +55,7 @@
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
-        "Windows-Server-Technical-Preview"
+        "2016-Datacenter"
       ],
       "metadata": {
         "description": "Windows version for the VM."
@@ -94,8 +94,7 @@
   },
 
   "variables": {
-    "timcostoraccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
-    "timco-apiVersion": "2015-06-15",
+    "timco-vm1StorAccName": "[concat('timcosa', uniqueString(resourceGroup().id, parameters('timco-vm1Name')))]",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/WG-SRV1/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/WG-SRV1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
@@ -115,7 +114,7 @@
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]",
-    "timco-accountid": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/',variables('timcostoraccName'), '/providers/','Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
+    "timco-accountid": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/',variables('timco-vm1StorAccName'), '/providers/','Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
     "timco-wadlogs": "<WadCfg> <DiagnosticMonitorConfiguration overallQuotaInMB=\"4096\" xmlns=\"http://schemas.microsoft.com/ServiceHosting/2010/10/DiagnosticsConfiguration\"> <DiagnosticInfrastructureLogs scheduledTransferLogLevelFilter=\"Error\"/> <WindowsEventLog scheduledTransferPeriod=\"PT1M\" > <DataSource name=\"Application!*[System[(Level = 1 or Level = 2)]]\" /> <DataSource name=\"Security!*[System[(Level = 1 or Level = 2)]]\" /> <DataSource name=\"System!*[System[(Level = 1 or Level = 2)]]\" /></WindowsEventLog>",
     "timco-wadperfcounters1": "<PerformanceCounters scheduledTransferPeriod=\"PT1M\"><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% Processor Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU utilization\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% Privileged Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU privileged time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% User Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU user time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor Information(_Total)\\Processor Frequency\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"CPU frequency\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\System\\Processes\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"Processes\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Process(_Total)\\Thread Count\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"Threads\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Process(_Total)\\Handle Count\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"Handles\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\% Committed Bytes In Use\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Memory usage\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Available Bytes\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Committed Bytes\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory committed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Commit Limit\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory commit limit\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Disk active time\" locale=\"en-us\"/></PerformanceCounterConfiguration>",
     "timco-wadperfcounters2": "<PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Read Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Disk active read time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Write Time\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Disk active write time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Transfers/sec\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Reads/sec\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk read operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Writes/sec\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk write operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Bytes/sec\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Read Bytes/sec\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk read speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Write Bytes/sec\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk write speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\LogicalDisk(_Total)\\% Free Space\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Disk free space (percentage)\" locale=\"en-us\"/></PerformanceCounterConfiguration></PerformanceCounters>",
@@ -126,23 +125,23 @@
 
   "resources": [
     {
-      "name": "[variables('timcostoraccName')]",
+      "name": "[variables('timco-vm1StorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2015-06-15",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "[variables('timcostoraccName')]"
+        "displayName": "[variables('timco-vm1StorAccName')]"
       },
       "properties": {
-        "accountType": "[parameters('timcostoraccType')]"
+        "accountType": "[parameters('timco-vm1StorAccType')]"
       }
     },
     {
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-09-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vNet1Name')]"
@@ -173,7 +172,7 @@
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-09-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
@@ -189,7 +188,7 @@
       "name": "[variables('timco-vm1Nic1Name')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-09-01",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
@@ -218,9 +217,9 @@
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "[variables('timco-apiVersion')]",
+      "apiVersion": "2016-03-30",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('timcostoraccName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
       ],
       "tags": {
@@ -233,7 +232,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/')]"
+            "storageUri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/')]"
           }
         },
         "osProfile": {
@@ -251,7 +250,7 @@
           "osDisk": {
             "name": "timco-vm1OSDisk",
             "vhd": {
-              "uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
+              "uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -262,7 +261,7 @@
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "vhd": {
-                "Uri": "[concat('http://', variables('timcostoraccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
+                "Uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
               },
               "createOption": "Empty"
             }
@@ -281,7 +280,7 @@
           "name": "timco-dsc1",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "[variables('timco-apiVersion')]",
+          "apiVersion": "2016-03-30",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
@@ -307,7 +306,7 @@
           "name": "Microsoft.Insights.VMDiagnosticsSettings",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "[variables('timco-apiVersion')]",
+          "apiVersion": "2016-03-30",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
@@ -321,11 +320,11 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "xmlCfg": "[base64(concat(variables('timco-wadcfgxstart'), variables('timco-wadmetricsresourceid'), parameters('timco-vm1Name'), variables('timco-wadcfgxend')))]",
-              "storageAccount": "[variables('timcostoraccName')]"
+              "storageAccount": "[variables('timco-vm1StorAccName')]"
             },
             "protectedSettings": {
-              "storageAccountName": "[variables('timcostoraccName')]",
-              "storageAccountKey": "[listkeys(variables('timco-accountid'), variables('timco-apiVersion')).key1]",
+              "storageAccountName": "[variables('timco-vm1StorAccName')]",
+              "storageAccountKey": "[listkeys(variables('timco-accountid'), '2016-03-30').key1]",
               "storageAccountEndPoint": "https://core.windows.net"
             }
           }
