@@ -41,7 +41,7 @@
     },
     "timco-vm1Pip1DnsName": {
       "type": "string",
-      "defaultValue": "tcadc1",
+      "defaultValue": "timcoadc1",
       "minLength": 1,
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the VM.  Do not include domain name suffix.  It can be the same as the internal VM name."
