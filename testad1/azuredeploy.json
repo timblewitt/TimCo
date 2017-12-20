@@ -156,7 +156,7 @@
     },
     "imageSKU": {
       "type": "string",
-      "defaultValue": "2012-R2-Datacenter",
+      "defaultValue": "2016-Datacenter",
       "metadata": {
         "description": "Image SKU"
       }
