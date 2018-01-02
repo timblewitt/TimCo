@@ -263,6 +263,9 @@
           },
           "osDisk": {
             "name": "timco-vm1OSDisk",
+            "managedDisk": {
+                "storageAccountType": "Standard_LRS"
+            },
             "caching": "ReadWrite",
             "createOption": "FromImage"
           },
@@ -270,7 +273,10 @@
             {
               "name": "timco-vm1Datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
-              "lun": 1,
+              "lun": 1,            
+              "managedDisk": {
+                "storageAccountType": "Standard_LRS"
+              },
               "createOption": "Empty"
             }
           ]
