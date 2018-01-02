@@ -263,9 +263,6 @@
           },
           "osDisk": {
             "name": "timco-vm1OSDisk",
-            "vhd": {
-              "uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
-            },
             "caching": "ReadWrite",
             "createOption": "FromImage"
           },
@@ -274,9 +271,6 @@
               "name": "timco-vm1Datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
-              "vhd": {
-                "Uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
-              },
               "createOption": "Empty"
             }
           ]
