@@ -39,14 +39,14 @@ Node $AllNodes.NodeName
 
     xWaitforDisk Disk2
       {
-        DiskNumber = 2
+        DiskId = 2
           RetryIntervalSec = $RetryIntervalSec
           RetryCount = $RetryCount
       }
 
     xDisk FVolume
       {
-        DiskNumber = 2
+        DiskId = 2
         DriveLetter = 'F'
       }
 
