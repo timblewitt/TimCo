@@ -185,7 +185,7 @@
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2017-08-01",
+      "apiVersion": "2017-10-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
