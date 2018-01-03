@@ -142,7 +142,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1StorAccName')]"
       },
@@ -155,7 +155,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-08-01",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vNet1Name')]"
       },
@@ -186,7 +186,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
       },
@@ -230,8 +230,8 @@
     {
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "location": "[resourceGroup().location]",
       "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
@@ -264,7 +264,7 @@
           "osDisk": {
             "name": "timco-vm1OSDisk",
             "managedDisk": {
-                "storageAccountType": "Standard_LRS"
+              "storageAccountType": "Standard_LRS"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -273,7 +273,7 @@
             {
               "name": "timco-vm1Datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
-              "lun": 1,            
+              "lun": 1,
               "managedDisk": {
                 "storageAccountType": "Standard_LRS"
               },
