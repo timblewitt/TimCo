@@ -251,7 +251,6 @@
           },
           "dataDisks": [
             {
-              "name": "[concat('Data Disk ', parameters('timco-vm1Name'))]",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
