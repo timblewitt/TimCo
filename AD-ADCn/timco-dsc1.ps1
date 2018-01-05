@@ -52,7 +52,7 @@ Node $AllNodes.NodeName
 
     xWaitforDisk Disk2
       {
-        DiskNumber = 2
+        DiskId = 2
         RetryIntervalSec = $RetryIntervalSec
         RetryCount = $RetryCount
         DependsOn = "[xDnsServerAddress]DNSServer"
@@ -60,7 +60,7 @@ Node $AllNodes.NodeName
 
     xDisk FVolume
       {
-        DiskNumber = 2
+        DiskId = 2
         DriveLetter = 'F'
       }
 

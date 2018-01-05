@@ -262,7 +262,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat('OS Disk ', parameters('timco-vm1Name'))]",
+            "name": "[variables('timco-vm1OSDiskName')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -271,7 +271,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat('Data Disk ', parameters('timco-vm1Name'))]",
+              "name": "[variables('timco-vm1DataDisk1Name')]",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
