@@ -77,7 +77,7 @@
     },
     "timco-vm1WindowsOSVersion": {
       "type": "string",
-      "defaultValue": "2012-R2-Datacenter",
+      "defaultValue": "2016-Datacenter",
       "allowedValues": [
         "2008-R2-SP1",
         "2012-Datacenter",
@@ -90,11 +90,11 @@
     },
     "timco-vm1VmSize": {
       "type": "string",
-      "defaultValue": "Standard_D1",
+      "defaultValue": "Standard_D1_V2",
       "allowedValues": [
         "Standard_A0",
         "Standard_A1",
-        "Standard_D1"
+        "Standard_D1_V2"
       ],
       "metadata": {
         "description": "Size of VM."
@@ -167,7 +167,7 @@
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-09-01",
+      "apiVersion": "2017-10-01",
       "dependsOn": [ ],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
@@ -211,8 +211,8 @@
     {
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-30",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
@@ -244,8 +244,8 @@
           },
           "osDisk": {
             "name": "timco-vm1OSDisk",
-            "vhd": {
-              "uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1OSDiskName'), '.vhd')]"
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -255,8 +255,8 @@
               "name": "timco-vm1datadisk1",
               "diskSizeGB": "[parameters('timco-vm1DataDisk1SizeGB')]",
               "lun": 1,
-              "vhd": {
-                "Uri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/', variables('timco-vm1StorageAccountContainerName'), '/', variables('timco-vm1DataDisk1Name'), '.vhd')]"
+              "managedDisk": {
+                "storageAccountType": "Standard_LRS"
               },
               "createOption": "Empty"
             }
