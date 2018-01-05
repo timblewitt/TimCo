@@ -243,7 +243,6 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat('OS Disk ', parameters('timco-vm1Name'))]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
