@@ -234,7 +234,7 @@
     {
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
