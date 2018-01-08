@@ -157,8 +157,8 @@
     {
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2017-08-01",
       "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vNet1Name')]"
@@ -188,8 +188,8 @@
     {
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
@@ -204,8 +204,8 @@
     {
       "name": "[variables('timco-vm1Nic1Name')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-09-01",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
