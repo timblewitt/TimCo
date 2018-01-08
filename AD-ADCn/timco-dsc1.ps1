@@ -40,22 +40,14 @@ Node $AllNodes.NodeName
         ActionAfterReboot = 'ContinueConfiguration'            
         ConfigurationMode = 'ApplyOnly'            
         RebootNodeIfNeeded = $true      
-	AllowModuleOverWrite = $true      
+		AllowModuleOverWrite = $true      
       } 
-
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias 
-        AddressFamily  = "IPv4"
-      }
 
     xWaitforDisk Disk2
       {
         DiskId = 2
         RetryIntervalSec = $RetryIntervalSec
         RetryCount = $RetryCount
-        DependsOn = "[xDnsServerAddress]DNSServer"
       }
 
     xDisk FVolume
@@ -96,10 +88,35 @@ Node $AllNodes.NodeName
       }  
 
     WindowsFeature ADDSTools
-      { 
+	  { 
         Ensure = 'Present' 
         Name = 'RSAT-ADDS' 
+        DependsOn = "[WindowsFeature]ADDSInstall"
       }
+
+	WindowsFeature ADAdminCenter
+	  {
+		Ensure = "Present"
+        Name = "RSAT-AD-AdminCenter"
+        DependsOn = "[WindowsFeature]ADDSTools"
+	  }
+
+    xDnsServerAddress DNSServer
+      {
+        Address = $DNSServerAddress
+        InterfaceAlias = $InterfaceAlias 
+        AddressFamily  = "IPv4"
+        DependsOn="[WindowsFeature]ADDSInstall"
+      }
+	
+    xWaitForADDomain DscForestWait
+	  {
+
+        DomainName = $DomainName
+        DomainUserCredential= $DomainCreds
+        RetryCount = $RetryCount
+        RetryIntervalSec = $RetryIntervalSec
+	  }
 
     xADDomainController NextDC 
       {
@@ -109,7 +126,7 @@ Node $AllNodes.NodeName
         DatabasePath = "F:\NTDS"
         LogPath = "F:\NTDS"
         SysvolPath = "F:\SYSVOL"
-        DependsOn = "[WindowsFeature]ADDSInstall","[xDisk]FVolume"
+        DependsOn = "[xWaitForADDomain]DscForestWait"
       }
 
     xPendingReboot Reboot1
