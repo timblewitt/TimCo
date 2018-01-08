@@ -153,22 +153,25 @@
     {
       "name": "[variables('timco-vm1StorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2017-10-01",
+      "sku": {
+        "name": "[parameters('timco-vm1StorAccType')]"
+      },
+      "kind": "StorageV2",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1StorAccName')]"
       },
       "properties": {
-        "accountType": "[parameters('timco-vm1StorAccType')]"
       }
     },
     {
       "name": "[variables('timco-vm1Pip1Name')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
-      "dependsOn": [ ],
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1Pip1Name')]"
       },
@@ -182,8 +185,8 @@
     {
       "name": "[variables('timco-vm1Nic1Name')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-09-01",
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-vm1Pip1Name'))]"
       ],
@@ -211,7 +214,7 @@
     {
       "name": "[parameters('timco-vm1Name')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
@@ -274,8 +277,8 @@
         {
           "name": "timco-dsc1",
           "type": "extensions",
+          "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
