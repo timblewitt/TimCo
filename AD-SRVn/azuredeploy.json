@@ -310,7 +310,7 @@
         "properties": {
           "publisher": "Microsoft.Compute",
           "type": "JsonADDomainExtension",
-          "typeHandlerVersion": "2.72",
+          "typeHandlerVersion": "1.3",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "Name": "[parameters('timco-domainName')]",
