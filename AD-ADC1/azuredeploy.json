@@ -297,8 +297,8 @@
         {
           "name": "timco-dsc1",
           "type": "extensions",
+          "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
           ],
