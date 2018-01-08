@@ -60,19 +60,19 @@ Node $NodeName
         DependsOn = "[xDisk]FVolume"
       }
 
+    xPendingReboot Reboot1
+      { 
+        Name = "RebootServer"
+        DependsOn = "[xDisk]FVolume"
+      }
+		
 	xComputer JoinDomain
       {
         Name       = $NodeName
         DomainName = $DomainName
         Credential = $DomainCreds 
-        DependsOn = "[xDisk]FVolume"
+        DependsOn = "[xPendingReboot]Reboot1"
         }
-
-    xPendingReboot Reboot1
-      { 
-        Name = "RebootServer"
-        DependsOn = "[xComputer]JoinDomain"
-      }
 
     }
 } 
