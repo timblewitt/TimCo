@@ -111,8 +111,7 @@ Node $AllNodes.NodeName
 	
     xWaitForADDomain DscForestWait
 	  {
-
-        DomainName = $DomainName
+		DomainName = $DomainName
         DomainUserCredential= $DomainCreds
         RetryCount = $RetryCount
         RetryIntervalSec = $RetryIntervalSec

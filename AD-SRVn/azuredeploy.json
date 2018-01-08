@@ -288,8 +288,19 @@
                 "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
                 "properties": {
                   "NodeName": "[parameters('timco-vm1Name')]",
-                  "DNSServerAddress": "[parameters('timco-vm1DNSServer')]"
+                  "DNSServerAddress": "[parameters('timco-vm1DNSServer')]",
+                  "DomainName": "[parameters('timco-domainName')]",
+                  "DomainAdminCreds": {
+                    "UserName": "[parameters('timco-domainAdminName')]",
+                    "Password": "PrivateSettingsRef:DomainAdminPassword"
+                  }
                 }
+              },
+              "protectedSettings": {
+                "Items": {
+                  "DomainAdminPassword": "[parameters('timco-DomainAdminPassword')]"
+                },
+                "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dsc1ConfigurationData'))]"
               }
             },
             "dependsOn": [
@@ -302,32 +313,6 @@
           "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
         ]
       },
-      {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
-        "apiVersion": "2017-12-01",
-        "location": "[resourceGroup().location]",
-        "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "JsonADDomainExtension",
-          "typeHandlerVersion": "1.3",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "Name": "[parameters('timco-domainName')]",
-            "OUPath": "[parameters('timco-ouPath')]",
-            "User": "[concat(parameters('timco-domainAdminName'),'@',parameters('timco-domainName'))]",
-            "Restart": "true",
-            "NumberOfRetries": 30,
-            "Options": "[variables('timco-domainJoinOptions')]"
-          },
-          "protectedsettings": {
-            "Password": "[parameters('timco-domainAdminPassword')]"
-          }
-        },
-        "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
-        ]
-      }
     ],
     "outputs": {}
 }

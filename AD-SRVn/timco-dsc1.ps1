@@ -5,13 +5,22 @@ Param
     [string[]]$NodeName,
 
     [Parameter(Mandatory)]
-    [string[]]$DNSServerAddress
+    [string[]]$DNSServerAddress,
+	  
+    [Parameter(Mandatory)]
+    [String]$DomainName,
+
+    [Parameter(Mandatory)]
+    [System.Management.Automation.PSCredential]$DomainAdmincreds
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
+Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
 Import-DscResource -ModuleName xPendingReboot
+	
+[System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
 
 $Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
 $InterfaceAlias = $($Interface.Name)
@@ -51,10 +60,18 @@ Node $NodeName
         DependsOn = "[xDisk]FVolume"
       }
 
+	xComputer JoinDomain
+      {
+        Name       = $NodeName
+        DomainName = $DomainName
+        Credential = $DomainCreds 
+        DependsOn = "[xDisk]FVolume"
+        }
+
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
-        DependsOn = "[xDisk]FVolume"
+        DependsOn = "[xComputer]JoinDomain"
       }
 
     }
