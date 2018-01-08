@@ -140,16 +140,20 @@
     {
       "name": "[variables('timco-vm1StorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2017-10-01",
+      "sku": {
+        "name": "[parameters('timco-vm1StorAccType')]"
+      },
+      "kind": "StorageV2",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
         "displayName": "[variables('timco-vm1StorAccName')]"
       },
       "properties": {
-        "accountType": "[parameters('timco-vm1StorAccType')]"
       }
     },
+
     {
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -304,7 +308,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.17",
+            "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "modulesUrl": "[variables('timco-modulesUrl')]",
