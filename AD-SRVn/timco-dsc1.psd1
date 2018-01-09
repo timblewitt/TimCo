@@ -3,7 +3,7 @@
     @{ 
       Nodename = 'localhost'
 #      PSDscAllowDomainUser = $true
-#      PSDscAllowPlainTextPassword = $true
+      PSDscAllowPlainTextPassword = $true
     }
   )
 
