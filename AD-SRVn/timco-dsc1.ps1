@@ -27,6 +27,14 @@ $InterfaceAlias = $($Interface.Name)
 
 Node $NodeName
     {
+    LocalConfigurationManager            
+      {            
+        ActionAfterReboot = 'ContinueConfiguration'            
+        ConfigurationMode = 'ApplyOnly'            
+        RebootNodeIfNeeded = $true      
+		AllowModuleOverWrite = $true      
+      } 
+
     xDnsServerAddress DNSServer
       {
         Address = $DNSServerAddress
