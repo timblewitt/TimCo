@@ -11,7 +11,7 @@ Param
     [String]$DomainName,
 
     [Parameter(Mandatory)]
-    [System.Management.Automation.PSCredential]$DomainAdmincreds
+    [PSCredential]$DomainAdmincreds
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -20,7 +20,7 @@ Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
 Import-DscResource -ModuleName xPendingReboot
 	
-[System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
+[System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
 
 $Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
 $InterfaceAlias = $($Interface.Name)
