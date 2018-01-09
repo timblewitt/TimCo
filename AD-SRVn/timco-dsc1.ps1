@@ -42,13 +42,13 @@ Node $NodeName
 
     xWaitforDisk Disk2
       {
-        DiskNumber = 2
+        DiskId = 2
         RetryIntervalSec = 60
       }
 
     xDisk FVolume
       {
-        DiskNumber = 2
+        DiskId = 2
         DriveLetter = 'F'
       }
 
@@ -72,7 +72,7 @@ Node $NodeName
         DomainName = $DomainName
         Credential = $DomainCreds 
         DependsOn = "[xPendingReboot]Reboot1"
-        }
+      }
 
     }
 } 
