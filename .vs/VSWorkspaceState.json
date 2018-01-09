@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\AD-ADC1",
-    "\\AD-ADCn"
+    "\\AD-ADCn",
+    "\\AD-SRVn"
   ],
-  "SelectedNode": "\\AD-ADCn\\azuredeploy.json",
+  "SelectedNode": "\\AD-SRVn\\azuredeploy.json",
   "PreviewInSolutionExplorer": false
 }

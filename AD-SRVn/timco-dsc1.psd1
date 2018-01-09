@@ -2,8 +2,8 @@
   AllNodes = @( 
     @{ 
       Nodename = 'localhost'
-      PSDscAllowDomainUser = $true
-      PSDscAllowPlainTextPassword = $true
+#      PSDscAllowDomainUser = $true
+#      PSDscAllowPlainTextPassword = $true
     }
   )
 

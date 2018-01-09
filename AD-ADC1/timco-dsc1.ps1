@@ -34,7 +34,7 @@ Node $AllNodes.NodeName
         ActionAfterReboot = 'ContinueConfiguration'            
         ConfigurationMode = 'ApplyOnly'            
         RebootNodeIfNeeded = $true      
-	AllowModuleOverWrite = $true      
+		AllowModuleOverWrite = $true      
       } 
 
     xWaitforDisk Disk2
