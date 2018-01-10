@@ -330,14 +330,17 @@
         "settings": {
           "Name": "[parameters('timco-domainName')]",
           "OUPath": "[parameters('timco-OUPath')]",
-          "User": "[concat(parameters('timco-domainName'),'\\',parameters('timco-domainAdminUserName'))]",
+          "User": "[concat(parameters('timco-domainName'),'\\',parameters('timco-domainAdminName'))]",
           "Restart": "true",
           "Options": "[variables('timco-domainJoinOptions')]"
         },
         "protectedSettings": {
           "Password": "[parameters('timco-domainAdminPassword')]"
         }
-      }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+      ]
     }
   ],
   "outputs": {
