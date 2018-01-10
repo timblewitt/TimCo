@@ -11,7 +11,10 @@ Param
     [String]$DomainName,
 
     [Parameter(Mandatory)]
-    [PSCredential]$DomainAdmincreds
+    [System.Management.Automation.PSCredential]$DomainAdmincreds,
+
+    [Int]$RetryCount=20,
+    [Int]$RetryIntervalSec=10
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -24,9 +27,9 @@ Import-DscResource -ModuleName xPendingReboot
 
 $Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
 $InterfaceAlias = $($Interface.Name)
-
-Node $NodeName
-    {
+	
+Node $AllNodes.NodeName
+  {
     LocalConfigurationManager            
       {            
         ActionAfterReboot = 'ContinueConfiguration'            
@@ -35,23 +38,11 @@ Node $NodeName
 		AllowModuleOverWrite = $true      
       } 
 
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias
-        AddressFamily  = "IPv4"
-      }
-
-    WindowsFeature TelnetClient
-      {
-        Ensure = 'Present'
-        Name = 'Telnet-Client'
-      }
-
     xWaitforDisk Disk2
       {
         DiskId = 2
-        RetryIntervalSec = 60
+        RetryIntervalSec = $RetryIntervalSec
+        RetryCount = $RetryCount
       }
 
     xDisk FVolume
@@ -59,7 +50,7 @@ Node $NodeName
         DiskId = 2
         DriveLetter = 'F'
       }
-
+	  
     File CreateFile 
       {
         DestinationPath = 'F:\Software\Readme.txt'
@@ -67,20 +58,41 @@ Node $NodeName
         Contents = 'Store all software in this folder.'
         DependsOn = "[xDisk]FVolume"
       }
-
-    xPendingReboot Reboot1
-      { 
-        Name = "RebootServer"
+	  
+    WindowsFeature TelnetClient
+      {
+        Ensure = 'Present'
+        Name = 'Telnet-Client'
+      }
+	  
+    xDnsServerAddress DNSServer
+      {
+        Address = $DNSServerAddress
+        InterfaceAlias = $InterfaceAlias
+        AddressFamily  = "IPv4"
         DependsOn = "[xDisk]FVolume"
       }
-		
+	  
+    xWaitForADDomain DscForestWait
+	  {
+		DomainName = $DomainName
+        DomainUserCredential= $DomainCreds
+        RetryCount = $RetryCount
+        RetryIntervalSec = $RetryIntervalSec
+	  }
+	  
 	xComputer JoinDomain
       {
         Name       = $NodeName
         DomainName = $DomainName
         Credential = $DomainCreds 
-        DependsOn = "[xPendingReboot]Reboot1"
+        DependsOn = "[xWaitForADDomain]DscForestWait"
       }
 
-    }
+    xPendingReboot Reboot1
+      { 
+        Name = "RebootServer"
+        DependsOn = "[xComputer]JoinDomain"
+      }	
+  }
 } 

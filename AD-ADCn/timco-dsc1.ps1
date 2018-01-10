@@ -1,7 +1,7 @@
 Configuration Main
 {
 Param 
-    (
+  (
     [string[]]$NodeName,
 
     [Parameter(Mandatory)]
@@ -18,7 +18,7 @@ Param
 
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
-    )
+  )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 Import-DscResource -ModuleName xStorage
@@ -26,9 +26,9 @@ Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xActiveDirectory
 Import-DscResource -ModuleName xPendingReboot
 
-[System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $AdminCreds.Password)
+[System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $AdminCreds.Password)
 
-[System.Management.Automation.PSCredential ]$SafeModeAdminCreds = New-Object System.Management.Automation.PSCredential ($SafeModeCreds.UserName, $SafeModeCreds.Password)
+[System.Management.Automation.PSCredential]$SafeModeAdminCreds = New-Object System.Management.Automation.PSCredential ($SafeModeCreds.UserName, $SafeModeCreds.Password)
 
 $Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
 $InterfaceAlias = $($Interface.Name)
