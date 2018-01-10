@@ -14,7 +14,7 @@ Param
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
     [Parameter(Mandatory)]
-    [String]OUPath,
+    [String]$OUPath,
 
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
