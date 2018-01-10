@@ -77,13 +77,13 @@ Node $AllNodes.NodeName
         DependsOn = "[xDisk]FVolume"
       }
 	  
-    xWaitForADDomain DscForestWait
-	  {
-		DomainName = $DomainName
-        DomainUserCredential= $DomainCreds
-        RetryCount = $RetryCount
-        RetryIntervalSec = $RetryIntervalSec
-	  }
+#    xWaitForADDomain DscForestWait
+#	  {
+#		DomainName = $DomainName
+#        DomainUserCredential= $DomainCreds
+#        RetryCount = $RetryCount
+#        RetryIntervalSec = $RetryIntervalSec
+#	  }
 	  
 #	xComputer JoinDomain
 #      {
@@ -105,7 +105,7 @@ Node $AllNodes.NodeName
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
-        DependsOn = "[xComputer]JoinDomain"
+        DependsOn = "[xDnsServerAddress]DNSServer"
       }	
   }
 } 
