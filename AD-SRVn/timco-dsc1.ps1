@@ -95,6 +95,7 @@ Node $AllNodes.NodeName
 
 	xADComputer $NodeName
       {
+		DomainController = '10.0.2.14'
         DomainAdministratorCredential = $DomainCreds
         ComputerName = $NodeName
         Path = $OUPath
