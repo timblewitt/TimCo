@@ -85,22 +85,22 @@ Node $AllNodes.NodeName
         RetryIntervalSec = $RetryIntervalSec
 	  }
 	  
-	xComputer JoinDomain
-      {
-        Name       = $NodeName
-        DomainName = $DomainName
-        Credential = $DomainCreds 
-        DependsOn = "[xWaitForADDomain]DscForestWait"
-      }
+#	xComputer JoinDomain
+#      {
+#        Name       = $NodeName
+#        DomainName = $DomainName
+#        Credential = $DomainCreds 
+#        DependsOn = "[xWaitForADDomain]DscForestWait"
+#      }
 
-	xADComputer $NodeName
-      {
-		DomainController = '10.0.2.14'
-        DomainAdministratorCredential = $DomainCreds
-        ComputerName = $NodeName
-        Path = $OUPath
-        DependsOn = "[xComputer]JoinDomain"
-      }
+#	xADComputer $NodeName
+#      {
+#		DomainController = '10.0.2.14'
+#        DomainAdministratorCredential = $DomainCreds
+#        ComputerName = $NodeName
+#        Path = $OUPath
+#        DependsOn = "[xComputer]JoinDomain"
+#      }
 
     xPendingReboot Reboot1
       { 
