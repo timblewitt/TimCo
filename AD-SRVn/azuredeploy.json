@@ -330,7 +330,7 @@
         "settings": {
           "Name": "[parameters('timco-domainName')]",
           "OUPath": "[parameters('timco-OUPath')]",
-          "User": "parameters('timco-domainAdminName'))]",
+          "User": "[parameters('timco-domainAdminName')]",
           "Restart": "true",
           "Options": "[variables('timco-domainJoinOptions')]"
         },
