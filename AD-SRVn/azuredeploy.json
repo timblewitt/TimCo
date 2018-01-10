@@ -322,7 +322,6 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
       ],
-      "outputs": {},
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
