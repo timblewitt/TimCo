@@ -293,7 +293,8 @@
                   "DomainAdminCreds": {
                     "UserName": "[parameters('timco-domainAdminName')]",
                     "Password": "PrivateSettingsRef:DomainAdminPassword"
-                  }
+                  },
+                  "OUPath": "[parameters('timco-OUPath')]"
                 }
               },
               "protectedSettings": {

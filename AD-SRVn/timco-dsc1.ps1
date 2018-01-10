@@ -12,6 +12,9 @@ Param
 
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
+	  
+    [Parameter(Mandatory)]
+    [String]OUPath,
 
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
@@ -88,6 +91,14 @@ Node $AllNodes.NodeName
         DomainName = $DomainName
         Credential = $DomainCreds 
         DependsOn = "[xWaitForADDomain]DscForestWait"
+      }
+
+	xADComputer $NodeName
+      {
+        DomainAdministratorCredential = $DomainCreds
+        ComputerName = $NodeName
+        Path = $OUPath
+        DependsOn = "[xComputer]JoinDomain"
       }
 
     xPendingReboot Reboot1
