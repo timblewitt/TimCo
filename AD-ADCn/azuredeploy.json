@@ -133,6 +133,7 @@
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADCn/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
+    "timco-availabilitySetADC": "timco-AS-ADC",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
     "timco-vNet1Subnet1Prefix": "10.0.1.0/24",
@@ -232,6 +233,9 @@
             "enabled": true,
             "storageUri": "[concat('http://', variables('timco-vm1StorAccName'), '.blob.core.windows.net/')]"
           }
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('timco-availabilitySetADC'))]"
         },
         "osProfile": {
           "computerName": "[parameters('timco-vm1Name')]",
