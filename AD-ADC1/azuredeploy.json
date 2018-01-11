@@ -269,7 +269,7 @@
           }
         },
         "availabilitySet": {
-          "id": "[variables('timco-availabilitySetADC')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('timco-availabilitySetADC'))]"
         },
         "osProfile": {
           "computerName": "[parameters('timco-vm1Name')]",
