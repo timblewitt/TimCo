@@ -139,7 +139,7 @@
 
   "resources": [
     {
-      "name": "[variables('timco-availabilitySetDC')]",
+      "name": "[variables('timco-availabilitySetADC')]",
       "type": "Microsoft.Compute/availabilitySets",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
