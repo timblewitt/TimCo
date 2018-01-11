@@ -119,7 +119,7 @@
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
-    "timco-availabilitySetDC": "timco-ASDC",
+    "timco-availabilitySetADC": "timco-AS-ADC",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
