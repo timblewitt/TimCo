@@ -119,6 +119,7 @@
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-ADC1/",
     "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
+    "timco-availabilitySetDC": "timco-ASDC",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
@@ -137,6 +138,20 @@
   },
 
   "resources": [
+    {
+      "name": "[variables('timco-availabilitySetDC')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2017-12-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {
+        "platformUpdateDomainCount": "5",
+        "platformFaultDomainCount": "2"
+      },
+      "sku": {
+        "name": "Aligned"
+      }
+    },
     {
       "name": "[variables('timco-vm1StorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
