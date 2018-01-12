@@ -270,51 +270,49 @@
           ]
         }
       },
-      "resources": [
-        {
-          "name": "timco-dsc1",
-          "type": "extensions",
-          "apiVersion": "2017-12-01",
-          "location": "[resourceGroup().location]",
-          "tags": {
-            "displayName": "timco-dsc1"
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.72",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "modulesUrl": "[variables('timco-modulesUrl')]",
-              "sasToken": "",
-              "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
-              "properties": {
-                "NodeName": "[parameters('timco-vm1Name')]",
-                "DNSServerAddress": "[parameters('timco-vm1DNSServer')]",
-                "DomainName": "[parameters('timco-domainName')]",
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('timco-domainAdminName')]",
-                  "Password": "PrivateSettingsRef:DomainAdminPassword"
-                },
-                "OUPath": "[parameters('timco-OUPath')]"
-              }
-            },
-            "protectedSettings": {
-              "Items": {
-                "DomainAdminPassword": "[parameters('timco-DomainAdminPassword')]"
-              },
-              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dsc1ConfigurationData'))]"
-            }
-          },
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
-          ]
-        }
-      ],
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vm1StorAccName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('timco-vm1Nic1Name'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('timco-vm1Name'),'/extensions')]",
+      "apiVersion": "2017-12-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+      ],
+      "tags": {
+        "displayName": "timco-dsc1"
+      },
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.72",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[variables('timco-modulesUrl')]",
+          "sasToken": "",
+          "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
+          "properties": {
+            "NodeName": "[parameters('timco-vm1Name')]",
+            "DNSServerAddress": "[parameters('timco-vm1DNSServer')]",
+            "DomainName": "[parameters('timco-domainName')]",
+            "DomainAdminCreds": {
+              "UserName": "[parameters('timco-domainAdminName')]",
+              "Password": "PrivateSettingsRef:DomainAdminPassword"
+            },
+            "OUPath": "[parameters('timco-OUPath')]"
+          }
+        },
+        "protectedSettings": {
+          "Items": {
+            "DomainAdminPassword": "[parameters('timco-DomainAdminPassword')]"
+          },
+          "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dsc1ConfigurationData'))]"
+        }
+      }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
