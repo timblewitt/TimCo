@@ -320,7 +320,7 @@
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('timco-vm1Name'), '/DSC')" 
+        "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('timco-vm1Name'), '/DSC')]" 
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
