@@ -270,7 +270,7 @@
       },
       "resources": [
         {
-          "type": "extensions",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "timco-dsc1",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
@@ -320,7 +320,7 @@
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
+        "['Microsoft.Compute/virtualMachines/extensions/timco-dsc1']"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -337,10 +337,7 @@
         "protectedSettings": {
           "Password": "[parameters('timco-domainAdminPassword')]"
         }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
-      ]
+      }
     }
   ],
   "outputs": {
