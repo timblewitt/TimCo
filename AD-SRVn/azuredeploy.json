@@ -147,8 +147,8 @@
     "timco-vm1StorageAccountContainerName": "vhds",
     "timco-vm1Nic1Name": "[concat(parameters('timco-vm1Name'), '-nic1')]",
     "timco-vm1Pip1Name": "[concat(parameters('timco-vm1Name'), '-pip1')]",
-    "timco-dscExtensionName": "timcodsc1",
-    "timco-domainJoinExtensionName": "timcojoin1",
+    "timco-dscExtensionName": "timco-dsc1",
+    "timco-domainJoinExtensionName": "timco-join1",
     "timco-domainJoinOptions": 3
   },
   "resources": [
@@ -272,7 +272,7 @@
       },
       "resources": [
         {
-          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "type": "extensions",
           "name": "[concat(parameters('timco-vm1Name'),'/', variables('timco-dscExtensionName'))]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
