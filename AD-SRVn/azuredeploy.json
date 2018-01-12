@@ -272,8 +272,8 @@
       },
       "resources": [
         {
+          "name": "timco-dsc1",
           "type": "extensions",
-          "name": "[concat(parameters('timco-vm1Name'),'/', variables('timco-dscExtensionName'))]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "tags": {
@@ -318,11 +318,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('timco-vm1Name'),'/', variables('timco-domainJoinExtensionName'))]",
+      "name": "[concat(parameters('timco-vm1Name'),'/joindomain')]",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions/', variables('timco-dscExtensionName'))]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-vm1Name'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
