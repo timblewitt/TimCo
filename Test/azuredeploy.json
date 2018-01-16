@@ -307,7 +307,7 @@
               "sasToken": "",
               "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
               "properties": {
-                "NodeName": "[parameters('timco-adcNamePrefix'), copyIndex()]",
+                "NodeName": "[concat(parameters('timco-adcNamePrefix'), copyIndex())]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
