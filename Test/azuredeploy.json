@@ -6,7 +6,7 @@
   "parameters": {
     "timco-domainControllerCount": {
       "type": "int",
-      "defaultValue": "2",
+      "defaultValue": 2,
       "minValue": 1,
       "maxValue": 2,
       "metadata": {
@@ -15,7 +15,7 @@
     },
     "timco-domainWebServerCount": {
       "type": "int",
-      "defaultValue": "0",
+      "defaultValue": 0,
       "minValue": 0,
       "maxValue": 2,
       "metadata": {
