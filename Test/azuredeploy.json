@@ -13,7 +13,7 @@
         "description": "Number of domain controllers to deploy."
       }
     },
-    "timco-domainWebServerCount": {
+    "timco-webServerCount": {
       "type": "int",
       "defaultValue": 0,
       "minValue": 0,
@@ -53,7 +53,7 @@
     },
     "timco-adminUserName": {
       "type": "string",
-      "defaultValue": "timco-domainadmin",
+      "defaultValue": "timco-admin",
       "minLength": 1,
       "metadata": {
         "description": "Domain admin username."
@@ -163,27 +163,27 @@
       }
     },
     {
-      "name": "[concat(parameters('timco-adcNamePrefix'), copyindex(), '-pip1')]",
+      "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "nicLoop",
+        "name": "pipLoop",
         "count": "[parameters('timco-domainControllerCount')]"
       },
       "dependsOn": [],
       "tags": {
-        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyindex(), '-pip1')]"
+        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('timco-adcNamePrefix'), copyindex()]"
+          "domainNameLabel": "[concat(parameters('timco-adcNamePrefix'), copyIndex())]"
         }
       }
     },
     {
-      "name": "[concat(parameters('timco-adcNamePrefix'), copyindex(),'-nic')]",
+      "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]",
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
@@ -193,10 +193,10 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-adcNamePrefix'), copyindex(), '-pip1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]"
       ],
       "tags": {
-        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyindex(),'-nic')]"
+        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]"
       },
       "properties": {
         "ipConfigurations": [
@@ -204,12 +204,12 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[concat(variables('timco-adcIPAddressPrefix'), copyindex())]",
+              "privateIPAddress": "[concat(variables('timco-adcIPAddressPrefix'), copyIndex())]",
               "subnet": {
                 "id": "[variables('timco-adcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('timco-adcNamePrefix'), copyindex(), '-pip1')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]"
               }
             }
           }
@@ -227,7 +227,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), copyindex(),'-nic')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]"
       ],
       "tags": {
         "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex())]"
