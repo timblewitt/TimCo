@@ -183,7 +183,7 @@
       }
     },
     {
-      "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]",
+      "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
@@ -196,7 +196,7 @@
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]"
       ],
       "tags": {
-        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]"
+        "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex(),'-nic1')]"
       },
       "properties": {
         "ipConfigurations": [
@@ -209,7 +209,7 @@
                 "id": "[variables('timco-adcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('timco-adcNamePrefix'), copyIndex(), '-pip1')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('timco-adcNamePrefix'), copyIndex(), '-pip1'))]"
               }
             }
           }
@@ -227,7 +227,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), copyIndex(),'-nic')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), copyIndex(),'-nic1')]"
       ],
       "tags": {
         "displayName": "[concat(parameters('timco-adcNamePrefix'), copyIndex())]"
