@@ -34,7 +34,7 @@
     "timco-vm1Name": {
       "type": "string",
       "minLength": 1,
-      "defaultValue": "timco-adc1",
+      "defaultValue": "tc-adc1",
       "metadata": {
         "description": "Name of the VM."
       }
