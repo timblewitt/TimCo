@@ -267,7 +267,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(), '-OSDisk')]",
+              "name": "[concat(parameters('timco-adcNamePrefix'), copyIndex(), '-DataDisk')]",
               "diskSizeGB": "[variables('timco-adcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
