@@ -84,7 +84,7 @@
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-adcIPAddressPrefix": "10.0.2.1",
     "timco-adcStartIndex": 1,
-    "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), variables('timco-adcStartIndex'))]"
+    "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), variables('timco-adcStartIndex'))]",
     "timco-vmSize": "Standard_D1_V2",
     "timco-vmWindowsOSVersion": "2016-Datacenter",
     "timco-vmImagePublisher": "MicrosoftWindowsServer",
