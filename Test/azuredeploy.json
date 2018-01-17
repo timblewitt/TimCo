@@ -89,8 +89,9 @@
     "timco-vmStorAccType": "Standard_LRS",
     "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/Test/timco-dsc1.zip",
     "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Test/",
-    "timco-dsc1ConfigurationFunction": "timco-dsc1.ps1\\Main",
-    "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
+    "timco-dscConfigurationFunction1": "timco-dsc1.ps1\\FirstDC",
+    "timco-dscConfigurationFunction2": "timco-dsc1.ps1\\NextDC",
+    "timco-dscConfigurationData1": "timco-dsc1.psd1",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
@@ -111,9 +112,11 @@
     "timco-webDataDisk1SizeGB": "50",
     "timco-adcSubNet": "BackEnd-10.0.2.0-Subnet",
     "timco-webSubNet": "FrontEnd-10.0.1.0-Subnet",
+    "timco-appSubNet": "BackEnd-10.0.2.0-Subnet",
     "timco-vmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('timco-vNet1Name'))]",
     "timco-adcSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-adcSubNet'))]",
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
+    "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-vmStorageAccountContainerName": "vhds"
   },
 
@@ -325,7 +328,7 @@
             "settings": {
               "modulesUrl": "[variables('timco-modulesUrl')]",
               "sasToken": "",
-              "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
+              "configurationFunction": "[variables('timco-dscConfigurationFunction1')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
@@ -345,7 +348,7 @@
                 "AdminPassword": "[parameters('timco-adminPassword')]",
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
               },
-              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dsc1ConfigurationData'))]"
+              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData1'))]"
             }
           }
         }
