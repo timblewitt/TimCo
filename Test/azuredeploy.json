@@ -93,6 +93,7 @@
     "timco-dsc1ConfigurationData": "timco-dsc1.psd1",
     "timco-adcAvailabilitySet": "timco-AS-ADC",
     "timco-webAvailabilitySet": "timco-AS-WEB",
+    "timco-appAvailabilitySet": "timco-AS-APP",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",

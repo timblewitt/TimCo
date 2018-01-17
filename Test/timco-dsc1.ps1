@@ -64,6 +64,30 @@ Node $AllNodes.NodeName
         Name = 'Telnet-Client'
       }
 	  
+    WindowsFeature DNS 
+      { 
+        Ensure = "Present" 
+        Name = "DNS"
+      }
+
+    WindowsFeature DNSTools
+      { 
+        Ensure = 'Present' 
+        Name = 'RSAT-DNS-SERVER' 
+      }
+
+    WindowsFeature ADDSInstall 
+      { 
+        Ensure = "Present" 
+        Name = "AD-Domain-Services"
+      }  
+
+    WindowsFeature ADDSTools
+      { 
+        Ensure = 'Present' 
+        Name = 'RSAT-ADDS' 
+      }
+
     xDnsServerAddress DNSServer
       {
         Address = $DNSServerAddress
