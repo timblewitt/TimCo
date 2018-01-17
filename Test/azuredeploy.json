@@ -138,7 +138,7 @@
       "name": "[variables('timco-availabilitySets')[copyIndex()]]",
       "copy": {
         "name": "AvailabilitySets",
-        "count": "[length(variables('timco-availabilitySets'))]"
+        "count": "[string(length(variables('timco-availabilitySets')))]"
       },
       "type": "Microsoft.Compute/availabilitySets",
       "apiVersion": "2017-12-01",
