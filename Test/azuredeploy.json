@@ -8,7 +8,7 @@
       "type": "int",
       "defaultValue": 2,
       "minValue": 1,
-      "maxValue": 2,
+      "maxValue": 3,
       "metadata": {
         "description": "Number of domain controllers to deploy."
       }
@@ -17,7 +17,7 @@
       "type": "int",
       "defaultValue": 0,
       "minValue": 0,
-      "maxValue": 2,
+      "maxValue": 3,
       "metadata": {
         "description": "Number of domain-joined web servers to deploy."
       }
