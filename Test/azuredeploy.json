@@ -83,7 +83,8 @@
     "timco-vNet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-adcIPAddressPrefix": "10.0.2.1",
-    "timco-adcStartIndex": "4",
+    "timco-adcStartIndex": 1,
+    "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), variables('timco-adcStartIndex'))]"
     "timco-vmSize": "Standard_D1_V2",
     "timco-vmWindowsOSVersion": "2016-Datacenter",
     "timco-vmImagePublisher": "MicrosoftWindowsServer",
@@ -309,6 +310,7 @@
               "configurationFunction": "[variables('timco-dsc1ConfigurationFunction')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), copyIndex(variables('timco-adcStartIndex')))]",
+                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",

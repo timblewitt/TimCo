@@ -13,21 +13,15 @@ Param
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
-    [Parameter(Mandatory)]
-    [String]$OUPath,
-
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
-Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
 Import-DscResource -ModuleName xPendingReboot
 	
-[System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
-
 $Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
 $InterfaceAlias = $($Interface.Name)
 	
