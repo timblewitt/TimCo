@@ -96,7 +96,7 @@
     "timco-dscConfigurationData1": "timco-dsc1.psd1",
     "timco-availabilitySets": {
       "type": "array",
-      "defaultValue": [
+      "input": [
         "timco-adc-avset1",
         "timco-web-avset1",
         "timco-app-avset1"
