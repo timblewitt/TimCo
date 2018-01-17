@@ -331,9 +331,8 @@
               "configurationFunction": "[variables('timco-dscConfigurationFunction1')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]",
-                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainAdminCreds": {
+                "AdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
                 },
