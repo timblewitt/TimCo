@@ -8,7 +8,7 @@
       "type": "int",
       "defaultValue": 2,
       "minValue": 1,
-      "maxValue": 3,
+      "maxValue": 2,
       "metadata": {
         "description": "Number of domain controllers to deploy."
       }
@@ -20,6 +20,15 @@
       "maxValue": 3,
       "metadata": {
         "description": "Number of domain-joined web servers to deploy."
+      }
+    },
+    "timco-appServerCount": {
+      "type": "int",
+      "defaultValue": 0,
+      "minValue": 0,
+      "maxValue": 3,
+      "metadata": {
+        "description": "Number of domain-joined application servers to deploy."
       }
     },
     "timco-domainName": {
@@ -51,18 +60,26 @@
         "description": "Prefix for naming web servers."
       }
     },
+    "timco-appNamePrefix": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "timco-app",
+      "metadata": {
+        "description": "Prefix for naming application servers."
+      }
+    },
     "timco-adminUserName": {
       "type": "string",
       "defaultValue": "timco-admin",
       "minLength": 1,
       "metadata": {
-        "description": "Domain admin username."
+        "description": "Admin username."
       }
     },
     "timco-adminPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "Domain admin password."
+        "description": "Admin password."
       }
     }
   },
