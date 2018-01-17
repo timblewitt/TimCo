@@ -17,7 +17,7 @@
       "type": "int",
       "defaultValue": 0,
       "minValue": 0,
-      "maxValue": 4,
+      "maxValue": 3,
       "metadata": {
         "description": "Number of domain-joined web servers to deploy."
       }
