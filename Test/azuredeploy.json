@@ -8,7 +8,7 @@
       "type": "int",
       "defaultValue": 2,
       "minValue": 1,
-      "maxValue": 2,
+      "maxValue": 3,
       "metadata": {
         "description": "Number of domain controllers to deploy."
       }
@@ -105,6 +105,7 @@
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-adcIPAddressPrefix": "10.0.2.1",
     "timco-adcStartIndex": 1,
+    "timco-bdcStartIndex": "[add(variables('timco-adcStartIndex'),1)]",
     "timco-webStartIndex": 1,
     "timco-appStartIndex": 1,
     "timco-adcDNSServerAddress1": "[concat(variables('timco-adcIPAddressPrefix'), variables('timco-adcStartIndex'))]",
@@ -384,20 +385,16 @@
       }
     },
     {
-      "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]",
+      "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "virtualMachineLoop",
-        "count": "[parameters('timco-domainControllerCount')]"
-      },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'),'-nic1')]"
       ],
       "tags": {
-        "displayName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]"
+        "displayName": "First domain controller"
       },
       "properties": {
         "hardwareProfile": {
@@ -413,7 +410,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('timco-adcAvailabilitySet'))]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]",
+          "computerName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
           "adminUsername": "[parameters('timco-adminUsername')]",
           "adminPassword": "[parameters('timco-adminPassword')]"
         },
@@ -425,7 +422,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'), '-OSDisk')]",
+            "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -434,7 +431,121 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'), '-DataDisk')]",
+              "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-DataDisk')]",
+              "diskSizeGB": "[variables('timco-adcDataDisk1SizeGB')]",
+              "lun": 1,
+              "managedDisk": {
+                "storageAccountType": "Standard_LRS"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-nic1'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "timco-dsc1",
+          "type": "extensions",
+          "apiVersion": "2017-12-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]"
+          ],
+          "tags": {
+            "displayName": "timco-dsc1"
+          },
+          "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "2.72",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "modulesUrl": "[variables('timco-modulesUrl')]",
+              "sasToken": "",
+              "configurationFunction": "[variables('timco-dscConfigFunctionFirstDC')]",
+              "properties": {
+                "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
+                "DomainName": "[parameters('timco-domainName')]",
+                "AdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "PrivateSettingsRef:AdminPassword"
+                },
+                "SafeModeCreds": {
+                  "UserName": "Administrator",
+                  "Password": "PrivateSettingsRef:SafeModePassword"
+                }
+              }
+            },
+            "protectedSettings": {
+              "Items": {
+                "AdminPassword": "[parameters('timco-adminPassword')]",
+                "SafeModePassword": "[parameters('timco-safeModePassword')]"
+              },
+              "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData1'))]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'))]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2017-12-01",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('timco-domainControllerCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'),'-nic1')]"
+      ],
+      "tags": {
+        "displayName": "Additional domain controllers"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('timco-vmSize')]"
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', variables('timco-vmStorAccName'), '.blob.core.windows.net/')]"
+          }
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('timco-adcAvailabilitySet'))]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'))]",
+          "adminUsername": "[parameters('timco-adminUsername')]",
+          "adminPassword": "[parameters('timco-adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('timco-vmImagePublisher')]",
+            "offer": "[variables('timco-vmImageOffer')]",
+            "sku": "[variables('timco-vmWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'), '-OSDisk')]",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'), '-DataDisk')]",
               "diskSizeGB": "[variables('timco-adcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -472,9 +583,9 @@
             "settings": {
               "modulesUrl": "[variables('timco-modulesUrl')]",
               "sasToken": "",
-              "configurationFunction": "[variables('timco-dscConfigurationFunction1')]",
+              "configurationFunction": "[variables('timco-dscConfigFunctionNextDC')]",
               "properties": {
-                "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]",
+                "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'))]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
@@ -512,7 +623,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'),'-nic1')]"
       ],
       "tags": {
-        "displayName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]"
+        "displayName": "Web servers"
       },
       "properties": {
         "hardwareProfile": {
@@ -587,7 +698,7 @@
             "settings": {
               "modulesUrl": "[variables('timco-modulesUrl')]",
               "sasToken": "",
-              "configurationFunction": "[variables('timco-dscConfigurationFunction3')]",
+              "configurationFunction": "[variables('timco-dscConfigFunctionWebServer')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DomainName": "[parameters('timco-domainName')]",
@@ -627,7 +738,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'),'-nic1')]"
       ],
       "tags": {
-        "displayName": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]"
+        "displayName": "Application servers"
       },
       "properties": {
         "hardwareProfile": {
@@ -702,7 +813,7 @@
             "settings": {
               "modulesUrl": "[variables('timco-modulesUrl')]",
               "sasToken": "",
-              "configurationFunction": "[variables('timco-dscConfigurationFunction4')]",
+              "configurationFunction": "[variables('timco-dscConfigFunctionAppServer')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DomainName": "[parameters('timco-domainName')]",
