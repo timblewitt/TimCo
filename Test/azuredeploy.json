@@ -733,7 +733,7 @@
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-            "DSC"
+            "timco-dsc1"
           ],
           "tags": {
             "displayName": "joindomain"
