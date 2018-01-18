@@ -558,7 +558,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'), '-nic1'))]"
             }
           ]
         }
@@ -570,7 +570,7 @@
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'))]"
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'))]"
           ],
           "tags": {
             "displayName": "timco-dsc1"
