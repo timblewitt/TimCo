@@ -3,6 +3,9 @@ Configuration FirstDC
 Param 
     (
     [string[]]$NodeName = 'localhost',
+		
+    [Parameter(Mandatory)]
+    [string[]]$DNSServerAddress,
 
     [Parameter(Mandatory)]
     [String]$DomainName,
@@ -86,7 +89,15 @@ Node $AllNodes.NodeName
         Ensure = 'Present' 
         Name = 'RSAT-ADDS' 
       }
-
+	  
+    xDnsServerAddress DNSServer
+      {
+        Address = $DNSServerAddress
+        InterfaceAlias = $InterfaceAlias 
+        AddressFamily  = "IPv4"
+        DependsOn="[WindowsFeature]ADDSInstall"
+      }
+	
     xADDomain FirstDC 
       {
         DomainName = $DomainName
