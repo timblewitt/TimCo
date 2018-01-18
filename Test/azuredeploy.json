@@ -38,6 +38,20 @@
         "description": "FQDN of the AD Domain to be created."
       }
     },
+    "timco-adminUserName": {
+      "type": "string",
+      "defaultValue": "timco-admin",
+      "minLength": 1,
+      "metadata": {
+        "description": "Admin username."
+      }
+    },
+    "timco-adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password."
+      }
+    },
     "timco-safeModePassword": {
       "type": "securestring",
       "metadata": {
@@ -66,20 +80,6 @@
       "defaultValue": "timco-app",
       "metadata": {
         "description": "Prefix for naming application servers."
-      }
-    },
-    "timco-adminUserName": {
-      "type": "string",
-      "defaultValue": "timco-admin",
-      "minLength": 1,
-      "metadata": {
-        "description": "Admin username."
-      }
-    },
-    "timco-adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Admin password."
       }
     }
   },
