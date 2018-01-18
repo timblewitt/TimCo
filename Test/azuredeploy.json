@@ -31,6 +31,14 @@
         "description": "Number of domain-joined application servers to deploy."
       }
     },
+    "timco-availabilitySets": {
+      "type": "array",
+      "defaultValue": [
+        "timco-adc-avset1",
+        "timco-web-avset1",
+        "timco-app-avset1"
+      ]
+    },
     "timco-domainName": {
       "type": "string",
       "defaultValue": "timco.local",
@@ -94,14 +102,6 @@
     "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
     "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
     "timco-dscConfigurationData1": "timco-dsc1.psd1",
-    "timco-availabilitySets": {
-      "type": "array",
-      "input": [
-        "timco-adc-avset1",
-        "timco-web-avset1",
-        "timco-app-avset1"
-      ]
-    },
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
@@ -132,16 +132,16 @@
 
   "resources": [
     {
-      "name": "[string(variables('timco-availabilitySets')[copyIndex()])]",
+      "name": "[string(parameters('timco-availabilitySets')[copyIndex()])]",
       "copy": {
         "name": "AvailabilitySets",
-        "count": "[length(string(variables('timco-availabilitySets')))]"
+        "count": "[length(string(parameters('timco-availabilitySets')))]"
       },
       "type": "Microsoft.Compute/availabilitySets",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "[variables('timco-availabilitySets')[copyIndex()]]"
+        "displayName": "[parameters('timco-availabilitySets')[copyIndex()]]"
       },
       "properties": {
         "platformUpdateDomainCount": "5",
