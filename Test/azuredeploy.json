@@ -126,7 +126,9 @@
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-ouPathWeb": "OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
     "timco-ouPathApp": "OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
-    "timco-vmStorageAccountContainerName": "vhds"
+    "timco-vmStorageAccountContainerName": "vhds",
+    "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
+    "timco-domainJoinOptions": 3
   },
 
   "resources": [
@@ -721,6 +723,35 @@
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
               },
               "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData1'))]"
+            }
+          }
+        },
+        {
+          "name": "joindomain",
+          "type": "extensions",
+          "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+            "DSC"
+          ],
+          "tags": {
+            "displayName": "joindomain"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "JsonADDomainExtension",
+            "typeHandlerVersion": "1.3",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "Name": "[parameters('timco-domainName')]",
+              "OUPath": "[variables('timco-ouPathWeb')]",
+              "User": "[variables('timco-domainAdminName')]",
+              "Restart": "true",
+              "Options": "[variables('timco-domainJoinOptions')]"
+            },
+            "protectedSettings": {
+              "Password": "[parameters('timco-adminPassword')]"
             }
           }
         }
