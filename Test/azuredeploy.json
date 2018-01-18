@@ -31,14 +31,6 @@
         "description": "Number of domain-joined application servers to deploy."
       }
     },
-    "timco-availabilitySets": {
-      "type": "array",
-      "defaultValue": [
-        "timco-adc-avset1",
-        "timco-web-avset1",
-        "timco-app-avset1"
-      ]
-    },
     "timco-domainName": {
       "type": "string",
       "defaultValue": "timco.local",
@@ -102,6 +94,9 @@
     "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
     "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
     "timco-dscConfigurationData1": "timco-dsc1.psd1",
+    "timco-adcAvailabilitySet": "timco-adc-avset1",
+    "timco-webAvailabilitySet": "timco-web-avset1",
+    "timco-appAvailabilitySet": "timco-app-avset1",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
@@ -132,16 +127,46 @@
 
   "resources": [
     {
-      "name": "[string(parameters('timco-availabilitySets')[copyIndex()])]",
-      "copy": {
-        "name": "AvailabilitySets",
-        "count": "[length(string(parameters('timco-availabilitySets')))]"
-      },
+      "name": "[variables('timco-adcAvailabilitySet')]",
       "type": "Microsoft.Compute/availabilitySets",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "[parameters('timco-availabilitySets')[copyIndex()]]"
+        "displayName": "[variables('timco-adcAvailabilitySet')]"
+      },
+      "properties": {
+        "platformUpdateDomainCount": "5",
+        "platformFaultDomainCount": "2"
+      },
+      "sku": {
+        "name": "Aligned"
+      }
+    },
+    {
+      "name": "[variables('timco-webAvailabilitySet')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "condition": "[greater(parameters('timco-webServerCount'),0)]",
+      "apiVersion": "2017-12-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "[variables('timco-webAvailabilitySet')]"
+      },
+      "properties": {
+        "platformUpdateDomainCount": "5",
+        "platformFaultDomainCount": "2"
+      },
+      "sku": {
+        "name": "Aligned"
+      }
+    },
+    {
+      "name": "[variables('timco-appAvailabilitySet')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "condition": "[greater(parameters('timco-appServerCount'),0)]",
+      "apiVersion": "2017-12-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "[variables('timco-appAvailabilitySet')]"
       },
       "properties": {
         "platformUpdateDomainCount": "5",
