@@ -29,6 +29,9 @@ Import-DscResource -ModuleName xPendingReboot
 [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $AdminCreds.Password)
 
 [System.Management.Automation.PSCredential ]$SafeModeAdminCreds = New-Object System.Management.Automation.PSCredential ($SafeModeCreds.UserName, $SafeModeCreds.Password)
+	
+$Interface = Get-NetAdapter | Where Name -Like "Ethernet*" | Select-Object -First 1
+$InterfaceAlias = $($Interface.Name)
 
 Node $AllNodes.NodeName
   {
