@@ -477,6 +477,7 @@
               "configurationFunction": "[variables('timco-dscConfigFunctionFirstDC')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
+                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "AdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
