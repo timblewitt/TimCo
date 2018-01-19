@@ -709,7 +709,7 @@
               "configurationFunction": "[variables('timco-dscConfigFunctionWebServer')]",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-                "DNSServerAddress": "[concat(variables('timco-adcDNSServerAddress'),',',variables('timco-bdcDNSServerAddress')]",
+                "DNSServerAddress": "[concat(variables('timco-adcDNSServerAddress'),',',variables('timco-bdcDNSServerAddress'))]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
