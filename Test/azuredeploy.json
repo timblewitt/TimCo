@@ -215,9 +215,9 @@
         },
         "dhcpOptions": {
           "dnsServers": [
-            "168.63.129.16",
             "[variables('timco-adcDNSServerAddress')]",
-            "[variables('timco-bdcDNSServerAddress')]"
+            "[variables('timco-bdcDNSServerAddress')]",
+            "168.63.129.16"
           ]
         },
         "subnets": [
