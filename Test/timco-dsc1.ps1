@@ -425,7 +425,7 @@ Node $AllNodes.NodeName
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
-        DependsOn = "[xDnsServerAddress]DNSServer"
+        DependsOn = "[WindowsFeature]IIS"
       }	
   }
 } 
@@ -500,18 +500,10 @@ Node $AllNodes.NodeName
         Name = 'Telnet-Client'
       }
 	  
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias
-        AddressFamily  = "IPv4"
-        DependsOn = "[xDisk]FVolume"
-      }
-	  
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
-        DependsOn = "[xDnsServerAddress]DNSServer"
+        DependsOn = "[WindowsFeature]TelnetClient"
       }	
   }
 } 
