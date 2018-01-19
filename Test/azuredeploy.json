@@ -213,6 +213,12 @@
             "[variables('timco-vNet1Prefix')]"
           ]
         },
+        "dhcpOptions": {
+          "dnsServers": [
+            "variables('timco-adcDNSServerAddress')",
+            "variables('timco-bdcDNSServerAddress')"
+          ]
+        },
         "subnets": [
           {
             "name": "[variables('timco-vNet1Subnet1Name')]",

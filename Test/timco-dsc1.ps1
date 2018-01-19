@@ -93,14 +93,6 @@ Node $AllNodes.NodeName
         Name = 'RSAT-ADDS' 
       }
 	  
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias 
-        AddressFamily  = "IPv4"
-        DependsOn="[WindowsFeature]ADDSInstall"
-      }
-	
     xADDomain FirstDC 
       {
         DomainName = $DomainName
@@ -325,14 +317,6 @@ Node $AllNodes.NodeName
         DependsOn = "[WindowsFeature]ADDSTools"
 	  }
 
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias 
-        AddressFamily  = "IPv4"
-        DependsOn="[WindowsFeature]ADDSInstall"
-      }
-	
     xWaitForADDomain DscForestWait
 	  {
 		DomainName = $DomainName
@@ -438,14 +422,6 @@ Node $AllNodes.NodeName
         DependsOn = "[xDisk]FVolume"                      
     } 
 
-    xDnsServerAddress DNSServer
-      {
-        Address = $DNSServerAddress
-        InterfaceAlias = $InterfaceAlias
-        AddressFamily  = "IPv4"
-        DependsOn = "[WindowsFeature]IIS"
-      }
-	  
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
