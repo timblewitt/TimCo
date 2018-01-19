@@ -875,6 +875,35 @@
               "DataBlobUri": "[concat(variables('timco-assetLocation'),variables('timco-dscConfigurationData1'))]"
             }
           }
+        },
+        {
+          "name": "joindomain",
+          "type": "extensions",
+          "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+            "timco-dsc1"
+          ],
+          "tags": {
+            "displayName": "joindomain"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "JsonADDomainExtension",
+            "typeHandlerVersion": "1.3",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "Name": "[parameters('timco-domainName')]",
+              "OUPath": "[variables('timco-ouPathWeb')]",
+              "User": "[variables('timco-domainAdminName')]",
+              "Restart": "true",
+              "Options": "[variables('timco-domainJoinOptions')]"
+            },
+            "protectedSettings": {
+              "Password": "[parameters('timco-adminPassword')]"
+            }
+          }
         }
       ]
     }
