@@ -201,13 +201,84 @@
       }
     },
     {
+      "name": "[variables('timco-vNet1Subnet1NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - Front End"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-RDP",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "NSG-Rule-Allow-HTTP",
+            "properties": {
+              "description": "Allow HTTP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('timco-vNet1Subnet2NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - Back End"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-RDP",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
-      "dependsOn": [],
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('timco-vNet1Subnet1NSGName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('timco-vNet1Subnet2NSGName'))]"
+      ],
       "tags": {
-        "displayName": "vNet"
+        "displayName": "VNet"
       },
       "properties": {
         "addressSpace": {
@@ -226,13 +297,19 @@
           {
             "name": "[variables('timco-vNet1Subnet1Name')]",
             "properties": {
-              "addressPrefix": "[variables('timco-vNet1Subnet1Prefix')]"
+              "addressPrefix": "[variables('timco-vNet1Subnet1Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('timco-vNet1Subnet1NSGName'))]"
+              }
             }
           },
           {
             "name": "[variables('timco-vNet1Subnet2Name')]",
             "properties": {
-              "addressPrefix": "[variables('timco-vNet1Subnet2Prefix')]"
+              "addressPrefix": "[variables('timco-vNet1Subnet2Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('timco-vNet1Subnet2NSGName'))]"
+              }
             }
           }
         ]
@@ -296,47 +373,6 @@
         "dnsSettings": {
           "domainNameLabel": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]"
         }
-      }
-    },
-    {
-      "name": "[variables('timco-vNet1Subnet1NSGName')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2017-10-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "NSG - Front End"
-      },
-      "properties": {
-        "securityRules": [
-          {
-            "name": "NSG-Rule-Allow-RDP",
-            "properties": {
-              "description": "Allow RDP",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "NSG-Rule-Allow-HTTP",
-            "properties": {
-              "description": "Allow HTTP",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "80",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 101,
-              "direction": "Inbound"
-            }
-          }
-        ]
       }
     },
     {
