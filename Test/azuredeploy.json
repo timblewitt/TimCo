@@ -715,7 +715,7 @@
               "sasToken": "",
               "configurationFunction": "[variables('timco-dscConfigFunctionWebServer')]",
               "properties": {
-                "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+                "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "DomainAdminCreds": {
@@ -777,7 +777,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Application servers"
