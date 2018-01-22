@@ -15,6 +15,8 @@
            'OU=AppAdmins,OU=Users,OU=Managed',
            'OU=AppUsers,OU=Users,OU=Managed',
            'OU=Servers,OU=Computers,OU=Managed',
+           'OU=Web,OU=Servers,OU=Computers,OU=Managed',
+           'OU=Application,OU=Servers,OU=Computers,OU=Managed',
            'OU=Workstations,OU=Computers,OU=Managed'
 
   UserData = @'

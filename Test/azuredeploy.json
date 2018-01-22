@@ -101,8 +101,10 @@
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
     "timco-vNet1Subnet1Prefix": "10.0.1.0/24",
+    "timco-vNet1Subnet1NSGName": "NSG-FrontEnd",
     "timco-vNet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
+    "timco-vNet1Subnet2NSGName": "NSG-BackEnd",
     "timco-adcIPAddressPrefix": "10.0.2.",
     "timco-adcStartIndex": 1,
     "timco-bdcStartIndex": "[add(variables('timco-adcStartIndex'),1)]",
@@ -124,8 +126,8 @@
     "timco-adcSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-adcSubNet'))]",
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
-    "timco-ouPathWeb": "OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
-    "timco-ouPathApp": "OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
+    "timco-ouPathWeb": "OU=Web,OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
+    "timco-ouPathApp": "OU=Application,OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
     "timco-vmStorageAccountContainerName": "vhds",
     "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
     "timco-domainJoinOptions": 3
@@ -294,6 +296,47 @@
         "dnsSettings": {
           "domainNameLabel": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]"
         }
+      }
+    },
+    {
+      "name": "[variables('timco-vNet1Subnet1NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - Front End"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-RDP",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "NSG-Rule-Allow-HTTP",
+            "properties": {
+              "description": "Allow HTTP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
       }
     },
     {
