@@ -242,7 +242,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "pipLoop",
+        "name": "adcPipLoop",
         "count": "[parameters('timco-domainControllerCount')]"
       },
       "dependsOn": [],
@@ -262,7 +262,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "pipLoop",
+        "name": "webPipLoop",
         "count": "[parameters('timco-domainControllerCount')]"
       },
       "dependsOn": [],
@@ -282,7 +282,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "pipLoop",
+        "name": "appPipLoop",
         "count": "[parameters('timco-domainControllerCount')]"
       },
       "dependsOn": [],
@@ -302,7 +302,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "nicLoop",
+        "name": "adcNicLoop",
         "count": "[parameters('timco-domainControllerCount')]"
       },
       "dependsOn": [
@@ -336,7 +336,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "nicLoop",
+        "name": "webNicLoop",
         "count": "[parameters('timco-webServerCount')]"
       },
       "dependsOn": [
@@ -369,7 +369,7 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "nicLoop",
+        "name": "appNicLoop",
         "count": "[parameters('timco-appServerCount')]"
       },
       "dependsOn": [
@@ -513,7 +513,7 @@
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "virtualMachineLoop",
+        "name": "adcVirtualMachineLoop",
         "count": "[sub(parameters('timco-domainControllerCount'),1)]"
       },
       "dependsOn": [
@@ -630,7 +630,7 @@
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "virtualMachineLoop",
+        "name": "webVirtualMachineLoop",
         "count": "[parameters('timco-webServerCount')]"
       },
       "dependsOn": [
@@ -772,7 +772,7 @@
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "virtualMachineLoop",
+        "name": "appVirtualMachineLoop",
         "count": "[parameters('timco-appServerCount')]"
       },
       "dependsOn": [
@@ -895,7 +895,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "Name": "[parameters('timco-domainName')]",
-              "OUPath": "[variables('timco-ouPathWeb')]",
+              "OUPath": "[variables('timco-ouPathApp')]",
               "User": "[variables('timco-domainAdminName')]",
               "Restart": "true",
               "Options": "[variables('timco-domainJoinOptions')]"
