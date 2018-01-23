@@ -500,10 +500,17 @@ Node $AllNodes.NodeName
         Name = 'Telnet-Client'
       }
 	  
+	WindowsFeature FileServer 
+    { 
+        Ensure = "Present" 
+        Name = "File-Server" 
+        DependsOn = "[xDisk]FVolume"                      
+    } 
+
     xPendingReboot Reboot1
       { 
         Name = "RebootServer"
-        DependsOn = "[WindowsFeature]TelnetClient"
+        DependsOn = "[WindowsFeature]FileServer"
       }	
   }
 } 
