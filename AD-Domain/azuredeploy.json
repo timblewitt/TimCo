@@ -22,6 +22,17 @@
         "description": "Number of domain-joined web servers to deploy."
       }
     },
+    "timco-webDomainJoin": {
+      "type": "string",
+      "defaultValue": "Yes",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],
+      "metadata": {
+        "description": "Join web servers to domain?."
+      }
+    },
     "timco-appServerCount": {
       "type": "int",
       "defaultValue": 0,
@@ -29,6 +40,17 @@
       "maxValue": 3,
       "metadata": {
         "description": "Number of domain-joined application servers to deploy."
+      }
+    },
+    "timco-appDomainJoin": {
+      "type": "string",
+      "defaultValue": "Yes",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],
+      "metadata": {
+        "description": "Join application servers to domain?."
       }
     },
     "timco-domainName": {
@@ -87,13 +109,8 @@
   "variables": {
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/Test/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Test/",
-    "timco-dscConfigFunctionFirstDC": "timco-dsc1.ps1\\FirstDC",
-    "timco-dscConfigFunctionNextDC": "timco-dsc1.ps1\\NextDC",
-    "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
-    "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
-    "timco-dscConfigurationData1": "timco-dsc1.psd1",
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-Domain/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-Domain/",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
@@ -126,9 +143,13 @@
     "timco-adcSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-adcSubNet'))]",
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
+    "timco-dscConfigFunctionFirstDC": "timco-dsc1.ps1\\FirstDC",
+    "timco-dscConfigFunctionNextDC": "timco-dsc1.ps1\\NextDC",
+    "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
+    "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
+    "timco-dscConfigurationData1": "timco-dsc1.psd1",
     "timco-ouPathWeb": "OU=Web,OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
     "timco-ouPathApp": "OU=Application,OU=Servers;OU=Computers;OU=Managed;DC=timco;DC=local",
-    "timco-vmStorageAccountContainerName": "vhds",
     "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
     "timco-domainJoinOptions": 3
   },
@@ -528,6 +549,7 @@
               "managedDisk": {
                 "storageAccountType": "Standard_LRS"
               },
+              "caching": "ReadOnly",
               "createOption": "Empty"
             }
           ]
@@ -643,6 +665,7 @@
               "managedDisk": {
                 "storageAccountType": "Standard_LRS"
               },
+              "caching": "ReadOnly",
               "createOption": "Empty"
             }
           ]
@@ -760,6 +783,7 @@
               "managedDisk": {
                 "storageAccountType": "Standard_LRS"
               },
+              "caching": "ReadOnly",
               "createOption": "Empty"
             }
           ]
@@ -816,6 +840,7 @@
         {
           "name": "joindomain",
           "type": "extensions",
+          "condition": "[equals(parameters('timco-webDomainJoin'),'Yes')]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -902,6 +927,7 @@
               "managedDisk": {
                 "storageAccountType": "Standard_LRS"
               },
+              "caching": "ReadOnly",
               "createOption": "Empty"
             }
           ]
@@ -958,6 +984,7 @@
         {
           "name": "joindomain",
           "type": "extensions",
+          "condition": "[equals(parameters('timco-appDomainJoin'),'Yes')]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
