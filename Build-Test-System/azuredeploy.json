@@ -109,8 +109,8 @@
   "variables": {
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
-    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/AD-Domain/timco-dsc1.zip",
-    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/AD-Domain/",
+    "timco-modulesUrl": "https://github.com/timblewitt/TimCo/raw/master/Build-Test-System/timco-dsc1.zip",
+    "timco-assetLocation": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
