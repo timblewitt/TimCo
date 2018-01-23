@@ -503,7 +503,7 @@ Node $AllNodes.NodeName
 	WindowsFeature FileServer 
     { 
         Ensure = "Present" 
-        Name = "File-Server" 
+        Name = "FS-FileServer" 
         DependsOn = "[xDisk]FVolume"                      
     } 
 
@@ -514,3 +514,4 @@ Node $AllNodes.NodeName
       }	
   }
 } 
+			
