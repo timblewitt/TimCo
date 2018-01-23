@@ -1,2 +1,2 @@
 # TimCo
-Sample VM deployments for a sample company TimCo.
+Build a test environment based on a sample company TimCo.
