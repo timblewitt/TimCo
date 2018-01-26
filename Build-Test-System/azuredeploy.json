@@ -314,7 +314,7 @@
       "properties": {
         "frontendIPConfigurations": [
           {
-            "name": "LoadBalancerFrontEnd",
+            "name": "[variables('timco-webLBFEName')]",
             "properties": {
               "publicIPAddress": {
                 "id": "[variables('timco-webPIPID')]"
@@ -324,7 +324,7 @@
         ],
         "backendAddressPools": [
           {
-            "name": "webBackendPool"
+            "name": "[variables('timco-webLBPoolName')]"
           }
         ],
         "inboundNatRules": [
