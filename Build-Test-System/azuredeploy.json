@@ -121,7 +121,8 @@
     "timco-webLBFEConfigID": "[concat(variables('timco-webLBID'),'/frontendIPConfigurations/',variables('timco-webLBFEName'))]",
     "timco-webLBPoolID": "[concat(variables('timco-webLBID'),'/backendAddressPools/', variables('timco-webLBPoolName'))]",
     "timco-webLBProbeID": "[concat(variables('timco-webLBID'),'/probes/tcpProbe')]",
-    "timco-webPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('timco-webLBName'))]",
+    "timco-webPIPName": "[concat(variables('timco-webLBName'), '-pip1')]",
+    "timco-webPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('timco-webPIPName'))]",
     "timco-webDNSPrefix": "timcoweb20180126",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
@@ -131,7 +132,7 @@
     "timco-vNet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vNet1Subnet2NSGName": "NSG-BackEnd",
-    "timco-bdcCount":  "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
+    "timco-bdcCount": "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
     "timco-adcIPAddressPrefix": "10.0.2.",
     "timco-adcStartIndex": 1,
     "timco-bdcStartIndex": "[add(variables('timco-adcStartIndex'),1)]",
@@ -309,7 +310,7 @@
         "displayName": "Web load balancer"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-webLBName'), '-pip1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-webPIPName'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
