@@ -377,7 +377,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webPipLoop",
-        "count": "[parameters('timco-webServerCount')]"
+        "count": "[variables('timco-webCopyCount')]",
       },
       "dependsOn": [],
       "tags": {
@@ -398,7 +398,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appPipLoop",
-        "count": "[parameters('timco-appServerCount')]"
+        "count": "[variables('timco-appCopyCount')]"
       },
       "dependsOn": [],
       "tags": {
@@ -557,7 +557,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webNicLoop",
-        "count": "[parameters('timco-webServerCount')]"
+        "count": "[variables('timco-webCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
@@ -604,7 +604,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appNicLoop",
-        "count": "[parameters('timco-appServerCount')]"
+        "count": "[variables('timco-appCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
