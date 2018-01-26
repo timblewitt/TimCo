@@ -814,6 +814,7 @@
         {
           "name": "timco-dsc1",
           "type": "extensions",
+          "condition": "[greater(parameters('timco-domainControllerCount'),1)]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -933,6 +934,7 @@
         {
           "name": "timco-dsc1",
           "type": "extensions",
+          "condition": "[greater(parameters('timco-webServerCount'),0)]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -973,7 +975,7 @@
         {
           "name": "joindomain",
           "type": "extensions",
-          "condition": "[equals(parameters('timco-webDomainJoin'),'Yes')]",
+          "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -1078,6 +1080,7 @@
         {
           "name": "timco-dsc1",
           "type": "extensions",
+          "condition": "[greater(parameters('timco-appServerCount'),0)]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
