@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\AD-SRVn",
-    "\\Test"
+    "\\Build-Test-System"
   ],
-  "SelectedNode": "\\Test\\azuredeploy.json",
+  "SelectedNode": "\\Build-Test-System\\timco-dsc1.psd1",
   "PreviewInSolutionExplorer": false
 }

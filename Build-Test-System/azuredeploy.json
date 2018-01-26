@@ -114,6 +114,15 @@
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
+    "timco-webLBName": "LB-Web",
+    "timco-webLBFEName": "WebLBFrontEnd",
+    "timco-webLBPoolName": "WebLBBackEndPool",
+    "timco-webLBID": "[resourceId('Microsoft.Network/loadBalancers',variables('timco-webLBName'))]",
+    "timco-webLBFEConfigID": "[concat(variables('timco-webLBID'),'/frontendIPConfigurations/',variables('timco-webLBFEName'))]",
+    "timco-webLBPoolID": "[concat(variables('timco-webLBID'),'/backendAddressPools/', variables('timco-webLBPoolName'))]",
+    "timco-webLBProbeID": "[concat(variables('timco-webLBID'),'/probes/tcpProbe')]",
+    "timco-webPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('timco-webLBName'))]",
+    "timco-webDNSPrefix": "timcoweb20180126",
     "timco-vNet1Name": "timco-vnet1",
     "timco-vNet1Prefix": "10.0.0.0/16",
     "timco-vNet1Subnet1Name": "FrontEnd-10.0.1.0-Subnet",
@@ -290,6 +299,94 @@
       }
     },
     {
+      "name": "[variables('timco-webLBName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "condition": "[greater(parameters('timco-webServerCount'),0)]",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Web load balancer"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/'), variables('timco-webLBName')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontEnd",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('timco-webPIPID')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "webBackendPool"
+          }
+        ],
+        "inboundNatRules": [
+          {
+            "name": "RDP-VM0",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('timco-webLBFEConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 50001,
+              "backendPort": 3389,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "RDP-VM1",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('timco-webLBFEConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 50002,
+              "backendPort": 3389,
+              "enableFloatingIP": false
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "LBRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('timco-webLBFEConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('timco-webLBPoolID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 80,
+              "backendPort": 80,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[variables('timco-webLBProbeID')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "tcpProbe",
+            "properties": {
+              "protocol": "tcp",
+              "port": 80,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "[variables('timco-vNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2017-10-01",
@@ -397,6 +494,22 @@
       }
     },
     {
+      "name": "[variables('timco-webLBName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "PIP - web load balancer"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('timco-webDNSPrefix')]"
+        }
+      }
+    },
+    {
       "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2017-10-01",
@@ -451,6 +564,18 @@
           {
             "name": "ipconfig1",
             "properties": {
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[variables('timco-webLBPoolID')]",
+                  "properties": {
+                  }
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('timco-webLBID'),'/inboundNatRules/RDP-VM', copyindex(1))]"
+                }
+              ],
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
                 "id": "[variables('timco-webSubnetRef')]"
