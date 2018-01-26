@@ -308,7 +308,7 @@
         "displayName": "Web load balancer"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/'), variables('timco-webLBName')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('timco-webLBName'), '-pip1')]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -496,7 +496,7 @@
       }
     },
     {
-      "name": "[variables('timco-webLBName')]",
+      "name": "[concat(variables('timco-webLBName'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
