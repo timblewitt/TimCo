@@ -139,7 +139,6 @@
     "timco-appStartIndex": 1,
     "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-adcStartIndex'),2,'1'))]",
     "timco-bdcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-bdcStartIndex'),2,'1'))]",
-    "timco-bdcCopyCount": "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
     "timco-webCopyCount": "[if(equals(parameters('timco-webServerCount'), 0), 1, parameters('timco-webServerCount'))]",
     "timco-appCopyCount": "[if(equals(parameters('timco-appServerCount'), 0), 1, parameters('timco-appServerCount'))]",
     "timco-vmSize": "Standard_D1_V2",
@@ -752,7 +751,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('timco-adcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(parameters('timco-domainControllerCount'),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Second domain controller"
