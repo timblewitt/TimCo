@@ -139,7 +139,9 @@
     "timco-appStartIndex": 1,
     "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-adcStartIndex'),2,'1'))]",
     "timco-bdcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-bdcStartIndex'),2,'1'))]",
-    "timco-bdcCount": "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
+    "timco-bdcCopyCount": "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
+    "timco-webCopyCount": "[if(equals(parameters('timco-webServerCount'), 1), 1, sub(parameters('timco-webServerCount'), 1))]",
+    "timco-appCopyCount": "[if(equals(parameters('timco-appServerCount'), 1), 1, sub(parameters('timco-appServerCount'), 1))]",
     "timco-vmSize": "Standard_D1_V2",
     "timco-vmWindowsOSVersion": "2016-Datacenter",
     "timco-vmImagePublisher": "MicrosoftWindowsServer",
@@ -749,7 +751,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "adcVirtualMachineLoop",
-        "count": "[variables('timco-bdcCount')]"
+        "count": "[variables('timco-bdcCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
@@ -868,7 +870,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webVirtualMachineLoop",
-        "count": "[parameters('timco-webServerCount')]"
+        "count": "[variables('timco-webCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
@@ -1013,7 +1015,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appVirtualMachineLoop",
-        "count": "[parameters('timco-appServerCount')]"
+        "count": "[variables('timco-appCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
