@@ -740,6 +740,7 @@
     {
       "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-bdcStartIndex')),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
+      "condition": "[greater(parameters('timco-domainControllerCount'),1)]",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "copy": {
