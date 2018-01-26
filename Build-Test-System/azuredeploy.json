@@ -456,6 +456,7 @@
     {
       "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
+      "condition": "[greater(parameters('timco-webServerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -476,6 +477,7 @@
     {
       "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
+      "condition": "[greater(parameters('timco-appServerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -546,6 +548,7 @@
     {
       "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "condition": "[greater(parameters('timco-webServerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -591,6 +594,7 @@
     {
       "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "condition": "[greater(parameters('timco-appServerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
