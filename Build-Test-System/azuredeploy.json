@@ -131,6 +131,7 @@
     "timco-vNet1Subnet2Name": "BackEnd-10.0.2.0-Subnet",
     "timco-vNet1Subnet2Prefix": "10.0.2.0/24",
     "timco-vNet1Subnet2NSGName": "NSG-BackEnd",
+    "timco-bdcCount":  "[if(equals(parameters('timco-domainControllerCount'), 1), 1, sub(parameters('timco-domainControllerCount'), 1))]",
     "timco-adcIPAddressPrefix": "10.0.2.",
     "timco-adcStartIndex": 1,
     "timco-bdcStartIndex": "[add(variables('timco-adcStartIndex'),1)]",
@@ -745,7 +746,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "adcVirtualMachineLoop",
-        "count": "[sub(parameters('timco-domainControllerCount'),1)]"
+        "count": "[variables('timco-bdcCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
