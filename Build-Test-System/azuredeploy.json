@@ -1121,7 +1121,7 @@
         {
           "name": "joindomain",
           "type": "extensions",
-          "condition": "[equals(parameters('timco-appDomainJoin'),'Yes')]",
+          "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
