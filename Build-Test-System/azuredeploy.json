@@ -485,6 +485,18 @@
               "backendPort": 3389,
               "enableFloatingIP": false
             }
+          },
+          {
+            "name": "RDP-VM3",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('timco-webLBFEConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 50003,
+              "backendPort": 3389,
+              "enableFloatingIP": false
+            }
           }
         ],
         "loadBalancingRules": [
