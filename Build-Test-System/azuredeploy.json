@@ -167,8 +167,8 @@
     "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
     "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
     "timco-dscConfigurationData1": "timco-dsc1.psd1",
-    "timco-ouPathWeb": "[concat('OU=Web,OU=Servers;OU=Computers;OU=Managed;', parameters('timco-domainDistinguishedName')]",
-    "timco-ouPathApp": "[concat('OU=Application,OU=Servers;OU=Computers;OU=Managed;', parameters('timco-domainDistinguishedName')]",
+    "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', parameters('timco-domainDistinguishedName'))]",
+    "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', parameters('timco-domainDistinguishedName'))]",
     "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
     "timco-domainJoinOptions": 3
   },
