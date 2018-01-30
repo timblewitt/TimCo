@@ -122,6 +122,7 @@
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
     "timco-webLBName": "timco-web-lb",
+    "timco-webLBNatRulesName": "timco-web-lb-nat-rules",
     "timco-webLBID": "[resourceId('Microsoft.Network/loadBalancers',variables('timco-webLBName'))]",
     "timco-webLBFEConfigName": "timco-WebLBFrontEnd",
     "timco-webLBFEConfigID": "[concat(variables('timco-webLBID'),'/frontendIPConfigurations/',variables('timco-webLBFEConfigName'))]",
@@ -461,44 +462,6 @@
             "name": "[variables('timco-webLBBEPoolName')]"
           }
         ],
-        "inboundNatRules": [
-          {
-            "name": "RDP-VM1",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('timco-webLBFEConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 50001,
-              "backendPort": 3389,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "RDP-VM2",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('timco-webLBFEConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 50002,
-              "backendPort": 3389,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "RDP-VM3",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('timco-webLBFEConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 50003,
-              "backendPort": 3389,
-              "enableFloatingIP": false
-            }
-          }
-        ],
         "loadBalancingRules": [
           {
             "name": "LBRule",
@@ -531,6 +494,29 @@
             }
           }
         ]
+      }
+    },
+    {
+      "name": "[concat('RDP-VM', copyIndex(variables('timco-webStartIndex')))]",
+      "name": "[variables('timco-webLBNatRulesName')]",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Inbound NAT Rules"
+      },
+      "copy": {
+        "name": "natRulesLoop",
+        "count": "[parameters('timco-webServerCount')]"
+      },
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[variables('timco-webLBFEConfigID')]"
+        },
+        "protocol": "tcp",
+        "frontendPort": "[concat('5000', copyIndex(variables('timco-webStartIndex')))]",
+        "backendPort": 3389,
+        "enableFloatingIP": false
       }
     },
     {
