@@ -930,7 +930,7 @@
       },
       "resources": [
         {
-          "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-DSC-Web')]",
+          "name": "[concat('DSC-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[greater(parameters('timco-webServerCount'),0)]",
           "apiVersion": "2017-12-01",
@@ -957,8 +957,7 @@
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
-                },
-                "OUPath": "[variables('timco-ouPathWeb')]"
+                }
               }
             },
             "protectedSettings": {
@@ -971,14 +970,14 @@
           }
         },
         {
-          "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-JoinDomain-Web')]",
+          "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-            "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-DSC-Web')]"
+            "[concat('DSC-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
             "displayName": "JoinDomain-Web"
@@ -1076,7 +1075,7 @@
       },
       "resources": [
         {
-          "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-DSC-App')]",
+          "name": "[concat('DSC-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[greater(parameters('timco-appServerCount'),0)]",
           "apiVersion": "2017-12-01",
@@ -1103,8 +1102,7 @@
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
-                },
-                "OUPath": "[variables('timco-ouPathApp')]"
+                }
               }
             },
             "protectedSettings": {
@@ -1117,14 +1115,14 @@
           }
         },
         {
-          "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-JoinDomain-App')]",
+          "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-            "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-DSC-App')]"
+            "[concat('DSC-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
             "displayName": "JoinDomain-App"

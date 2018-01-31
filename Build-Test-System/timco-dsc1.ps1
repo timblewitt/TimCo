@@ -360,9 +360,6 @@ Param
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
-    [Parameter(Mandatory)]
-    [String]$OUPath,
-
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
   )
@@ -445,9 +442,6 @@ Param
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
-    [Parameter(Mandatory)]
-    [String]$OUPath,
-
     [Int]$RetryCount=20,
     [Int]$RetryIntervalSec=10
   )
