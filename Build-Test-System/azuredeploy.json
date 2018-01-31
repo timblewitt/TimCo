@@ -83,6 +83,7 @@
     "timco-adcNamePrefix": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 12,
       "defaultValue": "timco-adc",
       "metadata": {
         "description": "Prefix for naming domain controllers."
@@ -91,6 +92,7 @@
     "timco-webNamePrefix": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 12,
       "defaultValue": "timco-web",
       "metadata": {
         "description": "Prefix for naming web servers."
@@ -99,6 +101,7 @@
     "timco-appNamePrefix": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 12,
       "defaultValue": "timco-app",
       "metadata": {
         "description": "Prefix for naming application servers."
