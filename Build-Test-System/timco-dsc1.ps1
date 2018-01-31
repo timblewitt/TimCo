@@ -435,6 +435,7 @@ Node $AllNodes.NodeName
 			DomainUserCredential= $DomainCreds
 			RetryCount = $RetryCount
 			RetryIntervalSec = $RetryIntervalSec
+			DependsOn = "[xPendingReboot]Reboot1"
 		  }
 	}
 
