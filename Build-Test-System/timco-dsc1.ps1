@@ -371,6 +371,7 @@ Import-DscResource -ModuleName PSDesiredStateConfiguration
 Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
+Import-DscResource -ModuleName xActiveDirectory
 Import-DscResource -ModuleName xPendingReboot
 	
 [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
@@ -468,6 +469,7 @@ Import-DscResource -ModuleName PSDesiredStateConfiguration
 Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
+Import-DscResource -ModuleName xActiveDirectory
 Import-DscResource -ModuleName xPendingReboot
 	
 [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
