@@ -696,7 +696,7 @@
       },
       "resources": [
         {
-          "name": "timco-dsc1",
+          "name": "DSC-ADC",
           "type": "extensions",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
@@ -704,7 +704,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]"
           ],
           "tags": {
-            "displayName": "timco-dsc1"
+            "displayName": "DSC-ADC"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -810,17 +810,17 @@
       },
       "resources": [
         {
-          "name": "timco-dsc1",
+          "name": "DSC-BDC",
           "type": "extensions",
           "condition": "[greater(parameters('timco-domainControllerCount'),1)]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/timco-dsc1')]"
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
-            "displayName": "timco-dsc1"
+            "displayName": "DSC-BDC"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -930,7 +930,7 @@
       },
       "resources": [
         {
-          "name": "timco-dsc1",
+          "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-DSC-Web')]",
           "type": "extensions",
           "condition": "[greater(parameters('timco-webServerCount'),0)]",
           "apiVersion": "2017-12-01",
@@ -939,7 +939,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]"
           ],
           "tags": {
-            "displayName": "timco-dsc1"
+            "displayName": "DSC-Web"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -971,17 +971,17 @@
           }
         },
         {
-          "name": "joindomain",
+          "name": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-JoinDomain-Web')]",
           "type": "extensions",
           "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-            "timco-dsc1"
+            "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-DSC-Web')]"
           ],
           "tags": {
-            "displayName": "joindomain"
+            "displayName": "JoinDomain-Web"
           },
           "properties": {
             "publisher": "Microsoft.Compute",
@@ -1076,7 +1076,7 @@
       },
       "resources": [
         {
-          "name": "timco-dsc1",
+          "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-DSC-App')]",
           "type": "extensions",
           "condition": "[greater(parameters('timco-appServerCount'),0)]",
           "apiVersion": "2017-12-01",
@@ -1085,7 +1085,7 @@
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]"
           ],
           "tags": {
-            "displayName": "timco-dsc1"
+            "displayName": "DSC-App"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -1117,17 +1117,17 @@
           }
         },
         {
-          "name": "joindomain",
+          "name": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-JoinDomain-App')]",
           "type": "extensions",
           "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-            "timco-dsc1"
+            "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-DSC-App')]"
           ],
           "tags": {
-            "displayName": "joindomain"
+            "displayName": "JoinDomain-App"
           },
           "properties": {
             "publisher": "Microsoft.Compute",
