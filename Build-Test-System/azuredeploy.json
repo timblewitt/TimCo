@@ -504,9 +504,6 @@
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('timco-webLBName'))]"
       ],
-      "tags": {
-        "displayName": "Inbound NAT Rules"
-      },
       "copy": {
         "name": "natRulesLoop",
         "count": "[parameters('timco-webServerCount')]"
