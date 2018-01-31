@@ -497,7 +497,7 @@
       }
     },
     {
-      "name": "[concat(variables('timco-webLBNatRulesName'), '/', 'RDP-VM', copyIndex(variables('timco-webStartIndex')))]",
+      "name": "[concat(variables('timco-webLBName'), '/', 'RDP-VM', copyIndex(variables('timco-webStartIndex')))]",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
