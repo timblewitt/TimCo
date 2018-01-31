@@ -954,6 +954,7 @@
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
+                "DomainJoin": "[parameters('timco-webDomainJoin')]",
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"
@@ -1100,6 +1101,7 @@
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
+                "DomainJoin": "[parameters('timco-appDomainJoin')]",
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
                   "Password": "PrivateSettingsRef:AdminPassword"

@@ -358,6 +358,9 @@ Param
     [String]$DomainName,
 
     [Parameter(Mandatory)]
+    [String]$WebDomainJoin,
+
+    [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
     [Int]$RetryCount=20,
@@ -424,6 +427,17 @@ Node $AllNodes.NodeName
         Name = "RebootServer"
         DependsOn = "[WindowsFeature]IIS"
       }	
+	
+    If ($WebDomainJoin -eq 'Yes') { 
+		xWaitForADDomain DscForestWait
+		  {
+			DomainName = $DomainName
+			DomainUserCredential= $DomainCreds
+			RetryCount = $RetryCount
+			RetryIntervalSec = $RetryIntervalSec
+		  }
+	}
+
   }
 } 
 
@@ -438,6 +452,9 @@ Param
 	  
     [Parameter(Mandatory)]
     [String]$DomainName,
+	  
+    [Parameter(Mandatory)]
+    [String]$AppDomainJoin,
 
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
@@ -506,6 +523,17 @@ Node $AllNodes.NodeName
         Name = "RebootServer"
         DependsOn = "[WindowsFeature]FileServer"
       }	
+
+    If ($AppDomainJoin -eq 'Yes') { 
+		xWaitForADDomain DscForestWait
+		  {
+			DomainName = $DomainName
+			DomainUserCredential= $DomainCreds
+			RetryCount = $RetryCount
+			RetryIntervalSec = $RetryIntervalSec
+		  }
+	}
+
   }
 } 
 			
