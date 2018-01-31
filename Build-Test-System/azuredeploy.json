@@ -559,7 +559,7 @@
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'), '-pip1')]",
-        "[concat('Microsoft.Network/loadBalancers/inboundNatRules/', variables('timco-webLBName'), '/', 'RDP-VM', copyIndex(variables('timco-webStartIndex')))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('timco-webLBName'), '/inboundNatRules/', 'RDP-VM', copyIndex(variables('timco-webStartIndex')))]"
       ],
       "tags": {
         "displayName": "NICS - web servers"
