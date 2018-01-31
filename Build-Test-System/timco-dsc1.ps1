@@ -358,7 +358,7 @@ Param
     [String]$DomainName,
 
     [Parameter(Mandatory)]
-    [String]$WebDomainJoin,
+    [String]$DomainJoin,
 
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
@@ -428,7 +428,7 @@ Node $AllNodes.NodeName
         DependsOn = "[WindowsFeature]IIS"
       }	
 	
-    If ($WebDomainJoin -eq 'Yes') { 
+    If ($DomainJoin -eq 'Yes') { 
 		xWaitForADDomain DscForestWait
 		  {
 			DomainName = $DomainName
@@ -455,7 +455,7 @@ Param
     [String]$DomainName,
 	  
     [Parameter(Mandatory)]
-    [String]$AppDomainJoin,
+    [String]$DomainJoin,
 
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
@@ -525,7 +525,7 @@ Node $AllNodes.NodeName
         DependsOn = "[WindowsFeature]FileServer"
       }	
 
-    If ($AppDomainJoin -eq 'Yes') { 
+    If ($DomainJoin -eq 'Yes') { 
 		xWaitForADDomain DscForestWait
 		  {
 			DomainName = $DomainName
