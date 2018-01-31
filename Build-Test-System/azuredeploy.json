@@ -60,13 +60,6 @@
         "description": "FQDN of the AD Domain to be created."
       }
     },
-    "timco-domainDistinguishedName": {
-      "type": "string",
-      "defaultValue": "DC=timco,DC=local",
-      "metadata": {
-        "description": "Distinguished name of the AD Domain to be created."
-      }
-    },
     "timco-adminUserName": {
       "type": "string",
       "defaultValue": "timco-admin",
@@ -168,8 +161,9 @@
     "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
     "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
     "timco-dscConfigurationData1": "timco-dsc1.psd1",
-    "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', parameters('timco-domainDistinguishedName'))]",
-    "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', parameters('timco-domainDistinguishedName'))]",
+    "timco-domainDistinguishedName": "[concat('DC=',replace(parameters('timco-domainName'),'.',',DC='))]",
+    "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
+    "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
     "timco-domainJoinOptions": 3
   },
