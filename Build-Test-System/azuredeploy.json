@@ -159,10 +159,11 @@
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-dscConfigurationUrl": "https://github.com/timblewitt/TimCo/raw/master/Build-Test-System/timco-dsc1.zip",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/timco-dsc1.psd1",
-    "timco-dscConfigFunctionFirstDC": "timco-dsc1.ps1\\FirstDC",
-    "timco-dscConfigFunctionNextDC": "timco-dsc1.ps1\\NextDC",
-    "timco-dscConfigFunctionWebServer": "timco-dsc1.ps1\\WebServer",
-    "timco-dscConfigFunctionAppServer": "timco-dsc1.ps1\\AppServer",
+    "timco-dscConfigScript": "timco-dsc1.ps1",
+    "timco-dscConfigFunctionFirstDC": "FirstDC",
+    "timco-dscConfigFunctionNextDC": "NextDC",
+    "timco-dscConfigFunctionWebServer": "WebServer",
+    "timco-dscConfigFunctionAppServer": "AppServer",
     "timco-domainDistinguishedName": "[concat('DC=',replace(parameters('timco-domainName'),'.',',DC='))]",
     "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
@@ -362,7 +363,6 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
-      "dependsOn": [],
       "copy": {
         "name": "adcPipLoop",
         "count": "[parameters('timco-domainControllerCount')]"
@@ -722,10 +722,15 @@
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "configuration.url": "[variables('timco-dscConfigurationUrl')]",
-              "configurationData.url": "[variables('timco-dscConfigurationDataUrl')]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionFirstDC')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "configuration.function": "[variables('timco-dscConfigFunctionFirstDC')]",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
@@ -838,10 +843,15 @@
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "configuration.url": "[variables('timco-dscConfigurationUrl')]",
-              "configurationData.url": "[variables('timco-dscConfigurationDataUrl')]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionNextDC')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "configuration.function": "[variables('timco-dscConfigFunctionNextDC')]",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
@@ -957,10 +967,15 @@
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "configuration.url": "[variables('timco-dscConfigurationUrl')]",
-              "configurationData.url": "[variables('timco-dscConfigurationDataUrl')]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionWebServer')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "configuration.function": "[variables('timco-dscConfigFunctionWebServer')]",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
@@ -1104,65 +1119,69 @@
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "configuration.url": "[variables('timco-dscConfigurationUrl')]",
-              "configurationData.url": "[variables('timco-dscConfigurationDataUrl')]",
-              "sasToken": "",
-              "configuration.function": "[variables('timco-dscConfigFunctionAppServer')]",
-              "configurationArguments": {
-                "properties": {
-                  "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-                  "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
-                  "DomainName": "[parameters('timco-domainName')]",
-                  "DomainJoin": "[parameters('timco-appDomainJoin')]",
-                  "DomainAdminCreds": {
-                    "UserName": "[parameters('timco-adminUserName')]",
-                    "Password": "PrivateSettingsRef:AdminPassword"
-                  }
-                }
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionAppServer')]"
               },
-              "protectedSettings": {
-                "Items": {
-                  "AdminPassword": "[parameters('timco-adminPassword')]",
-                  "SafeModePassword": "[parameters('timco-safeModePassword')]"
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
+              "sasToken": "",
+              "configurationArguments": {
+                "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
+                "DomainName": "[parameters('timco-domainName')]",
+                "DomainJoin": "[parameters('timco-appDomainJoin')]",
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "PrivateSettingsRef:AdminPassword"
                 }
               }
-            }
-          },
-          {
-            "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-            "type": "extensions",
-            "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
-            "apiVersion": "2015-06-15",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-              "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-              "[concat('DSC-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
-              "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
-            ],
-            "tags": {
-              "displayName": "JoinDomain-App"
             },
-            "properties": {
-              "publisher": "Microsoft.Compute",
-              "type": "JsonADDomainExtension",
-              "typeHandlerVersion": "1.3",
-              "autoUpgradeMinorVersion": true,
-              "settings": {
-                "Name": "[parameters('timco-domainName')]",
-                "OUPath": "[variables('timco-ouPathApp')]",
-                "User": "[variables('timco-domainAdminName')]",
-                "Restart": "true",
-                "Options": "[variables('timco-domainJoinOptions')]"
-              },
-              "protectedSettings": {
-                "Password": "[parameters('timco-adminPassword')]"
+            "protectedSettings": {
+              "Items": {
+                "AdminPassword": "[parameters('timco-adminPassword')]",
+                "SafeModePassword": "[parameters('timco-safeModePassword')]"
               }
             }
           }
-          ]
-        }
-      ],
-
-      "outputs": {
+        },
+        {
+          "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+          "type": "extensions",
+          "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
+          "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+            "[concat('DSC-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
+          ],
+          "tags": {
+            "displayName": "JoinDomain-App"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "JsonADDomainExtension",
+            "typeHandlerVersion": "1.3",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "Name": "[parameters('timco-domainName')]",
+              "OUPath": "[variables('timco-ouPathApp')]",
+              "User": "[variables('timco-domainAdminName')]",
+              "Restart": "true",
+              "Options": "[variables('timco-domainJoinOptions')]"
+            },
+            "protectedSettings": {
+              "Password": "[parameters('timco-adminPassword')]"
+            }
+          }
+          }
+        ]
       }
-    }
+    ],
+
+  "outputs": {
+  }
+}
