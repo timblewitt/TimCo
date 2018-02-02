@@ -967,7 +967,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.72",
+            "typeHandlerVersion": "2.74",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
