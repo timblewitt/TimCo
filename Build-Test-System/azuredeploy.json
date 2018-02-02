@@ -164,6 +164,7 @@
     "timco-dscConfigFunctionNextDC": "NextDC",
     "timco-dscConfigFunctionWebServer": "WebServer",
     "timco-dscConfigFunctionAppServer": "AppServer",
+    "timco-dscForceUpdateVersion": "1.0",
     "timco-domainDistinguishedName": "[concat('DC=',replace(parameters('timco-domainName'),'.',',DC='))]",
     "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
@@ -721,6 +722,7 @@
             "type": "DSC",
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
                 "url": "[variables('timco-dscConfigurationUrl')]",
@@ -842,6 +844,7 @@
             "type": "DSC",
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
                 "url": "[variables('timco-dscConfigurationUrl')]",
@@ -966,6 +969,7 @@
             "type": "DSC",
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
                 "url": "[variables('timco-dscConfigurationUrl')]",
@@ -1014,6 +1018,7 @@
             "type": "JsonADDomainExtension",
             "typeHandlerVersion": "1.3",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "Name": "[parameters('timco-domainName')]",
               "OUPath": "[variables('timco-ouPathWeb')]",
@@ -1118,6 +1123,7 @@
             "type": "DSC",
             "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
                 "url": "[variables('timco-dscConfigurationUrl')]",
@@ -1166,6 +1172,7 @@
             "type": "JsonADDomainExtension",
             "typeHandlerVersion": "1.3",
             "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "Name": "[parameters('timco-domainName')]",
               "OUPath": "[variables('timco-ouPathApp')]",
