@@ -358,19 +358,20 @@ Param
     [String]$DomainName,
 
     [Parameter(Mandatory)]
+    [String]$DomainJoin,
+
+    [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
-    [Parameter(Mandatory)]
-    [String]$OUPath,
-
-    [Int]$RetryCount=20,
-    [Int]$RetryIntervalSec=10
+    [Int]$RetryCount=30,
+    [Int]$RetryIntervalSec=60
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
+Import-DscResource -ModuleName xActiveDirectory
 Import-DscResource -ModuleName xPendingReboot
 	
 [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
@@ -427,6 +428,18 @@ Node $AllNodes.NodeName
         Name = "RebootServer"
         DependsOn = "[WindowsFeature]IIS"
       }	
+	
+    If ($DomainJoin -eq 'Yes') { 
+		xWaitForADDomain DscForestWait
+		  {
+			DomainName = $DomainName
+			DomainUserCredential= $DomainCreds
+			RetryCount = $RetryCount
+			RetryIntervalSec = $RetryIntervalSec
+			DependsOn = "[xPendingReboot]Reboot1"
+		  }
+	}
+
   }
 } 
 
@@ -441,21 +454,22 @@ Param
 	  
     [Parameter(Mandatory)]
     [String]$DomainName,
+	  
+    [Parameter(Mandatory)]
+    [String]$DomainJoin,
 
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$DomainAdmincreds,
 	  
-    [Parameter(Mandatory)]
-    [String]$OUPath,
-
-    [Int]$RetryCount=20,
-    [Int]$RetryIntervalSec=10
+    [Int]$RetryCount=30,
+    [Int]$RetryIntervalSec=60
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 Import-DscResource -ModuleName xComputerManagement
 Import-DscResource -ModuleName xNetworking
 Import-DscResource -ModuleName xStorage
+Import-DscResource -ModuleName xActiveDirectory
 Import-DscResource -ModuleName xPendingReboot
 	
 [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($DomainAdmincreds.UserName)", $DomainAdminCreds.Password)
@@ -512,6 +526,17 @@ Node $AllNodes.NodeName
         Name = "RebootServer"
         DependsOn = "[WindowsFeature]FileServer"
       }	
+
+    If ($DomainJoin -eq 'Yes') { 
+		xWaitForADDomain DscForestWait
+		  {
+			DomainName = $DomainName
+			DomainUserCredential= $DomainCreds
+			RetryCount = $RetryCount
+			RetryIntervalSec = $RetryIntervalSec
+		  }
+	}
+
   }
 } 
 			
