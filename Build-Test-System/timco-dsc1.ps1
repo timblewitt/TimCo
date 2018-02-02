@@ -16,8 +16,8 @@ Param
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$SafeModeCreds,
 
-    [Int]$RetryCount=20,
-    [Int]$RetryIntervalSec=10
+    [Int]$RetryCount=30,
+    [Int]$RetryIntervalSec=60
     )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -232,8 +232,8 @@ Param
     [Parameter(Mandatory)]
     [System.Management.Automation.PSCredential]$SafeModeCreds,
 
-    [Int]$RetryCount=20,
-    [Int]$RetryIntervalSec=10
+    [Int]$RetryCount=30,
+    [Int]$RetryIntervalSec=60
   )
 
 Import-DscResource -ModuleName PSDesiredStateConfiguration
