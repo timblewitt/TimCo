@@ -1143,6 +1143,7 @@
                 }
               }
             }
+          }
         },
         {
           "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
@@ -1175,7 +1176,7 @@
               "Password": "[parameters('timco-adminPassword')]"
             }
           }
-          }
+        }
         ]
       }
     ],
