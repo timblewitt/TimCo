@@ -720,33 +720,36 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.74",
+            "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionFirstDC'))]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionFirstDC')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "properties": {
+              "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
-                "DomainName": "[parameters('timco-domainName')]",
-                "AdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "PrivateSettingsRef:AdminPassword"
-                },
-                "SafeModeCreds": {
-                  "UserName": "Administrator",
-                  "Password": "PrivateSettingsRef:SafeModePassword"
-                }
+                "DomainName": "[parameters('timco-domainName')]"
               }
             },
             "protectedSettings": {
-              "Items": {
-                "AdminPassword": "[parameters('timco-adminPassword')]",
-                "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              },
-              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
+              "configurationArguments": {
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "[parameters('timco-adminPassword')]"
+                },
+                "SafeModeCreds": {
+                  "UserName": "Administrator",
+                  "Password": "[parameters('timco-safeModePassword')]"
+                }
+              }
             }
           }
         }
@@ -837,33 +840,36 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.74",
+            "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionNextDC'))]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionNextDC')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "properties": {
+              "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
-                "DomainName": "[parameters('timco-domainName')]",
-                "AdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "PrivateSettingsRef:AdminPassword"
-                },
-                "SafeModeCreds": {
-                  "UserName": "Administrator",
-                  "Password": "PrivateSettingsRef:SafeModePassword"
-                }
+                "DomainName": "[parameters('timco-domainName')]"
               }
             },
             "protectedSettings": {
-              "Items": {
-                "AdminPassword": "[parameters('timco-adminPassword')]",
-                "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              },
-              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
+              "configurationArguments": {
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "[parameters('timco-adminPassword')]"
+                },
+                "SafeModeCreds": {
+                  "UserName": "Administrator",
+                  "Password": "[parameters('timco-safeModePassword')]"
+                }
+              }
             }
           }
         }
@@ -961,26 +967,29 @@
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionWebServer'))]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionWebServer')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "properties": {
+              "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[parameters('timco-webDomainJoin')]",
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "PrivateSettingsRef:AdminPassword"
-                }
+                "DomainJoin": "[parameters('timco-webDomainJoin')]"
               }
             },
             "protectedSettings": {
-              "Items": {
-                "AdminPassword": "[parameters('timco-adminPassword')]",
-                "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              },
-              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
+              "configurationArguments": {
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "[parameters('timco-adminPassword')]"
+                }
+              }
             }
           }
         },
@@ -1106,32 +1115,34 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.74",
+            "typeHandlerVersion": "2.72",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionAppServer'))]",
+              "configuration": {
+                "url": "[variables('timco-dscConfigurationUrl')]",
+                "script": "[variables('timco-dscConfigScript')]",
+                "function": "[variables('timco-dscConfigFunctionAppServer')]"
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
               "sasToken": "",
-              "properties": {
+              "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[parameters('timco-appDomainJoin')]",
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "PrivateSettingsRef:AdminPassword"
-                }
+                "DomainJoin": "[parameters('timco-appDomainJoin')]"
               }
             },
             "protectedSettings": {
-              "Items": {
-                "AdminPassword": "[parameters('timco-adminPassword')]",
-                "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              },
-              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
+              "configurationArguments": {
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "[parameters('timco-adminPassword')]"
+                }
+              }
             }
-          }
         },
         {
           "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
