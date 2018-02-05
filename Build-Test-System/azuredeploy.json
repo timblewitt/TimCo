@@ -720,20 +720,14 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.72",
+            "typeHandlerVersion": "2.74",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "configuration": {
-                "url": "[variables('timco-dscConfigurationUrl')]",
-                "script": "[variables('timco-dscConfigScript')]",
-                "function": "[variables('timco-dscConfigFunctionFirstDC')]"
-              },
-              "configurationData": {
-                "url": "[variables('timco-dscConfigurationDataUrl')]"
-              },
+              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionFirstDC'))]",
               "sasToken": "",
-              "configurationArguments": {
+              "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
@@ -751,7 +745,8 @@
               "Items": {
                 "AdminPassword": "[parameters('timco-adminPassword')]",
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              }
+              },
+              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
             }
           }
         }
@@ -842,7 +837,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.72",
+            "typeHandlerVersion": "2.74",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
@@ -1121,7 +1116,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.72",
+            "typeHandlerVersion": "2.74",
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
