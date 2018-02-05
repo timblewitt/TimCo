@@ -841,16 +841,10 @@
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "configuration": {
-                "url": "[variables('timco-dscConfigurationUrl')]",
-                "script": "[variables('timco-dscConfigScript')]",
-                "function": "[variables('timco-dscConfigFunctionNextDC')]"
-              },
-              "configurationData": {
-                "url": "[variables('timco-dscConfigurationDataUrl')]"
-              },
+              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionNextDC'))]",
               "sasToken": "",
-              "configurationArguments": {
+              "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
@@ -868,7 +862,8 @@
               "Items": {
                 "AdminPassword": "[parameters('timco-adminPassword')]",
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              }
+              },
+              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
             }
           }
         }
@@ -966,14 +961,8 @@
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "configuration": {
-                "url": "[variables('timco-dscConfigurationUrl')]",
-                "script": "[variables('timco-dscConfigScript')]",
-                "function": "[variables('timco-dscConfigFunctionWebServer')]"
-              },
-              "configurationData": {
-                "url": "[variables('timco-dscConfigurationDataUrl')]"
-              },
+              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionWebServer'))]",
               "sasToken": "",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
@@ -990,7 +979,8 @@
               "Items": {
                 "AdminPassword": "[parameters('timco-adminPassword')]",
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              }
+              },
+              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
             }
           }
         },
@@ -1120,14 +1110,8 @@
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
-              "configuration": {
-                "url": "[variables('timco-dscConfigurationUrl')]",
-                "script": "[variables('timco-dscConfigScript')]",
-                "function": "[variables('timco-dscConfigFunctionAppServer')]"
-              },
-              "configurationData": {
-                "url": "[variables('timco-dscConfigurationDataUrl')]"
-              },
+              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionAppServer'))]",
               "sasToken": "",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
@@ -1144,7 +1128,8 @@
               "Items": {
                 "AdminPassword": "[parameters('timco-adminPassword')]",
                 "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              }
+              },
+              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
             }
           }
         },
