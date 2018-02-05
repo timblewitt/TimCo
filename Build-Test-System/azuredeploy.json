@@ -1119,21 +1119,22 @@
             "autoUpgradeMinorVersion": true,
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
+              "wmfVersion": "latest",
               "configuration": {
                 "url": "[variables('timco-dscConfigurationUrl')]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionAppServer')]"
               },
-              "configurationData": {
-                "url": "[variables('timco-dscConfigurationDataUrl')]"
-              },
-              "sasToken": "",
               "configurationArguments": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
                 "DomainJoin": "[parameters('timco-appDomainJoin')]"
-              }
+              },
+              "configurationData": {
+                "url": "[variables('timco-dscConfigurationDataUrl')]"
+              },
+              "sasToken": ""
             },
             "protectedSettings": {
               "configurationArguments": {
@@ -1177,9 +1178,9 @@
             }
           }
         }
-        ]
-      }
-    ],
+      ]
+    }
+  ],
 
   "outputs": {
   }
