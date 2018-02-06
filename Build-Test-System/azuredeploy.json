@@ -159,7 +159,7 @@
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-dscConfigurationUrl": "https://github.com/timblewitt/TimCo/raw/master/Build-Test-System/timco-dsc1.zip",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/timco-dsc1.psd1",
-    "timco-dscConfigScript": "timco-dsc1.ps1",
+    "timco-dscConfigScript": "timco-dsc1.ps1\\",
     "timco-dscConfigFunctionFirstDC": "FirstDC",
     "timco-dscConfigFunctionNextDC": "NextDC",
     "timco-dscConfigFunctionWebServer": "WebServer",
@@ -168,7 +168,7 @@
     "timco-domainDistinguishedName": "[concat('DC=',replace(parameters('timco-domainName'),'.',',DC='))]",
     "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
-    "timco-domainAdminName": "[concat(parameters('timco-domainName'), '\\', parameters('timco-adminUserName'))]",
+    "timco-domainAdminName": "[concat(parameters('timco-adminUserName'),'@', parameters('timco-domainName'))]",
     "timco-domainJoinOptions": 3
   },
 
@@ -725,7 +725,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionFirstDC'))]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), variables('timco-dscConfigFunctionFirstDC'))]",
               "sasToken": "",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
@@ -842,7 +842,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionNextDC'))]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), variables('timco-dscConfigFunctionNextDC'))]",
               "sasToken": "",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'))]",
@@ -962,7 +962,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionWebServer'))]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), variables('timco-dscConfigFunctionWebServer'))]",
               "sasToken": "",
               "properties": {
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
@@ -1111,7 +1111,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), '\\', variables('timco-dscConfigFunctionAppServer'))]",
+              "configurationFunction": "[concat(variables('timco-dscConfigScript'), variables('timco-dscConfigFunctionAppServer'))]",
               "sasToken": "",
               "properties": {
                 "NodeName": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
