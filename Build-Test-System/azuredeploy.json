@@ -109,14 +109,9 @@
     },
     "_artifactsLocation": {
       "type": "string",
+      "defaultValue":  "https://github.com/timblewitt/TimCo/raw/master/",
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
-      }
-    },
-    "_artifactsLocationSasToken": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Auto-generated token to access _artifactsLocation"
       }
     }
   },
@@ -184,9 +179,7 @@
     "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-domainAdminName": "[concat(parameters('timco-adminUserName'),'@', parameters('timco-domainName'))]",
-    "timco-domainJoinOptions": 3,
-    "dsc1ArchiveFolder": "DSC",
-    "dsc1ArchiveFileName": "dsc1.zip"
+    "timco-domainJoinOptions": 3
   },
 
   "resources": [
@@ -1021,7 +1014,6 @@
               }
             },
             "protectedSettings": {
-              "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]",
               "configurationArguments": {
                 "DomainAdminCreds": {
                   "UserName": "[parameters('timco-adminUserName')]",
