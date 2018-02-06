@@ -201,8 +201,8 @@ Node $AllNodes.NodeName
                GroupScope = $Group.GroupScope
                Description = $Group.Description
                Category = $Group.Category
-               MembersToInclude = $Group.MembersToInclude
-#               MembersToInclude = "AA1","BB1","CC1"
+#               MembersToInclude = $Group.MembersToInclude
+               MembersToInclude = {"AA1","BB1","CC1"}
 #               MembersToInclude = ($Users | Where-Object {$_.UserName -In $Group.MembersToInclude}).UserName
                Path = "$($Group.Path),$DomainRoot"
                Ensure = 'Present'
