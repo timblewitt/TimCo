@@ -109,7 +109,7 @@
     },
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue":  "https://github.com/timblewitt/TimCo/raw/master/",
+      "defaultValue":  "https://github.com/timblewitt/TimCo/raw/master",
       "metadata": {
         "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
       }
@@ -953,44 +953,13 @@
       },
       "resources": [
         {
-          "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+          "name": "[concat('DSC-Web',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
           "type": "extensions",
-          "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
-          "apiVersion": "2015-06-15",
+          "condition": "[greater(parameters('timco-webServerCount'),0)]",
+          "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-            "[concat('DSC-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
-          ],
-          "tags": {
-            "displayName": "JoinDomain-Web"
-          },
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "JsonADDomainExtension",
-            "typeHandlerVersion": "1.3",
-            "autoUpgradeMinorVersion": true,
-            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
-            "settings": {
-              "Name": "[parameters('timco-domainName')]",
-              "OUPath": "[variables('timco-ouPathWeb')]",
-              "User": "[variables('timco-domainAdminName')]",
-              "Restart": "true",
-              "Options": "[variables('timco-domainJoinOptions')]"
-            },
-            "protectedSettings": {
-              "Password": "[parameters('timco-adminPassword')]"
-            }
-          }
-        },
-        {
-          "name": "Microsoft.Powershell.DSC",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0')))]"
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]"
           ],
           "tags": {
             "displayName": "DSC-Web"
@@ -1020,6 +989,38 @@
                   "Password": "[parameters('timco-adminPassword')]"
                 }
               }
+            }
+          }
+        },
+        {
+          "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+          "type": "extensions",
+          "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
+          "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+            "[concat('DSC-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
+          ],
+          "tags": {
+            "displayName": "JoinDomain-Web"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "JsonADDomainExtension",
+            "typeHandlerVersion": "1.3",
+            "autoUpgradeMinorVersion": true,
+            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
+            "settings": {
+              "Name": "[parameters('timco-domainName')]",
+              "OUPath": "[variables('timco-ouPathWeb')]",
+              "User": "[variables('timco-domainAdminName')]",
+              "Restart": "true",
+              "Options": "[variables('timco-domainJoinOptions')]"
+            },
+            "protectedSettings": {
+              "Password": "[parameters('timco-adminPassword')]"
             }
           }
         }
