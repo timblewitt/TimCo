@@ -106,13 +106,6 @@
       "metadata": {
         "description": "Prefix for naming application servers."
       }
-    },
-    "_artifactsLocation": {
-      "type": "string",
-      "defaultValue":  "https://github.com/timblewitt/TimCo/raw/master",
-      "metadata": {
-        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
-      }
     }
   },
 
@@ -734,7 +727,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionFirstDC')]"
               },
@@ -853,7 +846,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionNextDC')]"
               },
@@ -974,7 +967,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionWebServer')]"
               },
@@ -1121,7 +1114,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[concat(parameters('_artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionAppServer')]"
               },
