@@ -106,6 +106,18 @@
       "metadata": {
         "description": "Prefix for naming application servers."
       }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+      }
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Auto-generated token to access _artifactsLocation"
+      }
     }
   },
 
@@ -157,9 +169,12 @@
     "timco-adcSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-adcSubNet'))]",
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
+    "timco-dscArchiveFolder": "Build-Test-System",
+    "timco-dscArchiveFileName": "timco-dsc1.zip",
     "timco-dscConfigurationUrl": "https://github.com/timblewitt/TimCo/raw/master/Build-Test-System/timco-dsc1.zip",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/timco-dsc1.psd1",
     "timco-dscConfigScript": "timco-dsc1.ps1\\",
+    "timco-dscConfigScript1": "timco-dsc1.ps1",
     "timco-dscConfigFunctionFirstDC": "FirstDC",
     "timco-dscConfigFunctionNextDC": "NextDC",
     "timco-dscConfigFunctionWebServer": "WebServer",
@@ -169,7 +184,9 @@
     "timco-ouPathWeb": "[concat('OU=Web,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-ouPathApp": "[concat('OU=Application,OU=Servers,OU=Computers,OU=Managed,', variables('timco-domainDistinguishedName'))]",
     "timco-domainAdminName": "[concat(parameters('timco-adminUserName'),'@', parameters('timco-domainName'))]",
-    "timco-domainJoinOptions": 3
+    "timco-domainJoinOptions": 3,
+    "dsc1ArchiveFolder": "DSC",
+    "dsc1ArchiveFileName": "dsc1.zip"
   },
 
   "resources": [
@@ -943,48 +960,6 @@
       },
       "resources": [
         {
-          "name": "[concat('DSC-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-          "type": "extensions",
-          "condition": "[greater(parameters('timco-webServerCount'),0)]",
-          "apiVersion": "2017-12-01",
-          "location": "[resourceGroup().location]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]"
-          ],
-          "tags": {
-            "displayName": "DSC-Web"
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.74",
-            "autoUpgradeMinorVersion": true,
-            "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
-            "settings": {
-              "modulesUrl": "[variables('timco-dscConfigurationUrl')]",
-              "configurationFunction": "[concat(variables('timco-dscConfigScript'), variables('timco-dscConfigFunctionWebServer'))]",
-              "sasToken": "",
-              "properties": {
-                "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
-                "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[parameters('timco-webDomainJoin')]",
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "PrivateSettingsRef:AdminPassword"
-                }
-              }
-            },
-            "protectedSettings": {
-              "Items": {
-                "AdminPassword": "[parameters('timco-adminPassword')]",
-                "SafeModePassword": "[parameters('timco-safeModePassword')]"
-              },
-              "DataBlobUri": "[variables('timco-dscConfigurationDataUrl')]"
-            }
-          }
-        },
-        {
           "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
@@ -1013,6 +988,46 @@
             },
             "protectedSettings": {
               "Password": "[parameters('timco-adminPassword')]"
+            }
+          }
+        },
+        {
+          "name": "Microsoft.Powershell.DSC",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0')))]"
+          ],
+          "tags": {
+            "displayName": "DSC-Web"
+          },
+          "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "2.9",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "configuration": {
+                "url": "[concat(parameters('_artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "script": "[variables('timco-dscConfigScript1')]",
+                "function": "[variables('timco-dscConfigFunctionWebServer')]"
+              },
+              "configurationArguments": {
+                "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
+                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
+                "DomainName": "[parameters('timco-domainName')]",
+                "DomainJoin": "[parameters('timco-webDomainJoin')]"
+              }
+            },
+            "protectedSettings": {
+              "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]",
+              "configurationArguments": {
+                "DomainAdminCreds": {
+                  "UserName": "[parameters('timco-adminUserName')]",
+                  "Password": "[parameters('timco-adminPassword')]"
+                }
+              }
             }
           }
         }
