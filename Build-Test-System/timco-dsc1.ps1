@@ -202,7 +202,7 @@ Node $AllNodes.NodeName
                Description = $Group.Description
                Category = $Group.Category
 #               MembersToInclude = $Group.MembersToInclude
-               MembersToInclude = {"AA1","BB1","CC1"}
+               MembersToInclude = "AA1","BB1","CC1"
 #               MembersToInclude = ($Users | Where-Object {$_.UserName -In $Group.MembersToInclude}).UserName
                Path = "$($Group.Path),$DomainRoot"
                Ensure = 'Present'
