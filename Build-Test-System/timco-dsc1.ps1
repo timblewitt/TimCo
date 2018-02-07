@@ -195,6 +195,7 @@ Node $AllNodes.NodeName
       $Groups = $ConfigurationData.NonNodeData.GroupData | ConvertFrom-CSV
       ForEach ($Group in $Groups)
         { 
+		  $GroupMembers  = "AA1","BB1","DD1"
           xADGroup "NewADGroup_$($Group.GroupName)"
             {
                GroupName = $Group.GroupName
@@ -202,7 +203,7 @@ Node $AllNodes.NodeName
                Description = $Group.Description
                Category = $Group.Category
 #               MembersToInclude = $Group.MembersToInclude
-               MembersToInclude = "AA1","BB1","CC1"
+               MembersToInclude = $GroupMembers
 #               MembersToInclude = ($Users | Where-Object {$_.UserName -In $Group.MembersToInclude}).UserName
                Path = "$($Group.Path),$DomainRoot"
                Ensure = 'Present'
