@@ -533,7 +533,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "adcNicLoop",
-        "count": "[parameters('timco-domainControllerCount')]"
+        "count": "[variables('timco-dcCopyCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('timco-vNet1Name'))]",
