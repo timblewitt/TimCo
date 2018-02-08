@@ -365,6 +365,7 @@
     {
       "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
+      "condition": "[greater(parameters('timco-domainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -529,6 +530,7 @@
     {
       "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
+      "condition": "[greater(parameters('timco-domainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "copy": {
