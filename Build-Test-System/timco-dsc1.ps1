@@ -195,7 +195,6 @@ Node $AllNodes.NodeName
       $Groups = $ConfigurationData.NonNodeData.GroupData | ConvertFrom-CSV
       ForEach ($Group in $Groups)
         { 
-#		  $GroupMembers = $Group.MembersToInclude.Split(',')
           xADGroup "NewADGroup_$($Group.GroupName)"
             {
                GroupName = $Group.GroupName
@@ -203,8 +202,6 @@ Node $AllNodes.NodeName
                Description = $Group.Description
                Category = $Group.Category
                MembersToInclude = $Group.MembersToInclude.Split(',')
-#               MembersToInclude = $GroupMembers
-#               MembersToInclude = ($Users | Where-Object {$_.UserName -In $Group.MembersToInclude}).UserName
                Path = "$($Group.Path),$DomainRoot"
                Ensure = 'Present'
                DependsOn = $DependsOn_User
@@ -416,12 +413,19 @@ Node $AllNodes.NodeName
         Ensure = 'Present'
         Name = 'Telnet-Client'
       }
-
+	  
 	WindowsFeature IIS 
     { 
         Ensure = "Present" 
         Name = "Web-Server" 
         DependsOn = "[xDisk]FVolume"                      
+    } 
+
+	WindowsFeature IISTools
+    { 
+        Ensure = "Present" 
+        Name = "Web-Mgmt-Tools" 
+        DependsOn = "[WindowsFeature]IIS"                      
     } 
 
     xPendingReboot Reboot1
