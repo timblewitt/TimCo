@@ -196,14 +196,18 @@ Node $AllNodes.NodeName
       ForEach ($Group in $Groups)
         { 
 		  $GroupMembers  = "AA1","BB1","DD1"
-#		  $GroupMembers = $Group.MembersToInclude -replace ',', '","'
-#		  $GroupMembers = '"' + $GroupMembers + '"'
+		  $TestGroupMembers = ''
+		  $TestGroupMembersArray = $Group.MembersToInclude.Split(',')
+		  ForEach ($TestGroup In $TestGroupMembersArray) {
+			  $TestGroupMembers = $TestGroupMembers + '"' + $TestGroup + '",'
+		  }
+		  $TestGroupMembers = $TestGroupMembers.Substring(0,$TestGroupMembers.Length-1)
           xADGroup "NewADGroup_$($Group.GroupName)"
             {
                GroupName = $Group.GroupName
                GroupScope = $Group.GroupScope
 #               Description = $Group.Description
-               Description = $Group.MembersToInclude
+               Description = $TestGroupMembers
                Category = $Group.Category
 #               MembersToInclude = $Group.MembersToInclude
                MembersToInclude = $GroupMembers
