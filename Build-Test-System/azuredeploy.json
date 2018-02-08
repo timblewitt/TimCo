@@ -158,6 +158,8 @@
     "timco-adcSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-adcSubNet'))]",
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
+    "timco-webDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-webDomainJoin'))]",
+    "timco-appDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-appDomainJoin'))]",
     "timco-artifactsLocation": "https://github.com/timblewitt/TimCo/raw/master",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/timco-dsc1.psd1",
     "timco-dscArchiveFolder": "Build-Test-System",
@@ -195,6 +197,7 @@
     {
       "name": "[variables('timco-adcAvailabilitySet')]",
       "type": "Microsoft.Compute/availabilitySets",
+      "condition": "[greater(parameters('timco-domainControllerCount'),0)]",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
@@ -715,6 +718,7 @@
         {
           "name": "DSC-ADC",
           "type": "extensions",
+          "condition": "[greater(parameters('timco-domainControllerCount'),0)]",
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -769,7 +773,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('timco-vmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('timco-adcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(parameters('timco-domainControllerCount'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-bdcStartIndex'),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Second domain controller"
@@ -979,7 +983,7 @@
                 "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[parameters('timco-webDomainJoin')]"
+                "DomainJoin": "[variables('timco-webDomainJoin')]"
               }
             },
             "protectedSettings": {
@@ -995,7 +999,7 @@
         {
           "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
           "type": "extensions",
-          "condition": "[and(equals(parameters('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
+          "condition": "[and(equals(variables('timco-webDomainJoin'),'Yes'), greater(parameters('timco-webServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
@@ -1126,7 +1130,7 @@
                 "NodeName": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[parameters('timco-webDomainJoin')]"
+                "DomainJoin": "[variables('timco-webDomainJoin')]"
               }
             },
             "protectedSettings": {
@@ -1142,7 +1146,7 @@
         {
           "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
           "type": "extensions",
-          "condition": "[and(equals(parameters('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
+          "condition": "[and(equals(variables('timco-appDomainJoin'),'Yes'), greater(parameters('timco-appServerCount'),0))]",
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
