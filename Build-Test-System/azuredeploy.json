@@ -141,6 +141,7 @@
     "timco-appStartIndex": 1,
     "timco-adcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-adcStartIndex'),2,'1'))]",
     "timco-bdcDNSServerAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-bdcStartIndex'),2,'1'))]",
+    "timco-dcCopyCount": "[if(equals(parameters('timco-domainControllerCount'), 0), 1, parameters('timco-domainControllerCount'))]",
     "timco-webCopyCount": "[if(equals(parameters('timco-webServerCount'), 0), 1, parameters('timco-webServerCount'))]",
     "timco-appCopyCount": "[if(equals(parameters('timco-appServerCount'), 0), 1, parameters('timco-appServerCount'))]",
     "timco-vmSize": "Standard_D1_V2",
@@ -368,7 +369,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "adcPipLoop",
-        "count": "[parameters('timco-domainControllerCount')]"
+        "count": "[variables('timco-dcCopyCount')]"
       },
       "dependsOn": [],
       "tags": {
