@@ -195,22 +195,15 @@ Node $AllNodes.NodeName
       $Groups = $ConfigurationData.NonNodeData.GroupData | ConvertFrom-CSV
       ForEach ($Group in $Groups)
         { 
-		  $GroupMembers  = "AA1","BB1","DD1"
-		  $TestGroupMembers = ''
-		  $TestGroupMembersArray = $Group.MembersToInclude.Split(',')
-		  ForEach ($TestGroup In $TestGroupMembersArray) {
-			  $TestGroupMembers = $TestGroupMembers + '"' + $TestGroup + '",'
-		  }
-		  $TestGroupMembers = $TestGroupMembers.Substring(0,$TestGroupMembers.Length-1)
+#		  $GroupMembers = $Group.MembersToInclude.Split(',')
           xADGroup "NewADGroup_$($Group.GroupName)"
             {
                GroupName = $Group.GroupName
                GroupScope = $Group.GroupScope
-#               Description = $Group.Description
-               Description = $TestGroupMembers
+               Description = $Group.Description
                Category = $Group.Category
-#               MembersToInclude = $Group.MembersToInclude
-               MembersToInclude = $TestGroupMembersArray
+               MembersToInclude = $Group.MembersToInclude.Split(',')
+#               MembersToInclude = $GroupMembers
 #               MembersToInclude = ($Users | Where-Object {$_.UserName -In $Group.MembersToInclude}).UserName
                Path = "$($Group.Path),$DomainRoot"
                Ensure = 'Present'
