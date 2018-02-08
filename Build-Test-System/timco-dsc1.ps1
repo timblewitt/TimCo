@@ -195,14 +195,15 @@ Node $AllNodes.NodeName
       $Groups = $ConfigurationData.NonNodeData.GroupData | ConvertFrom-CSV
       ForEach ($Group in $Groups)
         { 
-#		  $GroupMembers  = "AA1","BB1","DD1"
-		  $GroupMembers = $Group.MembersToInclude -replace ',', '","'
-		  $GroupMembers = '"' + $GroupMembers + '"'
+		  $GroupMembers  = "AA1","BB1","DD1"
+#		  $GroupMembers = $Group.MembersToInclude -replace ',', '","'
+#		  $GroupMembers = '"' + $GroupMembers + '"'
           xADGroup "NewADGroup_$($Group.GroupName)"
             {
                GroupName = $Group.GroupName
                GroupScope = $Group.GroupScope
-               Description = $Group.Description
+#               Description = $Group.Description
+               Description = $Group.MembersToInclude
                Category = $Group.Category
 #               MembersToInclude = $Group.MembersToInclude
                MembersToInclude = $GroupMembers
