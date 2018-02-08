@@ -7,7 +7,7 @@
     "timco-domainControllerCount": {
       "type": "int",
       "defaultValue": 2,
-      "minValue": 1,
+      "minValue": 0,
       "maxValue": 2,
       "metadata": {
         "description": "Number of domain controllers to deploy."
@@ -643,6 +643,7 @@
     {
       "name": "[concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
+      "condition": "[greater(parameters('timco-domainControllerCount'),0)]",
       "apiVersion": "2017-12-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
