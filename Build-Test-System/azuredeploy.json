@@ -1130,7 +1130,7 @@
                 "NodeName": "[concat(parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
                 "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[variables('timco-webDomainJoin')]"
+                "DomainJoin": "[variables('timco-appDomainJoin')]"
               }
             },
             "protectedSettings": {
