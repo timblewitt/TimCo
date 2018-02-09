@@ -373,7 +373,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
-        "displayName": "PIPs - primary DC"
+        "displayName": "PIPs - Primary DC"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -390,7 +390,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
-        "displayName": "PIPs - secondary DC"
+        "displayName": "PIPs - Secondary DC"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -411,7 +411,7 @@
       },
       "dependsOn": [],
       "tags": {
-        "displayName": "PIPs - web servers"
+        "displayName": "PIPs - Web servers"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -432,7 +432,7 @@
       },
       "dependsOn": [],
       "tags": {
-        "displayName": "PIPs - application servers"
+        "displayName": "PIPs - Application servers"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -449,7 +449,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
-        "displayName": "PIP - web load balancer"
+        "displayName": "PIP - Web load balancer"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -554,7 +554,7 @@
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-pip1')]"
       ],
       "tags": {
-        "displayName": "NICs - primary DC"
+        "displayName": "NICs - Primary DC"
       },
       "properties": {
         "ipConfigurations": [
@@ -585,7 +585,7 @@
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-pip1')]"
       ],
       "tags": {
-        "displayName": "NICs - secondary DC"
+        "displayName": "NICs - Secondary DC"
       },
       "properties": {
         "ipConfigurations": [
@@ -593,12 +593,12 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'1'))]",
+              "privateIPAddress": "[concat(variables('timco-adcIPAddressPrefix'), padLeft(variables('timco-adcStartIndex'),2,'1'))]",
               "subnet": {
                 "id": "[variables('timco-adcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('timco-adcNamePrefix'), padLeft(copyIndex(variables('timco-adcStartIndex')),2,'0'), '-pip1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('timco-adcNamePrefix'), padLeft(variables('timco-adcStartIndex'),2,'0'), '-pip1'))]"
               }
             }
           }
@@ -621,7 +621,7 @@
         "[concat('Microsoft.Network/loadBalancers/', variables('timco-webLBName'), '/inboundNatRules/', 'RDP-VM', copyIndex(variables('timco-webStartIndex')))]"
       ],
       "tags": {
-        "displayName": "NICS - web servers"
+        "displayName": "NICS - Web servers"
       },
       "properties": {
         "ipConfigurations": [
@@ -667,7 +667,7 @@
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('timco-appNamePrefix'), padLeft(copyIndex(variables('timco-appStartIndex')),2,'0'), '-pip1')]"
       ],
       "tags": {
-        "displayName": "NICs - application servers"
+        "displayName": "NICs - Application servers"
       },
       "properties": {
         "ipConfigurations": [
