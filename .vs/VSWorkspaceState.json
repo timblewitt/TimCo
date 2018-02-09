@@ -3,6 +3,6 @@
     "",
     "\\Build-Test-System"
   ],
-  "SelectedNode": "\\Build-Test-System\\timco-dsc1.ps1",
+  "SelectedNode": "\\Build-Test-System\\azuredeploy.json",
   "PreviewInSolutionExplorer": false
 }
