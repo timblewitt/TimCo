@@ -14,6 +14,28 @@
       "metadata": {
         "description": "SQL Server system admin password"
       }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "S1"
+      ],
+      "metadata": {
+        "description": "Application plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 3,
+      "metadata": {
+        "description": "Number of instances in application plan"
+      }
     }
   },
   "variables": {
@@ -43,7 +65,7 @@
           "apiVersion": "2017-03-01-preview",
           "location": "[resourceGroup().location]",
           "tags": {
-            "displayName": "Database"
+            "displayName": "SQL Database"
           },
           "dependsOn": [
             "[variables('sqlServerName')]"
@@ -60,15 +82,34 @@
           "type": "firewallrules",
           "apiVersion": "2015-05-01-preview",
           "location": "[resourceGroup().location]",
+          "tags": {
+            "displayName": "SQL Firewall Rules"
+          },
           "dependsOn": [
-            "[variables('sqlServerName')]"
-          ],
+              "[variables('sqlServerName')]"
+            ],
           "properties": {
-            "endIpAddress": "0.0.0.0",
-            "startIpAddress": "0.0.0.0"
-          }
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            }
         }
       ]
+    },
+    {
+      "name": "[variables('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2017-08-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Hosting Plan"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "properties": {
+        "name": "[variables('hostingPlanName')]"
+      }
     }
   ],
   "outputs": {
