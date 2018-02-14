@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-timco-dsc1",
+      "appliesTo": "Build-AD-Domain/timco-dsc1.psd1",
+      "type": "launch"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"sqlAdminAccountName": {
+			"type": "string",
+      "defaultValue": "timco-admin",
+			"metadata": {
+				"description": "SQL Server system admin account"
+			}
+		},
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SQL Server system admin password"
+      }
+    }
+	},
+	"variables": {
+		"hostingPlanName": "[concat('hostingplan', uniqueString(resourceGroup().id))]",
+		"webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
+		"sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]",
+		"databaseName": "TimCoDB"
+	},
+	"resources": [
+    {
+      "name": "[variables('sqlServerName')]",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "SQL Server"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('sqlAdminAccountName')]",
+        "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "[variables('databaseName')]",
+          "type": "databases",
+          "apiVersion": "2017-03-01-preview",
+          "location": "[resourceGroup().location]",
+          "tags": {
+            "displayName": "Database"
+          },
+          "dependsOn": [
+            "[variables('sqlServerName')]"
+          ],
+          "properties": {
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "edition": "Basic",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "Basic"
+          }
+        },
+        {
+          "type": "firewallrules",
+           "apiVersion": "2014-04-01",
+          "dependsOn": [
+            "[variables('sqlServerName')]"
+          ],
+          "location": "[resourceGroup().location]",
+          "name": "AllowAllWindowsAzureIps",
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        }
+      ]
+    }
+	],
+	"outputs": {
+		"sqlSvrFqdn": {
+			"type": "string",
+			"value": "[reference(concat('Microsoft.Sql/servers/', variables('sqlServerName'))).fullyQualifiedDomainName]"
+		}
+	}
+
+}

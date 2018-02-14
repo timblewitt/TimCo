@@ -111,7 +111,7 @@
 
   "variables": {
     "timco-artifactsLocation": "https://github.com/timblewitt/TimCo/raw/master",
-    "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-Test-System/timco-dsc1.psd1",
+    "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
@@ -162,7 +162,7 @@
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-webDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-webDomainJoin'))]",
     "timco-appDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-appDomainJoin'))]",
-    "timco-dscArchiveFolder": "Build-Test-System",
+    "timco-dscArchiveFolder": "Build-AD-Domain",
     "timco-dscArchiveFileName": "timco-dsc1.zip",
     "timco-dscConfigScript": "timco-dsc1.ps1",
     "timco-dscConfigFunctionFirstDC": "FirstDC",
