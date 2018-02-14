@@ -15,7 +15,7 @@
         "description": "SQL Server system admin password"
       }
     },
-    "skuName": {
+    "appPlanPricingTier": {
       "type": "string",
       "defaultValue": "F1",
       "allowedValues": [
@@ -28,7 +28,7 @@
         "description": "Application plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
       }
     },
-    "skuCapacity": {
+    "appPlanInstances": {
       "type": "int",
       "defaultValue": 1,
       "minValue": 1,
@@ -104,8 +104,8 @@
         "displayName": "Hosting Plan"
       },
       "sku": {
-        "name": "[parameters('skuName')]",
-        "capacity": "[parameters('skuCapacity')]"
+        "name": "[parameters('appPlanPricingTier')]",
+        "capacity": "[parameters('appPlanInstances')]"
       },
       "properties": {
         "name": "[variables('hostingPlanName')]"
