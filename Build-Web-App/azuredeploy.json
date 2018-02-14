@@ -1,28 +1,28 @@
 {
-	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"sqlAdminAccountName": {
-			"type": "string",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sqlAdminAccountName": {
+      "type": "string",
       "defaultValue": "timco-admin",
-			"metadata": {
-				"description": "SQL Server system admin account"
-			}
-		},
+      "metadata": {
+        "description": "SQL Server system admin account"
+      }
+    },
     "sqlAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "SQL Server system admin password"
       }
     }
-	},
-	"variables": {
-		"hostingPlanName": "[concat('hostingplan', uniqueString(resourceGroup().id))]",
-		"webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
-		"sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]",
-		"databaseName": "TimCoDB"
-	},
-	"resources": [
+  },
+  "variables": {
+    "hostingPlanName": "[concat('hostingplan', uniqueString(resourceGroup().id))]",
+    "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
+    "sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]",
+    "databaseName": "TimCoDB"
+  },
+  "resources": [
     {
       "name": "[variables('sqlServerName')]",
       "type": "Microsoft.Sql/servers",
@@ -56,13 +56,13 @@
           }
         },
         {
+          "name": "AllowAllWindowsAzureIps",
           "type": "firewallrules",
-           "apiVersion": "2014-04-01",
+          "apiVersion": "2015-05-01-preview",
+          "location": "[resourceGroup().location]",
           "dependsOn": [
             "[variables('sqlServerName')]"
           ],
-          "location": "[resourceGroup().location]",
-          "name": "AllowAllWindowsAzureIps",
           "properties": {
             "endIpAddress": "0.0.0.0",
             "startIpAddress": "0.0.0.0"
@@ -70,92 +70,11 @@
         }
       ]
     }
-	],
-	"outputs": {
-		"sqlSvrFqdn": {
-			"type": "string",
-			"value": "[reference(concat('Microsoft.Sql/servers/', variables('sqlServerName'))).fullyQualifiedDomainName]"
-		}
-	}
-
-=======
-{
-	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"timco-sqlAdminAccountName": {
-			"type": "string",
-			"metadata": {
-				"description": "SQL Server system admin account"
-			}
-		},
-    "timco-sqlAdminPassword": {
-      "type": "securestring",
-      "defaultValue": "timco-admin",
-      "metadata": {
-        "description": "SQL Server system admin password"
-      }
+  ],
+  "outputs": {
+    "sqlSvrFqdn": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Sql/servers/', variables('sqlServerName'))).fullyQualifiedDomainName]"
     }
-	},
-	"variables": {
-		"hostingPlanName": "[concat('hostingplan', uniqueString(resourceGroup().id))]",
-		"webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
-		"timco-sqlServerName": "[concat('sqlserver', uniqueString(resourceGroup().id))]",
-		"timco-databaseName": "TimCoDB"
-	},
-	"resources": [
-    {
-      "name": "[variables('timco-sqlServerName')]",
-      "type": "Microsoft.Sql/servers",
-      "apiVersion": "2015-05-01-preview",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "SQL Server"
-      },
-      "properties": {
-        "administratorLogin": "[parameters('timco-sqlAdminAccountName')]",
-        "administratorLoginPassword": "[parameters('timco-sqlAdminPassword')]",
-        "version": "12.0"
-      },
-      "resources": [
-        {
-          "name": "[variables('timco-databaseName')]",
-          "type": "databases",
-          "apiVersion": "2017-03-01-preview",
-          "location": "[resourceGroup().location]",
-          "tags": {
-            "displayName": "Database"
-          },
-          "dependsOn": [
-            "[variables('timco-sqlServerName')]"
-          ],
-          "properties": {
-            "collation": "SQL_Latin1_General_CP1_CI_AS",
-            "edition": "Basic",
-            "maxSizeBytes": "1073741824",
-            "requestedServiceObjectiveName": "Basic"
-          }
-        },
-        {
-          "type": "firewallrules",
-           "apiVersion": "2014-04-01",
-          "dependsOn": [
-            "[variables('timco-sqlServerName')]"
-          ],
-          "location": "[resourceGroup().location]",
-          "name": "AllowAllWindowsAzureIps",
-          "properties": {
-            "endIpAddress": "0.0.0.0",
-            "startIpAddress": "0.0.0.0"
-          }
-        }
-      ]
-    }
-	],
-	"outputs": {
-		"timco-sqlSvrFqdn": {
-			"type": "string",
-			"value": "[reference(concat('Microsoft.Sql/servers/', variables('timco-sqlServerName'))).fullyQualifiedDomainName]"
-		}
-	}
+  }
 }
