@@ -36,13 +36,19 @@
       "metadata": {
         "description": "SQL Server system admin password"
       }
+    },
+    "sqlDatabaseName": {
+      "type": "string",
+      "defaultValue": "TimCoDB",
+      "metadata": {
+        "description": "SQL Server database name"
+      }
     }
   },
   "variables": {
-    "appServicePlanName": "[concat('appserviceplan', uniqueString(resourceGroup().id))]",
-    "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
-    "sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]",
-    "databaseName": "TimCoDB"
+    "appServicePlanName": "[concat('timco-appserviceplan', uniqueString(resourceGroup().id))]",
+    "webSiteName": "[concat('timco-website', uniqueString(resourceGroup().id))]",
+    "sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -60,7 +66,7 @@
       },
       "resources": [
         {
-          "name": "[variables('databaseName')]",
+          "name": "[parameters('sqlDatabaseName')]",
           "type": "databases",
           "apiVersion": "2017-03-01-preview",
           "location": "[resourceGroup().location]",
@@ -141,7 +147,7 @@
           },
           "properties": {
             "DefaultConnection": {
-              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('databaseName'), ';User Id=', parameters('sqlAdminAccountName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
+              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('sqlDatabaseName'), ';User Id=', parameters('sqlAdminAccountName'), '@', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlAdminPassword'), ';')]",
               "type": "SQLAzure"
             }
           }
