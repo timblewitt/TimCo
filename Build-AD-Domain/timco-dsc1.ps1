@@ -124,7 +124,7 @@ Node $AllNodes.NodeName
       {
         DomainName = $DomainName
         ComplexityEnabled = $false
-#        MinPasswordLength = "8"
+        MinPasswordLength = "8"
 #        LockoutDuration = "60"
 #        LockoutObservationWindow = "60"
 #        LockoutThreshold = "10"
