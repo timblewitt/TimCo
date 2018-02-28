@@ -46,9 +46,9 @@
     }
   },
   "variables": {
-    "appServicePlanName": "[concat('timco-appserviceplan', uniqueString(resourceGroup().id))]",
-    "webSiteName": "[concat('timco-website', uniqueString(resourceGroup().id))]",
-    "sqlServerName": "[concat('timco-sqlserver', uniqueString(resourceGroup().id))]"
+    "appServicePlanName": "[concat('timco-appserviceplan-', uniqueString(resourceGroup().id))]",
+    "webSiteName": "[concat('timco-website-', uniqueString(resourceGroup().id))]",
+    "sqlServerName": "[concat('timco-sqlserver-', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {

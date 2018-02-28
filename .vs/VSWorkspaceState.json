@@ -4,6 +4,6 @@
     "\\Build-AD-Domain",
     "\\Build-Web-App"
   ],
-  "SelectedNode": "\\Build-AD-Domain\\timco-dsc1.ps1",
+  "SelectedNode": "\\Build-Web-App\\README.MD",
   "PreviewInSolutionExplorer": false
 }
