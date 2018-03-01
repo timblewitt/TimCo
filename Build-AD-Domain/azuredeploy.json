@@ -110,7 +110,7 @@
   },
 
   "variables": {
-    "timco-artifactsLocation": "https://github.com/timblewitt/TimCo/raw/master",
+    "timco-artifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
