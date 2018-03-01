@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Build-Test-System"
+    "\\Build-AD-Domain",
+    "\\Build-Web-App"
   ],
-  "SelectedNode": "\\Build-Test-System\\azuredeploy.json",
+  "SelectedNode": "\\Build-AD-Domain\\timco-dsc1.ps1",
   "PreviewInSolutionExplorer": false
 }
