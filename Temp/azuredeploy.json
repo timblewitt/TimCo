@@ -111,7 +111,7 @@
 
   "variables": {
     "timco-artifactsLocation": "https://github.com/timblewitt/TimCo/raw/master",
-    "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
+    "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Test/timco-dsc1.psd1",
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
@@ -162,9 +162,9 @@
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-webDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-webDomainJoin'))]",
     "timco-appDomainJoin": "[if(equals(parameters('timco-domainControllerCount'), 0), 'No', parameters('timco-appDomainJoin'))]",
-    "timco-dscArchiveFolder": "Build-AD-Domain",
-    "timco-dscArchiveFileName": "timco-dsc1.zip",
-    "timco-dscConfigScript": "timco-dsc1.ps1",
+    "timco-dscArchiveFolder": "Test",
+    "timco-dscArchiveFileName": "timco-dsc2.zip",
+    "timco-dscConfigScript": "timco-dsc2.ps1",
     "timco-dscConfigFunctionFirstDC": "FirstDC",
     "timco-dscConfigFunctionNextDC": "NextDC",
     "timco-dscConfigFunctionWebServer": "WebServer",
@@ -1020,18 +1020,7 @@
                 "function": "[variables('timco-dscConfigFunctionWebServer')]"
               },
               "configurationArguments": {
-                "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]",
-                "DNSServerAddress": "[variables('timco-adcDNSServerAddress')]",
-                "DomainName": "[parameters('timco-domainName')]",
-                "DomainJoin": "[variables('timco-webDomainJoin')]"
-              }
-            },
-            "protectedSettings": {
-              "configurationArguments": {
-                "DomainAdminCreds": {
-                  "UserName": "[parameters('timco-adminUserName')]",
-                  "Password": "[parameters('timco-adminPassword')]"
-                }
+                "NodeName": "[concat(parameters('timco-webNamePrefix'), padLeft(copyIndex(variables('timco-webStartIndex')),2,'0'))]"
               }
             }
           }
