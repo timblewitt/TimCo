@@ -432,7 +432,7 @@
       }
     },
     {
-      "name": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]",
+      "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -448,7 +448,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
+          "domainNameLabel": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
         }
       }
     },
@@ -664,7 +664,7 @@
       }
     },
     {
-      "name": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]",
+      "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -675,7 +675,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]"
       ],
       "tags": {
         "displayName": "NICs - Application servers"
@@ -690,7 +690,7 @@
                 "id": "[variables('varAppSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1'))]"
               }
             }
           }
@@ -1056,7 +1056,7 @@
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
             "[concat('DSC-Web',padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
             "displayName": "JoinDomain-Web"
@@ -1082,7 +1082,7 @@
       ]
     },
     {
-      "name": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
+      "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2017-12-01",
@@ -1094,7 +1094,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varWebAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Application servers"
@@ -1113,7 +1113,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('varAppAvailabilitySet'))]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
+          "computerName": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
           "adminUsername": "[parameters('AdminUserName')]",
           "adminPassword": "[parameters('AdminPassword')]"
         },
@@ -1125,7 +1125,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-OSDisk')]",
+            "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -1134,7 +1134,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-DataDisk')]",
+              "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-DataDisk')]",
               "diskSizeGB": "[variables('varAppDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -1148,7 +1148,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-nic1'))]"
             }
           ]
         }
@@ -1161,7 +1161,7 @@
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
           ],
           "tags": {
             "displayName": "DSC-App"
@@ -1178,7 +1178,7 @@
                 "function": "[variables('varDscConfigFunctionAppServer')]"
               },
               "configurationArguments": {
-                "NodeName": "[concat(parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
+                "NodeName": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('varAdcDNSServerAddress')]",
                 "DomainName": "[parameters('DomainName')]",
                 "DomainJoin": "[variables('varAppDomainJoin')]"
@@ -1201,9 +1201,9 @@
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AppNamePrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
             "[concat('DSC-App',padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
             "displayName": "JoinDomain-App"
