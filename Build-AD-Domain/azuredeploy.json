@@ -4,6 +4,13 @@
   "contentVersion": "1.0.0.0",
 
   "parameters": {
+    "CompanyID": {
+      "type": "string",
+      "defaultValue": "TMC",
+      "metadata": {
+        "description": "Short company ID for use in naming resources."
+      }
+    },
     "DomainControllerCount": {
       "type": "int",
       "defaultValue": 2,
@@ -110,7 +117,7 @@
   },
 
   "variables": {
-    "timco-artifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
+    "varArtifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
@@ -213,7 +220,7 @@
       "apiVersion": "2015-11-01-preview",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "Log Analytics workspace"
+        "displayName": "[resourceGroup().location]"
       },
       "properties": {
         "features": {
@@ -802,7 +809,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
-                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('varArtifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionFirstDC')]"
               },
@@ -921,7 +928,7 @@
             "forceUpdateTag": "[variables('timco-dscForceUpdateVersion')]",
             "settings": {
               "configuration": {
-                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('varArtifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionNextDC')]"
               },
@@ -1042,7 +1049,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('varArtifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionWebServer')]"
               },
@@ -1189,7 +1196,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[concat(variables('timco-artifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
+                "url": "[concat(variables('varArtifactsLocation'), '/', variables('timco-dscArchiveFolder'), '/', variables('timco-dscArchiveFileName'))]",
                 "script": "[variables('timco-dscConfigScript')]",
                 "function": "[variables('timco-dscConfigFunctionAppServer')]"
               },
