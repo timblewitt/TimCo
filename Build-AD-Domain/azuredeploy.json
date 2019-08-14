@@ -114,6 +114,7 @@
     "timco-dscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
+    "timco-networkWatcher": "timco-network-watcher",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
@@ -193,6 +194,14 @@
       "kind": "StorageV2",
       "properties": {
       }
+    },
+    {
+      "name": "[variables('timco-networkWatcher')]",
+      "type": "Microsoft.Network/networkWatchers",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "properties": {},
+      "resources": []
     },
     {
       "name": "[variables('timco-adcAvailabilitySet')]",

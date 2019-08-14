@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Build-AD-Domain"
+    "\\Build-AD-Domain",
+    "\\Build-Web-App"
   ],
-  "SelectedNode": "\\Build-AD-Domain\\timco-dsc2.zip",
+  "SelectedNode": "\\Build-AD-Domain\\README.md",
   "PreviewInSolutionExplorer": false
 }
