@@ -555,7 +555,7 @@
       }
     },
     {
-      "name": "[concat('nic', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-1')]",
+      "name": "[concat('nic-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
