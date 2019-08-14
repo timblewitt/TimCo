@@ -115,6 +115,7 @@
     "timco-vmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "timco-vmStorAccType": "Standard_LRS",
     "timco-networkWatcher": "timco-network-watcher",
+    "timco-logAnalyticsWorkspace": "timco-log-analytics-workspace",
     "timco-adcAvailabilitySet": "timco-adc-avset1",
     "timco-webAvailabilitySet": "timco-web-avset1",
     "timco-appAvailabilitySet": "timco-app-avset1",
@@ -202,6 +203,17 @@
       "location": "[resourceGroup().location]",
       "properties": {},
       "resources": []
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "name": "[variables('timco-logAnalyticsWorkspace')]",
+      "apiVersion": "2015-11-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "features": {
+          "searchVersion": 1
+        }
+      }
     },
     {
       "name": "[variables('timco-adcAvailabilitySet')]",
