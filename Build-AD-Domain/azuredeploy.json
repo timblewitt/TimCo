@@ -163,7 +163,7 @@
     "timco-webSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-webSubNet'))]",
     "timco-appSubnetRef": "[concat(variables('timco-vmVnetID'), '/subnets/', variables('timco-appSubNet'))]",
     "timco-webDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('WebDomainJoin'))]",
-    "timco-appDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('timco-appDomainJoin'))]",
+    "timco-appDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('AppDomainJoin'))]",
     "timco-dscArchiveFolder": "Build-AD-Domain",
     "timco-dscArchiveFileName": "timco-dsc1.zip",
     "timco-dscConfigScript": "timco-dsc1.ps1",
