@@ -86,41 +86,13 @@
       "metadata": {
         "description": "Safe mode password for domain controllers."
       }
-    },
-    "AdcNamePrefix": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 12,
-      "defaultValue": "vm-timco-adc",
-      "metadata": {
-        "description": "Prefix for naming domain controllers."
-      }
-    },
-    "WebNamePrefix": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 12,
-      "defaultValue": "vm-timco-web",
-      "metadata": {
-        "description": "Prefix for naming web servers."
-      }
-    },
-    "AppNamePrefix": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 12,
-      "defaultValue": "vm-timco-app",
-      "metadata": {
-        "description": "Prefix for naming application servers."
-      }
-    }
-  },
+    },  },
 
   "variables": {
     "varArtifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
     "varDscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
     "varCompanyId": "[toLower(parameters('CompanyID'))]",
-    "varVmStorAccName": "[concat('stg', variables('varCompanyId'), uniqueString(resourceGroup().id))]",
+    "varVmStorAccName": "[concat('stg', variables('varCompanyId'), 'mon',uniqueString(resourceGroup().id))]",
     "varVmStorAccType": "Standard_LRS",
     "varNetworkWatcher": "[concat('nww-',variables('varCompanyId'),'-',resourceGroup().location)]",
     "varLogAnalyticsWorkspace": "[concat('law-',variables('varCompanyId'),'-',resourceGroup().location)]",
@@ -145,7 +117,7 @@
     "varWebLBProbeID": "[concat(variables('varWebLBID'),'/probes/tcpProbe')]",
     "varWebPIPName": "[concat(variables('varWebLBName'), '-pip1')]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
-    "varWebDNSPrefix": "[parameters('WebNamePrefix')]",
+    "varWebDNSPrefix": "[variables('varWebPrefix')]",
     "varAdcIPAddressPrefix": "10.0.2.",
     "varAdcStartIndex": 1,
     "varBdcStartIndex": "[add(variables('varAdcStartIndex'),1)]",
@@ -156,6 +128,9 @@
     "varDcCopyCount": "[if(equals(parameters('DomainControllerCount'), 0), 2, parameters('DomainControllerCount'))]",
     "varWebCopyCount": "[if(equals(parameters('WebServerCount'), 0), 1, parameters('WebServerCount'))]",
     "varAppCopyCount": "[if(equals(parameters('AppServerCount'), 0), 1, parameters('AppServerCount'))]",
+    "varAdcPrefix": "[concat('vm-',variables('varCompanyId'),'-adc')]",
+    "varWebPrefix": "[concat('vm-',variables('varCompanyId'),'-web')]",
+    "varAppPrefix": "[concat('vm-',variables('varCompanyId'),'-app')]",
     "varVmSize": "Standard_D1_V2",
     "varVmWindowsOSVersion": "2016-Datacenter",
     "varVmImagePublisher": "MicrosoftWindowsServer",
@@ -401,7 +376,7 @@
       }
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -413,12 +388,12 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
+          "domainNameLabel": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
         }
       }
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1')]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
       "apiVersion": "2017-10-01",
@@ -430,12 +405,12 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]"
+          "domainNameLabel": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]"
         }
       }
     },
     {
-      "name": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
+      "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -451,7 +426,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
+          "domainNameLabel": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
         }
       }
     },
@@ -579,14 +554,14 @@
       }
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]"
       ],
       "tags": {
         "displayName": "NICs - Primary DC"
@@ -602,7 +577,7 @@
                 "id": "[variables('varAdcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1'))]"
               }
             }
           }
@@ -610,14 +585,14 @@
       }
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]"
       ],
       "tags": {
         "displayName": "NICs - Secondary DC"
@@ -633,7 +608,7 @@
                 "id": "[variables('varAdcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1'))]"
               }
             }
           }
@@ -641,7 +616,7 @@
       }
     },
     {
-      "name": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]",
+      "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -652,7 +627,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
         "[concat('Microsoft.Network/loadBalancers/', variables('varWebLBName'), '/inboundNatRules/', 'RDP-VM', copyIndex(variables('varWebStartIndex')))]"
       ],
       "tags": {
@@ -680,7 +655,7 @@
                 "id": "[variables('varWebSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1'))]"
               }
             }
           }
@@ -722,7 +697,7 @@
       }
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2017-12-01",
@@ -730,7 +705,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varAdcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "First domain controller"
@@ -749,7 +724,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('varAdcAvailabilitySet'))]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
+          "computerName": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
           "adminUsername": "[parameters('AdminUserName')]",
           "adminPassword": "[parameters('AdminPassword')]"
         },
@@ -761,7 +736,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-OSDisk')]",
+            "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -770,7 +745,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-DataDisk')]",
+              "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-DataDisk')]",
               "diskSizeGB": "[variables('varAdcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -784,7 +759,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-nic1'))]"
             }
           ]
         }
@@ -797,7 +772,7 @@
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
           ],
           "tags": {
             "displayName": "DSC-ADC"
@@ -815,7 +790,7 @@
                 "function": "[variables('varDscConfigFunctionFirstDC')]"
               },
               "configurationArguments": {
-                "NodeName": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
+                "NodeName": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('varAdcDNSServerAddress')]",
                 "DomainName": "[parameters('DomainName')]"
               },
@@ -840,7 +815,7 @@
       ]
     },
     {
-      "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
+      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
       "apiVersion": "2017-12-01",
@@ -848,7 +823,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varAdcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Second domain controller"
@@ -867,7 +842,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('varAdcAvailabilitySet'))]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
+          "computerName": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
           "adminUsername": "[parameters('AdminUserName')]",
           "adminPassword": "[parameters('AdminPassword')]"
         },
@@ -879,7 +854,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-OSDisk')]",
+            "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -888,7 +863,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-DataDisk')]",
+              "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-DataDisk')]",
               "diskSizeGB": "[variables('varAdcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -902,7 +877,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-nic1'))]"
             }
           ]
         }
@@ -915,8 +890,8 @@
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
           "tags": {
             "displayName": "DSC-BDC"
@@ -934,7 +909,7 @@
                 "function": "[variables('varDscConfigFunctionNextDC')]"
               },
               "configurationArguments": {
-                "NodeName": "[concat(parameters('AdcNamePrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
+                "NodeName": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
                 "DNSServerAddress": "[variables('varAdcDNSServerAddress')]",
                 "DomainName": "[parameters('DomainName')]"
               },
@@ -959,7 +934,7 @@
       ]
     },
     {
-      "name": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
+      "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2017-12-01",
@@ -971,7 +946,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varWebAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]"
       ],
       "tags": {
         "displayName": "Web servers"
@@ -990,7 +965,7 @@
           "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('varWebAvailabilitySet'))]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
+          "computerName": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
           "adminUsername": "[parameters('AdminUserName')]",
           "adminPassword": "[parameters('AdminPassword')]"
         },
@@ -1002,7 +977,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-OSDisk')]",
+            "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-OSDisk')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -1011,7 +986,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-DataDisk')]",
+              "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-DataDisk')]",
               "diskSizeGB": "[variables('varWebDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -1025,7 +1000,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-nic1'))]"
             }
           ]
         }
@@ -1038,7 +1013,7 @@
           "apiVersion": "2017-12-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
           ],
           "tags": {
             "displayName": "DSC-Web"
@@ -1055,7 +1030,7 @@
                 "function": "[variables('varDscConfigFunctionWebServer')]"
               },
               "configurationArguments": {
-                "NodeName": "[concat(parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
+                "NodeName": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
                 "DNSServerAddress": "[variables('varAdcDNSServerAddress')]",
                 "DomainName": "[parameters('DomainName')]",
                 "DomainJoin": "[variables('varWebDomainJoin')]"
@@ -1078,7 +1053,7 @@
           "apiVersion": "2015-06-15",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('WebNamePrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
+            "[concat('Microsoft.Compute/virtualMachines/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
             "[concat('DSC-Web',padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
             "[concat('Microsoft.Compute/virtualMachines/', parameters('AdcNamePrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '/extensions/DSC-ADC')]"
           ],
