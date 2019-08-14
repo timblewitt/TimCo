@@ -91,7 +91,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 12,
-      "defaultValue": "timco-adc",
+      "defaultValue": "vm-timco-adc",
       "metadata": {
         "description": "Prefix for naming domain controllers."
       }
@@ -100,7 +100,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 12,
-      "defaultValue": "timco-web",
+      "defaultValue": "vm-timco-web",
       "metadata": {
         "description": "Prefix for naming web servers."
       }
@@ -109,7 +109,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 12,
-      "defaultValue": "timco-app",
+      "defaultValue": "vm-timco-app",
       "metadata": {
         "description": "Prefix for naming application servers."
       }
@@ -119,10 +119,11 @@
   "variables": {
     "varArtifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
     "varDscConfigurationDataUrl": "https://raw.githubusercontent.com/timblewitt/TimCo/master/Build-AD-Domain/timco-dsc1.psd1",
+    "varCompanyId":  "[toLower(parameters('CompanyID'))]",
     "varVmStorAccName": "[concat('timcosa', uniqueString(resourceGroup().id))]",
     "varVmStorAccType": "Standard_LRS",
     "varNetworkWatcher": "timco-network-watcher",
-    "varLogAnalyticsWorkspace": "timco-law1",
+    "varLogAnalyticsWorkspace": "[concat(variables('varCompanyId'),'-',resourceGroup().location)]",
     "varAdcAvailabilitySet": "timco-adc-avset1",
     "varWebAvailabilitySet": "timco-web-avset1",
     "varAppAvailabilitySet": "timco-app-avset1",
