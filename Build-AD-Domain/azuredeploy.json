@@ -143,9 +143,9 @@
     "varWebSubNet": "variables('varVNet1Subnet1Name')",
     "varAppSubNet": "variables('varVNet1Subnet2Name')",
     "varVmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('varVNet1Name'))]",
-    "varAdcSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varAdcSubNet'))]",
-    "varWebSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varWebSubNet'))]",
-    "varAppSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varAppSubNet'))]",
+    "varAdcSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet2Name'))]",
+    "varWebSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet1Name'))]",
+    "varAppSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet2Name'))]",
     "varWebDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('WebDomainJoin'))]",
     "varAppDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('AppDomainJoin'))]",
     "varDscArchiveFolder": "Build-AD-Domain",
@@ -555,7 +555,7 @@
       }
     },
     {
-      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]",
+      "name": "[concat('nic', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2017-10-01",
