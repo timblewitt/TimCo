@@ -86,7 +86,8 @@
       "metadata": {
         "description": "Safe mode password for domain controllers."
       }
-    },  },
+    }
+  },
 
   "variables": {
     "varArtifactsLocation": "https://raw.github.com/timblewitt/TimCo/master",
