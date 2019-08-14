@@ -586,7 +586,7 @@
       }
     },
     {
-      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]",
+      "name": "[concat('nic-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
       "apiVersion": "2017-10-01",
@@ -617,7 +617,7 @@
       }
     },
     {
-      "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]",
+      "name": "[concat('nic-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -664,7 +664,7 @@
       }
     },
     {
-      "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]",
+      "name": "[concat('nic-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2017-10-01",
@@ -706,7 +706,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varAdcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-1')]"
       ],
       "tags": {
         "displayName": "First domain controller"
@@ -760,7 +760,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1'))]"
             }
           ]
         }
@@ -824,7 +824,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varAdcAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-1')]"
       ],
       "tags": {
         "displayName": "Second domain controller"
@@ -878,7 +878,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-1'))]"
             }
           ]
         }
@@ -947,7 +947,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varWebAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-1')]"
       ],
       "tags": {
         "displayName": "Web servers"
@@ -1001,7 +1001,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-1'))]"
             }
           ]
         }
@@ -1094,7 +1094,7 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
         "[concat('Microsoft.Compute/availabilitySets/', variables('varWebAvailabilitySet'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-nic1')]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-1')]"
       ],
       "tags": {
         "displayName": "Application servers"
@@ -1148,7 +1148,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-nic1'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-1'))]"
             }
           ]
         }
