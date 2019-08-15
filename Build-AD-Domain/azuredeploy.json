@@ -128,7 +128,7 @@
     "varWebPIPName": "[concat(variables('varWebLBName'), '-pip1')]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
     "varWebDNSPrefix": "[variables('varWebPrefix')]",
-    "varAdcIPAddressPrefix": "10.201.11.",
+    "varAdcIPAddressPrefix": "10.201.1.",
     "varAdcStartIndex": 1,
     "varBdcStartIndex": "[add(variables('varAdcStartIndex'),1)]",
     "varWebStartIndex": 1,
