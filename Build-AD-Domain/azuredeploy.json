@@ -101,13 +101,22 @@
     "varWebAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-web')]",
     "varAppAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-app')]",
     "varVNet1Name": "[concat('vnet-',variables('varCompanyId'),'-',resourceGroup().location,'-01')]",
-    "varVNet1Prefix": "10.0.0.0/16",
-    "varVNet1Subnet1Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
-    "varVNet1Subnet1Prefix": "10.0.1.0/24",
-    "varVNet1Subnet1NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
-    "varVNet1Subnet2Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
-    "varVNet1Subnet2Prefix": "10.0.2.0/24",
-    "varVNet1Subnet2NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
+    "varVNet1Prefix": "10.201.0.0/16",
+    "varVNet1Subnet1Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
+    "varVNet1Subnet1Prefix": "10.201.11.0/24",
+    "varVNet1Subnet1NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
+    "varVNet1Subnet2Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
+    "varVNet1Subnet2Prefix": "10.201.21.0/24",
+    "varVNet1Subnet2NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
+    "varVNet1Subnet3Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
+    "varVNet1Subnet3Prefix": "10.201.22.0/24",
+    "varVNet1Subnet3NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
+    "varVNet1Subnet4Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
+    "varVNet1Subnet4Prefix": "10.201.23.0/24",
+    "varVNet1Subnet4NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
+    "varVNet1Subnet5Name": "GatewaySubnet",
+    "varVNet1Subnet5Prefix": "10.201.255.224/27",
+    "varVNet1Subnet5NSGName": "nsg-GatewaySubnet",
     "varWebLBName": "[concat('elb-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
     "varWebLBNatRulesName": "timco-web-lb-nat-rules",
     "varWebLBID": "[resourceId('Microsoft.Network/loadBalancers',variables('varWebLBName'))]",
@@ -119,7 +128,7 @@
     "varWebPIPName": "[concat(variables('varWebLBName'), '-pip1')]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
     "varWebDNSPrefix": "[variables('varWebPrefix')]",
-    "varAdcIPAddressPrefix": "10.0.2.",
+    "varAdcIPAddressPrefix": "10.201.2.",
     "varAdcStartIndex": 1,
     "varBdcStartIndex": "[add(variables('varAdcStartIndex'),1)]",
     "varWebStartIndex": 1,
@@ -139,13 +148,13 @@
     "varAdcDataDisk1SizeGB": "50",
     "varWebDataDisk1SizeGB": "50",
     "varAppDataDisk1SizeGB": "50",
-    "varAdcSubNet": "variables('varVNet1Subnet2Name')",
-    "varWebSubNet": "variables('varVNet1Subnet1Name')",
-    "varAppSubNet": "variables('varVNet1Subnet2Name')",
+    "varAdcSubNet": "variables('varVNet1Subnet1Name')",
+    "varWebSubNet": "variables('varVNet1Subnet2Name')",
+    "varAppSubNet": "variables('varVNet1Subnet3Name')",
     "varVmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('varVNet1Name'))]",
-    "varAdcSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet2Name'))]",
-    "varWebSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet1Name'))]",
-    "varAppSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet2Name'))]",
+    "varAdcSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varAdcSubNet'))]",
+    "varWebSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varWebSubNet'))]",
+    "varAppSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varAppSubNet'))]",
     "varWebDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('WebDomainJoin'))]",
     "varAppDomainJoin": "[if(equals(parameters('DomainControllerCount'), 0), 'No', parameters('AppDomainJoin'))]",
     "varDscArchiveFolder": "Build-AD-Domain",
@@ -260,7 +269,7 @@
       }
     },
     {
-      "name": "[variables('varVNet1Subnet1NSGName')]",
+      "name": "[variables('varVNet1Subnet2NSGName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
@@ -302,7 +311,7 @@
       }
     },
     {
-      "name": "[variables('varVNet1Subnet2NSGName')]",
+      "name": "[variables('varVNet1Subnet3NSGName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
@@ -335,8 +344,8 @@
       "apiVersion": "2017-10-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet1NSGName'))]",
-        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet2NSGName'))]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet2NSGName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet3NSGName'))]"
       ],
       "tags": {
         "displayName": "VNet"
@@ -368,6 +377,33 @@
             "name": "[variables('varVNet1Subnet2Name')]",
             "properties": {
               "addressPrefix": "[variables('varVNet1Subnet2Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
+              }
+            }
+          },
+          {
+            "name": "[variables('varVNet1Subnet3Name')]",
+            "properties": {
+              "addressPrefix": "[variables('varVNet1Subnet3Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
+              }
+            }
+          },
+          {
+            "name": "[variables('varVNet1Subnet4Name')]",
+            "properties": {
+              "addressPrefix": "[variables('varVNet1Subnet4Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
+              }
+            }
+          },
+          {
+            "name": "[variables('varVNet1Subnet5Name')]",
+            "properties": {
+              "addressPrefix": "[variables('varVNet1Subnet5Prefix')]",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
               }
