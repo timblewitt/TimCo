@@ -148,7 +148,7 @@
     "varAdcDataDisk1SizeGB": "50",
     "varWebDataDisk1SizeGB": "50",
     "varAppDataDisk1SizeGB": "50",
-    "varAdcSubNet": "variables('varVNet1Subnet1Name')",
+    "varAdcSubNet": "variables('varVNet1Subnet3Name')",
     "varWebSubNet": "variables('varVNet1Subnet2Name')",
     "varAppSubNet": "variables('varVNet1Subnet3Name')",
     "varVmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('varVNet1Name'))]",
