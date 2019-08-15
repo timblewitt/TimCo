@@ -369,7 +369,7 @@
             "properties": {
               "addressPrefix": "[variables('varVNet1Subnet1Prefix')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet1NSGName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet3NSGName'))]"
               }
             }
           },
