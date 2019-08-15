@@ -128,7 +128,7 @@
     "varWebPIPName": "[concat(variables('varWebLBName'), '-pip1')]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
     "varWebDNSPrefix": "[variables('varWebPrefix')]",
-    "varAdcIPAddressPrefix": "10.201.1.",
+    "varAdcIPAddressPrefix": "10.201.11.",
     "varAdcStartIndex": 1,
     "varBdcStartIndex": "[add(variables('varAdcStartIndex'),1)]",
     "varWebStartIndex": 1,
@@ -192,7 +192,7 @@
     {
       "name": "[variables('varNetworkWatcher')]",
       "type": "Microsoft.Network/networkWatchers",
-      "apiVersion": "2018-08-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "Network watcher"
