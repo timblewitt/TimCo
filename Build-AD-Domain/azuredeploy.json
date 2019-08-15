@@ -211,7 +211,11 @@
       "properties": {
         "features": {
           "searchVersion": 1
-        }
+        },
+        "sku": {
+          "name": "PerGB2018"
+        },
+        "retentionInDays": 730
       }
     },
     {
