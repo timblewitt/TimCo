@@ -504,7 +504,8 @@
         "displayName": "PIPs - Secondary DC"
       },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
         "dnsSettings": {
           "domainNameLabel": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]"
         }
