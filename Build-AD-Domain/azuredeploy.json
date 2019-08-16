@@ -569,7 +569,7 @@
       }
     },
     {
-      "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]",
+      "name": "[concat('pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -611,7 +611,7 @@
       }
     },
     {
-      "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
+      "name": "[concat('pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -636,7 +636,7 @@
       }
     },
     {
-      "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]",
+      "name": "[concat('pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -661,7 +661,7 @@
       }
     },
     {
-      "name": "[concat(variables('varWebLBName'), '-pip1')]",
+      "name": "[concat('pip-', variables('varWebLBName'), '-1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2019-04-01",
