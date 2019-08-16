@@ -585,6 +585,9 @@
       "tags": {
         "displayName": "Web load balancer"
       },
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
         "frontendIPConfigurations": [
           {
