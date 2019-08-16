@@ -334,7 +334,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 100,
+              "priority": 110,
               "direction": "Inbound"
             }
           }
@@ -362,7 +362,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 100,
+              "priority": 110,
               "direction": "Inbound"
             }
           },
@@ -374,9 +374,13 @@
               "sourcePortRange": "*",
               "destinationPortRange": "80",
               "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
+              "destinationApplicationSecurityGroups": [
+                {
+                  "id": "[variables('varASG2ID')]"
+                }
+              ],
               "access": "Allow",
-              "priority": 101,
+              "priority": 120,
               "direction": "Inbound"
             }
           }
@@ -404,7 +408,29 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 100,
+              "priority": 110,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "NSG-Rule-Allow-App",
+            "properties": {
+              "description": "Allow App",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceApplicationSecurityGroups": [
+                {
+                  "id": "[variables('varASG2ID')]"
+                }
+              ],
+              "destinationApplicationSecurityGroups": [
+                {
+                  "id": "[variables('varASG3ID')]"
+                }
+              ],
+              "access": "Allow",
+              "priority": 120,
               "direction": "Inbound"
             }
           }
@@ -432,7 +458,29 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 100,
+              "priority": 110,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "NSG-Rule-Allow-DB-SQL",
+            "properties": {
+              "description": "Allow DB SQL",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "1433",
+              "sourceApplicationSecurityGroups": [
+                {
+                  "id": "[variables('varASG3ID')]"
+                }
+              ],
+              "destinationApplicationSecurityGroups": [
+                {
+                  "id": "[variables('varASG4ID')]"
+                }
+              ],
+              "access": "Allow",
+              "priority": 120,
               "direction": "Inbound"
             }
           }
