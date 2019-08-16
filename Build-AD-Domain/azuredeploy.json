@@ -964,7 +964,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-OSDisk')]",
+            "name": "[concat('dsk-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-OS')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -973,7 +973,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-DataDisk')]",
+              "name": "[concat('dsk-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-Data1')]",
               "diskSizeGB": "[variables('varAdcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -1082,7 +1082,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-OSDisk')]",
+            "name": "[concat('dsk-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-OS')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -1091,7 +1091,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-DataDisk')]",
+              "name": "[concat('dsk-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-Data1')]",
               "diskSizeGB": "[variables('varAdcDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
@@ -1205,7 +1205,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-OSDisk')]",
+            "name": "[concat('dsk-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-OS')]",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -1214,7 +1214,7 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-DataDisk')]",
+              "name": "[concat('dsk-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-Data1')]",
               "diskSizeGB": "[variables('varWebDataDisk1SizeGB')]",
               "lun": 1,
               "managedDisk": {
