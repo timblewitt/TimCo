@@ -134,7 +134,7 @@
     "varWebLBBEPoolName": "timco-WebLBBackEndPool",
     "varWebLBBEPoolID": "[concat(variables('varWebLBID'),'/backendAddressPools/', variables('varWebLBBEPoolName'))]",
     "varWebLBProbeID": "[concat(variables('varWebLBID'),'/probes/tcpProbe')]",
-    "varWebPIPName": "[concat('pip-', variables('varWebLBName'), '-1')]",
+    "varWebPIPName": "[concat('pip-', variables('varWebLBName'))]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
     "varWebDNSPrefix": "[variables('varWebPrefix')]",
     "varAdcIPAddressPrefix": "10.201.11.",
@@ -569,7 +569,7 @@
       }
     },
     {
-      "name": "[concat('pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1')]",
+      "name": "[concat('pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -590,7 +590,7 @@
       }
     },
     {
-      "name": "[concat('pip-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-1')]",
+      "name": "[concat('pip-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
       "apiVersion": "2019-04-01",
@@ -611,7 +611,7 @@
       }
     },
     {
-      "name": "[concat('pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-1')]",
+      "name": "[concat('pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -636,7 +636,7 @@
       }
     },
     {
-      "name": "[concat('pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-1')]",
+      "name": "[concat('pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('AppServerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -661,7 +661,7 @@
       }
     },
     {
-      "name": "[concat('pip-', variables('varWebLBName'), '-1')]",
+      "name": "[concat('pip-', variables('varWebLBName'))]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2019-04-01",
@@ -777,7 +777,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
       ],
       "tags": {
         "displayName": "NICs - Primary DC"
@@ -793,7 +793,7 @@
                 "id": "[variables('varAdcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0')))]"
               },
               "applicationSecurityGroups": [
                 {
@@ -813,7 +813,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
       ],
       "tags": {
         "displayName": "NICs - Secondary DC"
@@ -829,7 +829,7 @@
                 "id": "[variables('varAdcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0')))]"
               },
               "applicationSecurityGroups": [
                 {
@@ -853,7 +853,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-1')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
         "[concat('Microsoft.Network/loadBalancers/', variables('varWebLBName'), '/inboundNatRules/', 'RDP-VM', copyIndex(variables('varWebStartIndex')))]"
       ],
       "tags": {
@@ -881,7 +881,7 @@
                 "id": "[variables('varWebSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0')))]"
               },
               "applicationSecurityGroups": [
                 {
@@ -905,7 +905,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-1')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
       ],
       "tags": {
         "displayName": "NICs - Application servers"
@@ -920,7 +920,7 @@
                 "id": "[variables('varAppSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0')))]"
               },
               "applicationSecurityGroups": [
                 {
