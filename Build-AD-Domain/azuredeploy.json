@@ -526,7 +526,8 @@
         "displayName": "PIPs - Web servers"
       },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
         "dnsSettings": {
           "domainNameLabel": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
         }
@@ -547,7 +548,8 @@
         "displayName": "PIPs - Application servers"
       },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
         "dnsSettings": {
           "domainNameLabel": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
         }
@@ -564,7 +566,8 @@
         "displayName": "PIP - Web load balancer"
       },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
         "dnsSettings": {
           "domainNameLabel": "[variables('varWebDNSPrefix')]"
         }
