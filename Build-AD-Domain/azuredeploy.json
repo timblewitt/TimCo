@@ -22,7 +22,7 @@
     },
     "WebServerCount": {
       "type": "int",
-      "defaultValue": 0,
+      "defaultValue": 1,
       "minValue": 0,
       "maxValue": 3,
       "metadata": {
@@ -31,7 +31,7 @@
     },
     "WebDomainJoin": {
       "type": "string",
-      "defaultValue": "Yes",
+      "defaultValue": "No",
       "allowedValues": [
         "Yes",
         "No"
@@ -42,7 +42,7 @@
     },
     "AppServerCount": {
       "type": "int",
-      "defaultValue": 0,
+      "defaultValue": 1,
       "minValue": 0,
       "maxValue": 3,
       "metadata": {
@@ -114,9 +114,8 @@
     "varVNet1Subnet4Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
     "varVNet1Subnet4Prefix": "10.201.23.0/24",
     "varVNet1Subnet4NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
-    "varVNet1Subnet5Name": "GatewaySubnet",
-    "varVNet1Subnet5Prefix": "10.201.255.224/27",
-    "varVNet1Subnet5NSGName": "nsg-GatewaySubnet",
+    "varVNet1SubnetGWName": "GatewaySubnet",
+    "varVNet1SubnetGWPrefix": "10.201.255.224/27",
     "varWebLBName": "[concat('elb-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
     "varWebLBNatRulesName": "timco-web-lb-nat-rules",
     "varWebLBID": "[resourceId('Microsoft.Network/loadBalancers',variables('varWebLBName'))]",
@@ -463,12 +462,9 @@
             }
           },
           {
-            "name": "[variables('varVNet1Subnet5Name')]",
+            "name": "[variables('varVNet1SubnetGWName')]",
             "properties": {
-              "addressPrefix": "[variables('varVNet1Subnet5Prefix')]",
-              "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
-              }
+              "addressPrefix": "[variables('varVNet1SubnetGWPrefix')]"
             }
           }
         ]
