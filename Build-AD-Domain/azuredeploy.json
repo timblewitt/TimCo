@@ -103,9 +103,13 @@
     "varWebAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-web')]",
     "varAppAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-app')]",
     "varASG1Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
+    "varASG1ID": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('varASG1Name'))]",
     "varASG2Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
+    "varASG2ID": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('varASG2Name'))]",
     "varASG3Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
+    "varASG3ID": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('varASG3Name'))]",
     "varASG4Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
+    "varASG4ID": "[resourceId('Microsoft.Network/applicationSecurityGroups',variables('varASG4Name'))]",
     "varVNet1Name": "[concat('vnet-',variables('varCompanyId'),'-',resourceGroup().location,'-01')]",
     "varVNet1Prefix": "10.201.0.0/16",
     "varVNet1Subnet1Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
@@ -737,7 +741,7 @@
               },
               "applicationSecurityGroups": [
                 {
-                  "id": "[variables('varASG1Name')]"
+                  "id": "[variables('varASG1ID')]"
                 }
               ]
             }
@@ -773,7 +777,7 @@
               },
               "applicationSecurityGroups": [
                 {
-                  "id": "[variables('varASG1Name')]"
+                  "id": "[variables('varASG1ID')]"
                 }
               ]
             }
@@ -825,7 +829,7 @@
               },
               "applicationSecurityGroups": [
                 {
-                  "id": "[variables('varASG2Name')]"
+                  "id": "[variables('varASG2ID')]"
                 }
               ]
             }
@@ -864,7 +868,7 @@
               },
               "applicationSecurityGroups": [
                 {
-                  "id": "[variables('varASG3Name')]"
+                  "id": "[variables('varASG3ID')]"
                 }
               ]
             }
