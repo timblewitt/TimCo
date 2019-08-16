@@ -589,7 +589,7 @@
       "name": "[variables('varWebLBName')]",
       "type": "Microsoft.Network/loadBalancers",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', variables('varWebPIPName'))]"
@@ -654,7 +654,7 @@
       "name": "[concat(variables('varWebLBName'), '/', 'RDP-VM', copyIndex(variables('varWebStartIndex')))]",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('varWebLBName'))]"
@@ -677,7 +677,7 @@
       "name": "[concat('nic-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
@@ -708,7 +708,7 @@
       "name": "[concat('nic-', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
@@ -739,7 +739,7 @@
       "name": "[concat('nic-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webNicLoop",
@@ -786,7 +786,7 @@
       "name": "[concat('nic-', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'),'-1')]",
       "type": "Microsoft.Network/networkInterfaces",
       "condition": "[greater(parameters('AppServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appNicLoop",
@@ -820,7 +820,7 @@
       "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
@@ -889,7 +889,7 @@
           "name": "DSC-ADC",
           "type": "extensions",
           "condition": "[greater(parameters('DomainControllerCount'),0)]",
-          "apiVersion": "2017-12-01",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
@@ -938,7 +938,7 @@
       "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
@@ -1007,7 +1007,7 @@
           "name": "DSC-BDC",
           "type": "extensions",
           "condition": "[greater(parameters('DomainControllerCount'),1)]",
-          "apiVersion": "2017-12-01",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'))]",
@@ -1057,7 +1057,7 @@
       "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webVirtualMachineLoop",
@@ -1130,7 +1130,7 @@
           "name": "[concat('DSC-Web',padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[greater(parameters('WebServerCount'),0)]",
-          "apiVersion": "2017-12-01",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]"
@@ -1170,7 +1170,7 @@
           "name": "[concat('JoinDomain-Web',padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[and(equals(variables('varWebDomainJoin'),'Yes'), greater(parameters('WebServerCount'),0))]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
@@ -1204,7 +1204,7 @@
       "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
       "type": "Microsoft.Compute/virtualMachines",
       "condition": "[greater(parameters('AppServerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appVirtualMachineLoop",
@@ -1277,7 +1277,7 @@
           "name": "[concat('DSC-App',padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[greater(parameters('AppServerCount'),0)]",
-          "apiVersion": "2017-12-01",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]"
@@ -1317,7 +1317,7 @@
           "name": "[concat('JoinDomain-App',padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
           "type": "extensions",
           "condition": "[and(equals(variables('varAppDomainJoin'),'Yes'), greater(parameters('AppServerCount'),0))]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2019-03-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'))]",
