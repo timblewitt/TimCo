@@ -51,7 +51,7 @@
     },
     "AppDomainJoin": {
       "type": "string",
-      "defaultValue": "Yes",
+      "defaultValue": "No",
       "allowedValues": [
         "Yes",
         "No"
@@ -77,12 +77,14 @@
     },
     "AdminPassword": {
       "type": "securestring",
+      "defaultValue": "TopSecret123456",
       "metadata": {
         "description": "Administrator password."
       }
     },
     "SafeModePassword": {
       "type": "securestring",
+      "defaultValue": "TopSecret123456",
       "metadata": {
         "description": "Safe mode password for domain controllers."
       }
@@ -175,7 +177,7 @@
     {
       "name": "[variables('varVmStorAccName')]",
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
@@ -221,7 +223,7 @@
       "name": "[variables('varAdcAvailabilitySet')]",
       "type": "Microsoft.Compute/availabilitySets",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
@@ -239,7 +241,7 @@
       "name": "[variables('varWebAvailabilitySet')]",
       "type": "Microsoft.Compute/availabilitySets",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
@@ -257,7 +259,7 @@
       "name": "[variables('varAppAvailabilitySet')]",
       "type": "Microsoft.Compute/availabilitySets",
       "condition": "[greater(parameters('AppServerCount'),0)]",
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2019-03-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
@@ -474,14 +476,18 @@
       "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
         "displayName": "PIPs - Primary DC"
       },
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
         "dnsSettings": {
           "domainNameLabel": "[concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'))]"
         }
@@ -491,7 +497,7 @@
       "name": "[concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('DomainControllerCount'),1)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
@@ -508,7 +514,7 @@
       "name": "[concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "webPipLoop",
@@ -529,7 +535,7 @@
       "name": "[concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('AppServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "appPipLoop",
@@ -550,7 +556,7 @@
       "name": "[concat(variables('varWebLBName'), '-pip1')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "condition": "[greater(parameters('WebServerCount'),0)]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
