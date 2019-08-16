@@ -273,13 +273,41 @@
       }
     },
     {
-      "name": "[variables('varVNet1Subnet2NSGName')]",
+      "name": "[variables('varVNet1Subnet1NSGName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
-        "displayName": "NSG - Front End"
+        "displayName": "NSG - Management subnet"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-RDP",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('varVNet1Subnet2NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "NSG - Web Subnet"
       },
       "properties": {
         "securityRules": [
@@ -317,11 +345,39 @@
     {
       "name": "[variables('varVNet1Subnet3NSGName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [],
       "tags": {
-        "displayName": "NSG - Back End"
+        "displayName": "NSG - Application subnet"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-RDP",
+            "properties": {
+              "description": "Allow RDP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('varVNet1Subnet4NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "NSG - Database subnet"
       },
       "properties": {
         "securityRules": [
@@ -345,11 +401,13 @@
     {
       "name": "[variables('varVNet1Name')]",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-04-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet1NSGName'))]",
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet2NSGName'))]",
-        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet3NSGName'))]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet3NSGName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet4NSGName'))]"
       ],
       "tags": {
         "displayName": "VNet"
@@ -373,7 +431,7 @@
             "properties": {
               "addressPrefix": "[variables('varVNet1Subnet1Prefix')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet3NSGName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet1NSGName'))]"
               }
             }
           },
@@ -391,7 +449,7 @@
             "properties": {
               "addressPrefix": "[variables('varVNet1Subnet3Prefix')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet3NSGName'))]"
               }
             }
           },
@@ -400,7 +458,7 @@
             "properties": {
               "addressPrefix": "[variables('varVNet1Subnet4Prefix')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet2NSGName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet4NSGName'))]"
               }
             }
           },
