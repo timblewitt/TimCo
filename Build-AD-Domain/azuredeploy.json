@@ -102,6 +102,10 @@
     "varAdcAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-adc')]",
     "varWebAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-web')]",
     "varAppAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-app')]",
+    "varASG1Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
+    "varASG2Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-web')]",
+    "varASG3Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-app')]",
+    "varASG4Name": "[concat('asg-',variables('varCompanyId'),'-',resourceGroup().location,'-db')]",
     "varVNet1Name": "[concat('vnet-',variables('varCompanyId'),'-',resourceGroup().location,'-01')]",
     "varVNet1Prefix": "10.201.0.0/16",
     "varVNet1Subnet1Name": "[concat('sbnt-',variables('varCompanyId'),'-',resourceGroup().location,'-mgt')]",
@@ -272,6 +276,38 @@
       "sku": {
         "name": "Aligned"
       }
+    },
+    {
+      "name": "[variables('varASG1Name')]",
+      "type": "Microsoft.Network/applicationSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {}
+    },
+    {
+      "name": "[variables('varASG2Name')]",
+      "type": "Microsoft.Network/applicationSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {}
+    },
+    {
+      "name": "[variables('varASG3Name')]",
+      "type": "Microsoft.Network/applicationSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {}
+    },
+    {
+      "name": "[variables('varASG4Name')]",
+      "type": "Microsoft.Network/applicationSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {}
     },
     {
       "name": "[variables('varVNet1Subnet1NSGName')]",
