@@ -734,7 +734,8 @@
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-pip1'))]"
-              }
+              },
+              "applicationSecurityGroups": "[variables('varASG1Name')]"
             }
           }
         ]
@@ -765,7 +766,8 @@
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAdcPrefix'), padLeft(variables('varBdcStartIndex'),2,'0'), '-pip1'))]"
-              }
+              },
+              "applicationSecurityGroups": "[variables('varASG1Name')]"
             }
           }
         ]
@@ -812,7 +814,8 @@
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'), '-pip1'))]"
-              }
+              },
+              "applicationSecurityGroups": "[variables('varASG2Name')]"
             }
           }
         ]
@@ -846,7 +849,8 @@
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('varAppPrefix'), padLeft(copyIndex(variables('varAppStartIndex')),2,'0'), '-pip1'))]"
-              }
+              },
+              "applicationSecurityGroups": "[variables('varASG3Name')]"
             }
           }
         ]
