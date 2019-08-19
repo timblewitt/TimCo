@@ -136,9 +136,9 @@
     "varWebLBNatRulesName": "ELB-Nat-Rules-Web",
     "varWebLBFEConfigName": "ELB-FE-Config-Web",
     "varWebLBFEConfigID": "[concat(variables('varWebLBID'),'/frontendIPConfigurations/',variables('varWebLBFEConfigName'))]",
-    "varWebLBBEPoolName": "ELB-BE-Pool-web",
+    "varWebLBBEPoolName": "ELB-BE-Pool-Web",
     "varWebLBBEPoolID": "[concat(variables('varWebLBID'),'/backendAddressPools/', variables('varWebLBBEPoolName'))]",
-    "varWebLBProbeID": "[concat(variables('varWebLBID'),'/probes/ProbeHTTP80')]",
+    "varWebLBProbeID": "[concat(variables('varWebLBID'),'/probes/ELB-Probe-TCP80')]",
     "varWebPIPName": "[concat('pip-', variables('varWebLBName'))]",
     "varWebPIPID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('varWebPIPName'))]",
     "varWebDNSPrefix": "[variables('varWebPrefix')]",
@@ -162,9 +162,6 @@
     "varAdcDataDisk1SizeGB": "50",
     "varWebDataDisk1SizeGB": "50",
     "varAppDataDisk1SizeGB": "50",
-    "varAdcSubNet": "variables('varVNet1Subnet5Name')",
-    "varWebSubNet": "variables('varVNet1Subnet2Name')",
-    "varAppSubNet": "variables('varVNet1Subnet3Name')",
     "varVmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('varVNet1Name'))]",
     "varAdcSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet5Name'))]",
     "varWebSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet2Name'))]",
@@ -788,7 +785,7 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "LBRule",
+            "name": "ELB-Rule-TCP80",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[variables('varWebLBFEConfigID')]"
@@ -809,7 +806,7 @@
         ],
         "probes": [
           {
-            "name": "ProbeHTTP80",
+            "name": "ELB-Probe-TCP80",
             "properties": {
               "protocol": "tcp",
               "port": 80,
@@ -821,7 +818,7 @@
       }
     },
     {
-      "name": "[concat(variables('varWebLBName'), '/', 'RDP-VM', copyIndex(variables('varWebStartIndex')))]",
+      "name": "[concat(variables('varWebLBName'), '/', 'ELB-NAT-Rule-RDP-VM', copyIndex(variables('varWebStartIndex')))]",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "condition": "[greater(parameters('WebServerCount'),0)]",
       "apiVersion": "2019-04-01",
