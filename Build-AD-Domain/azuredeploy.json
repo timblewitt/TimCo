@@ -793,7 +793,7 @@
                 "id": "[variables('varAdcSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-', concat(variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', variables('varAdcPrefix'), padLeft(variables('varAdcStartIndex'),2,'0'), '-1'))]"
               },
               "applicationSecurityGroups": [
                 {
