@@ -925,7 +925,7 @@
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
         "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', variables('varWebPrefix'), padLeft(copyIndex(variables('varWebStartIndex')),2,'0'))]",
-        "[concat('Microsoft.Network/loadBalancers/', variables('varWebLBName'), '/inboundNatRules/', 'RDP-VM', copyIndex(variables('varWebStartIndex')))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('varWebLBName'), '/inboundNatRules/', 'ELB-NAT-Rule-RDP-VM', copyIndex(variables('varWebStartIndex')))]"
       ],
       "tags": {
         "displayName": "NICS - Web servers"
@@ -944,7 +944,7 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('varWebLBID'),'/inboundNatRules/RDP-VM', copyindex(1))]"
+                  "id": "[concat(variables('varWebLBID'),'/inboundNatRules/ELB-NAT-Rule-RDP-VM', copyindex(1))]"
                 }
               ],
               "privateIPAllocationMethod": "Dynamic",
