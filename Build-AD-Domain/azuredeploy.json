@@ -77,14 +77,12 @@
     },
     "AdminPassword": {
       "type": "securestring",
-      "defaultValue": "TopSecret123456",
       "metadata": {
         "description": "Administrator password."
       }
     },
     "SafeModePassword": {
       "type": "securestring",
-      "defaultValue": "TopSecret123456",
       "metadata": {
         "description": "Safe mode password for domain controllers."
       }
