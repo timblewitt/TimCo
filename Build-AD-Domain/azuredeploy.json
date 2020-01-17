@@ -154,7 +154,7 @@
     "varWebPrefix": "[concat('vm-',variables('varCompanyId'),'-web')]",
     "varAppPrefix": "[concat('vm-',variables('varCompanyId'),'-app')]",
     "varVmSize": "Standard_D1_V2",
-    "varVmWindowsOSVersion": "2016-Datacenter",
+    "varVmWindowsOSVersion": "2019-Datacenter",
     "varVmImagePublisher": "MicrosoftWindowsServer",
     "varVmImageOffer": "WindowsServer",
     "varAdcDataDisk1SizeGB": "50",
