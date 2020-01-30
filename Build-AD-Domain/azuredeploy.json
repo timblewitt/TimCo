@@ -95,7 +95,6 @@
     "varCompanyId": "[toLower(parameters('CompanyID'))]",
     "varVmStorAccName": "[concat('stg', variables('varCompanyId'), 'mon',uniqueString(resourceGroup().id))]",
     "varVmStorAccType": "Standard_LRS",
-    "varNetworkWatcher": "[concat('nww-',variables('varCompanyId'),'-',resourceGroup().location)]",
     "varLogAnalyticsWorkspace": "[concat('law-',variables('varCompanyId'),'-',resourceGroup().location)]",
     "varAdcAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-adc-1')]",
     "varWebAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-web-1')]",
@@ -197,17 +196,6 @@
       "kind": "StorageV2",
       "properties": {
       }
-    },
-    {
-      "name": "[variables('varNetworkWatcher')]",
-      "type": "Microsoft.Network/networkWatchers",
-      "apiVersion": "2019-04-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "Network watcher"
-      },
-      "properties": {},
-      "resources": []
     },
     {
       "type": "Microsoft.OperationalInsights/workspaces",
