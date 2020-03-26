@@ -1,0 +1,258 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "VMPrefix": {
+      "type": "string",
+      "defaultValue": "vm-tmc-",
+      "metadata": {
+        "description": "Prefix for naming VMs."
+      }
+    },
+    "ServerCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 0,
+      "maxValue": 8,
+      "metadata": {
+        "description": "Number of servers to deploy."
+      }
+    },
+    "AdminUserName": {
+      "type": "string",
+      "defaultValue": "timcoadmin",
+      "minLength": 1,
+      "metadata": {
+        "description": "Administrator username."
+      }
+    },
+    "AdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Administrator password."
+      }
+    }
+  },
+
+  "variables": {
+    "varCompanyId": "tmc",
+    "varVmStorAccName": "[concat('stg', variables('varCompanyId'), 'mon',uniqueString(resourceGroup().id))]",
+    "varVmStorAccType": "Standard_LRS",
+    "varVNet1Name": "[concat('vnet-',variables('varCompanyId'),'-',resourceGroup().location,'01')]",
+    "varVNet1Prefix": "10.201.0.0/16",
+    "varVNet1Subnet1Name": "[concat('sn-',variables('varCompanyId'),'-',resourceGroup().location,'01')]",
+    "varVNet1Subnet1Prefix": "10.201.11.0/24",
+    "varVNet1Subnet1NSGName": "[concat('nsg-',variables('varCompanyId'),'-',resourceGroup().location,'-01')]",
+    "varStartIndex": 1,
+    "varDNSServerAddress": "10.201.11.4",
+    "varCopyCount": "[if(equals(parameters('ServerCount'), 0), 1, parameters('ServerCount'))]",
+    "varVmSize": "Standard_D1_V2",
+    "varVmWindowsOSVersion": "2019-Datacenter",
+    "varVmImagePublisher": "MicrosoftWindowsServer",
+    "varVmImageOffer": "WindowsServer",
+    "varVmVNetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('varVNet1Name'))]",
+    "varSubnetRef": "[concat(variables('varVmVnetID'), '/subnets/', variables('varVNet1Subnet1Name'))]"
+  },
+
+  "resources": [
+    {
+      "name": "[variables('varVmStorAccName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "Storage account"
+      },
+      "sku": {
+        "name": "[variables('varVmStorAccType')]"
+      },
+      "kind": "StorageV2",
+      "properties": {
+      }
+    },
+    {
+      "name": "[variables('varVNet1Subnet1NSGName')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NSG - subnet"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "NSG-Rule-Allow-All",
+            "properties": {
+              "description": "Allow All",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 110,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('varVNet1Name')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('varVNet1Subnet1NSGName'))]"
+      ],
+      "tags": {
+        "displayName": "VNet"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('varVNet1Prefix')]"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [
+            "[variables('varDNSServerAddress')]",
+            "168.63.129.16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('varVNet1Subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('varVNet1Subnet1Prefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('varVNet1Subnet1NSGName'))]"
+              }
+            }
+          }        ]
+      }
+    },
+    {
+      "name": "[concat('pip-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'))]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "condition": "[greater(parameters('ServerCount'),0)]",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "PipLoop",
+        "count": "[variables('varCopyCount')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "PIPs - servers"
+      },
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'))]"
+        }
+      }
+    },
+    {
+      "name": "[concat('nic-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'),'-1')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "condition": "[greater(parameters('ServerCount'),0)]",
+      "apiVersion": "2019-04-01",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "NicLoop",
+        "count": "[variables('varCopyCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('varVNet1Name'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', 'pip-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'))]"
+      ],
+      "tags": {
+        "displayName": "NICS - servers"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('varSubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0')))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[concat(parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'))]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "condition": "[greater(parameters('ServerCount'),0)]",
+      "apiVersion": "2019-03-01",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "VirtualMachineLoop",
+        "count": "[variables('varCopyCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('varVmStorAccName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'),'-1')]"
+      ],
+      "tags": {
+        "displayName": "Servers"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('varVmSize')]"
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', variables('varVmStorAccName'), '.blob.core.windows.net/')]"
+          }
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'))]",
+          "adminUsername": "[parameters('AdminUserName')]",
+          "adminPassword": "[parameters('AdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('varVmImagePublisher')]",
+            "offer": "[variables('varVmImageOffer')]",
+            "sku": "[variables('varVmWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat('dsk-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'), '-OS')]",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic-', parameters('VMPrefix'), padLeft(copyIndex(variables('varStartIndex')),2,'0'), '-1'))]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "outputs": {
+  }
+}
