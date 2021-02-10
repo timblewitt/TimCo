@@ -22,7 +22,7 @@
     },
     "AdminUserName": {
       "type": "string",
-      "defaultValue": "timcoadmin",
+      "defaultValue": "tmcadmin",
       "minLength": 1,
       "metadata": {
         "description": "Administrator username."
@@ -48,7 +48,7 @@
     "varStartIndex": 1,
     "varDNSServerAddress": "10.201.11.4",
     "varCopyCount": "[if(equals(parameters('ServerCount'), 0), 1, parameters('ServerCount'))]",
-    "varVmSize": "Standard_D1_V2",
+    "varVmSize": "Standard_B2s",
     "varVmWindowsOSVersion": "2019-Datacenter",
     "varVmImagePublisher": "MicrosoftWindowsServer",
     "varVmImageOffer": "WindowsServer",
