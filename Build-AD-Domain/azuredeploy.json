@@ -69,7 +69,7 @@
     },
     "AdminUserName": {
       "type": "string",
-      "defaultValue": "timco-admin",
+      "defaultValue": "tmcadmin",
       "minLength": 1,
       "metadata": {
         "description": "Administrator username."
