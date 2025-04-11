@@ -95,7 +95,7 @@
     "varCompanyId": "[toLower(parameters('CompanyID'))]",
     "varVmStorAccName": "[concat('stg', variables('varCompanyId'), 'mon',uniqueString(resourceGroup().id))]",
     "varVmStorAccType": "Standard_LRS",
-    "varLogAnalyticsWorkspace": "[concat('log-',variables('varCompanyId'),'-',resourceGroup().location),'-01']",
+    "varLogAnalyticsWorkspace": "[concat('log-',variables('varCompanyId'),'-',resourceGroup().location,'-01')]",
     "varAdcAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-adc-01')]",
     "varWebAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-web-01')]",
     "varAppAvailabilitySet": "[concat('avs-',variables('varCompanyId'),'-app-01')]",
