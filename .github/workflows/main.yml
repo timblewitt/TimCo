@@ -1,8 +1,8 @@
 #
-# This workflow deploys the Azure management group hierarchy
+# This workflow builds a JSON ARM template from Bicep code
 #
 
-name: Infra-MG-Deploy
+name: Build-JSON-From-Bicep
 
 on:
   push:
@@ -29,20 +29,6 @@ jobs:
       - name: Check out repository under $GITHUB_WORKSPACE, so job can access it
         uses: actions/checkout@v2
 
-      - name: Log on to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: true
-          
-      - name: Deploy Management Groups
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |   
-            #
-            # Get supplied parameters
-            #
-            
-            Write-Output "Deploying Azure resources"
-
-          azPSVersion: latest 
+      - name: Install Bicep build
+        run: |
+           bicep --help
