@@ -32,4 +32,5 @@ jobs:
       - name: Bicep-Build
         run: |
           dir
-          az bicep build --file ./Build-AD-Domain-Bicep/timco.bicep
+          cd Build-AD-Domain-Bicep
+          az bicep build --file timco.bicep
