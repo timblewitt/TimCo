@@ -29,6 +29,7 @@ jobs:
       - name: Check out repository under $GITHUB_WORKSPACE, so job can access it
         uses: actions/checkout@v2
 
-      - name: Install Bicep build
+      - name: Bicep-Build
         run: |
-           bicep --help
+          dir
+          az bicep build --file ./Build-AD-Domain-Bicep/timco.bicep
