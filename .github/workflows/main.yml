@@ -1,0 +1,36 @@
+#
+# This workflow builds a JSON ARM template from Bicep code
+#
+
+name: Build-JSON-From-Bicep
+
+on:
+  push:
+    branches: [ none ]
+  workflow_dispatch:
+      inputs:
+        orgRootMg:
+          type: string
+          description: 'Organisation root management group'
+          required: true
+          default: 'OrgRoot'
+        mgRegion:
+          type: choice
+          description: 'Management group region'
+          default: 'uksouth'
+          options:
+            - "uksouth"
+            - "ukwest"
+
+jobs:
+  deploy-mg:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository under $GITHUB_WORKSPACE, so job can access it
+        uses: actions/checkout@v2
+
+      - name: Bicep-Build
+        run: |
+          dir
+          cd Build-AD-Domain-Bicep
+          az bicep build --file timco.bicep
