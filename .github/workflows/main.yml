@@ -23,7 +23,7 @@ on:
             - "ukwest"
 
 jobs:
-  deploy-mg:
+  Convert-To-JSON:
     runs-on: windows-latest
     steps:
       - name: Check out repository under $GITHUB_WORKSPACE, so job can access it
@@ -34,10 +34,11 @@ jobs:
           dir
           cd Build-AD-Domain-Bicep
           az bicep build --file timco.bicep
+          dir
       
       - name: Add-JSON-To-GitHub
         uses: EndBug/add-and-commit@v9
         with:
           author_name: github-actions
           message: Add JSON file to GitHub
-          add: timco.json
+          add: Build-AD-Domain-Bicep\timco.json
