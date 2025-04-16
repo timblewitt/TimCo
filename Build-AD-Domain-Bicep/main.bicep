@@ -200,7 +200,7 @@ module vms 'vm.bicep' = [for vm in flattenedVmList: {
     vmSize: vmSize
   }
 }]
-
+/*
 // Handle Public IP Address separately for each VM (outside of the module's params block)
 resource vmPublicIP 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
@@ -212,3 +212,4 @@ resource vmPublicIP 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm i
     }
   }
 }]
+*/
