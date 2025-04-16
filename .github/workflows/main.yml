@@ -33,7 +33,7 @@ jobs:
         run: |
           dir
           cd Build-AD-Domain-Bicep
-          az bicep build --file timco.bicep
+          az bicep build --file main.bicep
           dir
       
       - name: Add-JSON-To-GitHub
@@ -41,4 +41,4 @@ jobs:
         with:
           author_name: github-actions
           message: Add JSON file to GitHub
-          add: Build-AD-Domain-Bicep\timco.json
+          add: Build-AD-Domain-Bicep\main.json

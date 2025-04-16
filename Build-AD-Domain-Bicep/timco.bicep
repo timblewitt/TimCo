@@ -1,3 +1,6 @@
+@description('Organisation identifier - used in resource naming')
+param orgId string
+
 @description('Username for the Virtual Machine.')
 param adminUsername string
 
