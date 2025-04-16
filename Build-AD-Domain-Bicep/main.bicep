@@ -165,7 +165,7 @@ var appVmList = [for i in range(0, applicationServerCount): {
 
 var dbsVmList = [for i in range(0, databaseServerCount): {
   name: 'vm${prefix}dbs${padLeft(string(i + 1), 2, '0')}'  
-  type: 'app'
+  type: 'dbs'
   subnetName: 'snet-dbs'
   index: i
 }]
