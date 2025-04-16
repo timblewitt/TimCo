@@ -5,17 +5,17 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "16011928108862280755"
+      "templateHash": "6385081204369813777"
     }
   },
   "parameters": {
     "windowsVersion": {
       "type": "string",
-      "defaultValue": "Windows Server 2025",
+      "defaultValue": "2025-Datacenter",
       "allowedValues": [
-        "Windows Server 2019",
-        "Windows Server 2022",
-        "Windows Server 2025"
+        "2019-Datacenter",
+        "2022-Datacenter",
+        "2025-Datacenter"
       ]
     },
     "orgId": {
@@ -43,7 +43,12 @@
       "defaultValue": 2,
       "minValue": 0
     },
-    "appServerCount": {
+    "applicationServerCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 0
+    },
+    "databaseServerCount": {
       "type": "int",
       "defaultValue": 2,
       "minValue": 0
@@ -68,13 +73,13 @@
   "variables": {
     "copy": [
       {
-        "name": "dcVmList",
+        "name": "adcVmList",
         "count": "[length(range(0, parameters('domainControllerCount')))]",
         "input": {
-          "name": "[format('vm{0}adc{1}', variables('prefix'), padLeft(string(add(range(0, parameters('domainControllerCount'))[copyIndex('dcVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}adc{1}', variables('prefix'), padLeft(string(add(range(0, parameters('domainControllerCount'))[copyIndex('adcVmList')], 1)), 2, '0'))]",
           "type": "adc",
-          "subnetName": "snet-inf",
-          "index": "[range(0, parameters('domainControllerCount'))[copyIndex('dcVmList')]]"
+          "subnetName": "snet-adc",
+          "index": "[range(0, parameters('domainControllerCount'))[copyIndex('adcVmList')]]"
         }
       },
       {
@@ -89,12 +94,22 @@
       },
       {
         "name": "appVmList",
-        "count": "[length(range(0, parameters('appServerCount')))]",
+        "count": "[length(range(0, parameters('applicationServerCount')))]",
         "input": {
-          "name": "[format('vm{0}app{1}', variables('prefix'), padLeft(string(add(range(0, parameters('appServerCount'))[copyIndex('appVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}app{1}', variables('prefix'), padLeft(string(add(range(0, parameters('applicationServerCount'))[copyIndex('appVmList')], 1)), 2, '0'))]",
           "type": "app",
           "subnetName": "snet-app",
-          "index": "[range(0, parameters('appServerCount'))[copyIndex('appVmList')]]"
+          "index": "[range(0, parameters('applicationServerCount'))[copyIndex('appVmList')]]"
+        }
+      },
+      {
+        "name": "dbsVmList",
+        "count": "[length(range(0, parameters('databaseServerCount')))]",
+        "input": {
+          "name": "[format('vm{0}app{1}', variables('prefix'), padLeft(string(add(range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')], 1)), 2, '0'))]",
+          "type": "app",
+          "subnetName": "snet-app",
+          "index": "[range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')]]"
         }
       }
     ],
@@ -104,9 +119,9 @@
     "vnetName": "[format('vnet-{0}-01', variables('prefix'))]",
     "subnetConfig": [
       {
-        "name": "snet-inf",
+        "name": "snet-adc",
         "prefix": "10.100.0.0/27",
-        "type": "inf"
+        "type": "adc"
       },
       {
         "name": "snet-web",
@@ -119,34 +134,12 @@
         "type": "app"
       },
       {
-        "name": "snet-db",
+        "name": "snet-dbs",
         "prefix": "10.100.0.96/27",
         "type": "dbs"
       }
     ],
-    "vmTypes": [
-      {
-        "count": "[parameters('domainControllerCount')]",
-        "type": "adc",
-        "subnetName": "snet-inf"
-      },
-      {
-        "count": "[parameters('webServerCount')]",
-        "type": "web",
-        "subnetName": "snet-web"
-      },
-      {
-        "count": "[parameters('appServerCount')]",
-        "type": "app",
-        "subnetName": "snet-app"
-      },
-      {
-        "count": 0,
-        "type": "dbs",
-        "subnetName": "snet-db"
-      }
-    ],
-    "flattenedVmList": "[concat(variables('dcVmList'), variables('webVmList'), variables('appVmList'))]"
+    "flattenedVmList": "[concat(variables('adcVmList'), variables('webVmList'), variables('appVmList'), variables('dbsVmList'))]"
   },
   "resources": [
     {
@@ -170,7 +163,7 @@
       "name": "[format('nsg-{0}-{1}', variables('prefix'), variables('subnetConfig')[copyIndex()].type)]",
       "location": "[parameters('location')]",
       "properties": {
-        "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'inf'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
+        "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
       }
     },
     {
@@ -223,32 +216,6 @@
     },
     {
       "copy": {
-        "name": "nic",
-        "count": "[length(variables('flattenedVmList'))]"
-      },
-      "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2023-02-01",
-      "name": "[format('{0}-nic01', variables('flattenedVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[variables('flattenedVmList')[copyIndex()].index].id]"
-              },
-              "privateIPAllocationMethod": "Dynamic"
-            }
-          }
-        ]
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
-      ]
-    },
-    {
-      "copy": {
         "name": "vms",
         "count": "[length(variables('flattenedVmList'))]"
       },
@@ -273,23 +240,25 @@
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
           },
-          "windowsVersion": "[if(equals(parameters('windowsVersion'), 'Windows Server 2019'), createObject('value', '2019'), if(equals(parameters('windowsVersion'), 'Windows Server 2022'), createObject('value', '2022'), createObject('value', '2025')))]",
+          "windowsVersion": {
+            "value": "[parameters('windowsVersion')]"
+          },
           "zone": {
             "value": "[string(add(mod(variables('flattenedVmList')[copyIndex()].index, 3), 1))]"
           },
           "vmSize": {
             "value": "[parameters('vmSize')]"
-          }
+          },
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('flattenedVmList')[variables('flattenedVmList')[copyIndex()].index].name))), createObject('value', null()))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "languageVersion": "2.0",
           "contentVersion": "1.0.0.0",
           "metadata": {
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "2734863418526118416"
+              "templateHash": "11483115922859074945"
             }
           },
           "parameters": {
@@ -315,19 +284,11 @@
               "type": "string"
             },
             "publicIpAddressId": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
-          "variables": {
-            "imageVersionMap": {
-              "2019": "2019-Datacenter",
-              "2022": "2022-Datacenter",
-              "2025": "2025-Datacenter"
-            }
-          },
-          "resources": {
-            "nic": {
+          "resources": [
+            {
               "type": "Microsoft.Network/networkInterfaces",
               "apiVersion": "2023-02-01",
               "name": "[format('{0}-nic01', parameters('name'))]",
@@ -347,7 +308,7 @@
                 ]
               }
             },
-            "vm": {
+            {
               "type": "Microsoft.Compute/virtualMachines",
               "apiVersion": "2023-03-01",
               "name": "[parameters('name')]",
@@ -368,7 +329,7 @@
                   "imageReference": {
                     "publisher": "MicrosoftWindowsServer",
                     "offer": "WindowsServer",
-                    "sku": "[variables('imageVersionMap')[parameters('windowsVersion')]]",
+                    "sku": "[parameters('windowsVersion')]",
                     "version": "latest"
                   },
                   "osDisk": {
@@ -393,13 +354,14 @@
                 }
               },
               "dependsOn": [
-                "nic"
+                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
               ]
             }
-          }
+          ]
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('flattenedVmList')[variables('flattenedVmList')[copyIndex()].index].name))]",
         "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
       ]
     }
