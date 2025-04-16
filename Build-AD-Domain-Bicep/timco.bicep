@@ -28,12 +28,6 @@ param publicIpSku string = 'Basic'
 
 @description('The Windows version for the VM. This will pick a fully patched image of this given Windows version.')
 @allowed([
-  '2016-datacenter-gensecond'
-  '2016-datacenter-server-core-g2'
-  '2016-datacenter-server-core-smalldisk-g2'
-  '2016-datacenter-smalldisk-g2'
-  '2016-datacenter-with-containers-g2'
-  '2016-datacenter-zhcn-g2'
   '2019-datacenter-core-g2'
   '2019-datacenter-core-smalldisk-g2'
   '2019-datacenter-core-with-containers-g2'
@@ -51,11 +45,19 @@ param publicIpSku string = 'Basic'
   '2022-datacenter-core-smalldisk-g2'
   '2022-datacenter-g2'
   '2022-datacenter-smalldisk-g2'
+  '2025-datacenter-azure-edition'
+  '2025-datacenter-azure-edition-core'
+  '2025-datacenter-azure-edition-core-smalldisk'
+  '2025-datacenter-azure-edition-smalldisk'
+  '2025-datacenter-core-g2'
+  '2025-datacenter-core-smalldisk-g2'
+  '2025-datacenter-g2'
+  '2025-datacenter-smalldisk-g2'
 ])
-param OSVersion string = '2022-datacenter-azure-edition'
+param OSVersion string = '2025-datacenter-azure-edition'
 
 @description('Size of the virtual machine.')
-param vmSize string = 'Standard_D2s_v5'
+param vmSize string = 'Standard_B2s'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
