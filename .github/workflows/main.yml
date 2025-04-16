@@ -18,9 +18,7 @@ jobs:
 
       - name: Bicep-Build
         run: |
-          dir
-          cd Build-AD-Domain-Bicep
-          az bicep build --file main.bicep
+          az bicep build --file Build-AD-Domain-Bicep\main.bicep
           dir
       
       - name: Add-JSON-To-GitHub
