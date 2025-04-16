@@ -5,6 +5,7 @@ param storageAccountName string
 param windowsVersion string
 param zone string
 param vmSize string
+param publicIpAddressId string?  // New parameter to accept the public IP address (nullable)
 
 var imageVersionMap = {
   '2019': '2019-Datacenter'
@@ -13,7 +14,7 @@ var imageVersionMap = {
 }
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
-  name: '${name}-nic'
+  name: '${name}-nic01'  // Append -nic01 to each NIC name
   location: location
   properties: {
     ipConfigurations: [
@@ -24,6 +25,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
             id: subnetId
           }
           privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: publicIpAddressId != null ? {
+            id: publicIpAddressId
+          } : null  // Only associate the public IP if it's provided
         }
       }
     ]
