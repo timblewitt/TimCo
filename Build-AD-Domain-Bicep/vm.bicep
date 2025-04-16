@@ -5,16 +5,10 @@ param storageAccountName string
 param windowsVersion string
 param zone string
 param vmSize string
-param publicIpAddressId string?  // New parameter to accept the public IP address (nullable)
-
-var imageVersionMap = {
-  '2019': '2019-Datacenter'
-  '2022': '2022-Datacenter'
-  '2025': '2025-Datacenter'
-}
+param publicIpAddressId string
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
-  name: '${name}-nic01'  // Append -nic01 to each NIC name
+  name: '${name}-nic01'  
   location: location
   properties: {
     ipConfigurations: [
@@ -27,7 +21,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: publicIpAddressId != null ? {
             id: publicIpAddressId
-          } : null  // Only associate the public IP if it's provided
+          } : null  
         }
       }
     ]
@@ -51,7 +45,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
       imageReference: {
         publisher: 'MicrosoftWindowsServer'
         offer: 'WindowsServer'
-        sku: imageVersionMap[windowsVersion]
+        sku: windowsVersion
         version: 'latest'
       }
       osDisk: {

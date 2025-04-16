@@ -1,9 +1,9 @@
 @allowed([
-  'Windows Server 2019'
-  'Windows Server 2022'
-  'Windows Server 2025'
+  '2019-Datacenter'
+  '2022-Datacenter'
+  '2025-Datacenter'
 ])
-param windowsVersion string = 'Windows Server 2025'
+param windowsVersion string = '2025-Datacenter'
 
 @minLength(3)
 @maxLength(5)
@@ -15,7 +15,7 @@ param orgId string
   'westeurope'
   'northeurope'
 ])
-param location string = 'uksouth'  // Default value set for location
+param location string = 'uksouth'  
 
 @minValue(0)
 param domainControllerCount int = 1
@@ -24,7 +24,10 @@ param domainControllerCount int = 1
 param webServerCount int = 2
 
 @minValue(0)
-param appServerCount int = 2
+param applicationServerCount int = 2
+
+@minValue(0)
+param databaseServerCount int = 2
 
 @allowed([
   'Standard_B2s'
@@ -36,19 +39,19 @@ param appServerCount int = 2
 ])
 param vmSize string = 'Standard_B2s'
 
-param usePublicIP bool = false  // Default false, the user can choose this
+param usePublicIP bool = false 
 
 var prefix = toLower(orgId)
-var randomSuffix = uniqueString(orgId) // Generate a random 5-character string
-var storageAccountName = toLower('sa${prefix}${randomSuffix}diag') // Storage account name with random suffix
+var randomSuffix = uniqueString(orgId) 
+var storageAccountName = toLower('sa${prefix}${randomSuffix}diag') 
 
 var vnetName = 'vnet-${prefix}-01'
 
 var subnetConfig = [
-  { name: 'snet-inf', prefix: '10.100.0.0/27', type: 'inf' }
+  { name: 'snet-adc', prefix: '10.100.0.0/27', type: 'adc' }
   { name: 'snet-web', prefix: '10.100.0.32/27', type: 'web' }
   { name: 'snet-app', prefix: '10.100.0.64/27', type: 'app' }
-  { name: 'snet-db',  prefix: '10.100.0.96/27', type: 'dbs'  }
+  { name: 'snet-dbs',  prefix: '10.100.0.96/27', type: 'dbs'  }
 ]
 
 resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -77,7 +80,7 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in s
         sourceAddressPrefix: '*'
         destinationAddressPrefix: '*'
       }
-    }], s.type == 'inf' ? [{
+    }], s.type == 'adc' ? [{
       name: 'Allow-RDP'
       properties: {
         priority: 100
@@ -101,7 +104,7 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in s
         destinationAddressPrefix: '*'
         destinationPortRange: '80'
       }
-    }
+    } 
     {
       name: 'Allow-HTTPS'
       properties: {
@@ -139,37 +142,35 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
   }
 }
 
-var vmTypes = [
-  { count: domainControllerCount, type: 'adc', subnetName: 'snet-inf' }
-  { count: webServerCount, type: 'web', subnetName: 'snet-web' }
-  { count: appServerCount, type: 'app', subnetName: 'snet-app' }
-  { count: 0, type: 'dbs', subnetName: 'snet-db' }
-]
-
-// Precompute the individual VM lists for each type
-var dcVmList = [for i in range(0, domainControllerCount): {
-  name: 'vm${prefix}adc${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'adc'
+var adcVmList = [for i in range(0, domainControllerCount): {
+  name: 'vm${prefix}adc${padLeft(string(i + 1), 2, '0')}'  
   type: 'adc'
-  subnetName: 'snet-inf'
+  subnetName: 'snet-adc'
   index: i
 }]
 
 var webVmList = [for i in range(0, webServerCount): {
-  name: 'vm${prefix}web${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'web'
+  name: 'vm${prefix}web${padLeft(string(i + 1), 2, '0')}'  
   type: 'web'
   subnetName: 'snet-web'
   index: i
 }]
 
-var appVmList = [for i in range(0, appServerCount): {
-  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'app'
+var appVmList = [for i in range(0, applicationServerCount): {
+  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}' 
   type: 'app'
   subnetName: 'snet-app'
   index: i
 }]
 
-// Combine all VM lists into one flattened list
-var flattenedVmList = concat(dcVmList, webVmList, appVmList)
+var dbsVmList = [for i in range(0, databaseServerCount): {
+  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}'  
+  type: 'app'
+  subnetName: 'snet-app'
+  index: i
+}]
+
+var flattenedVmList = concat(adcVmList, webVmList, appVmList, dbsVmList)
 
 resource pip 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
@@ -189,26 +190,9 @@ module vms 'vm.bicep' = [for vm in flattenedVmList: {
     location: location
     subnetId: vnet.properties.subnets[vm.index].id
     storageAccountName: storageAccountName
-    windowsVersion: (windowsVersion == 'Windows Server 2019' ? '2019' : (windowsVersion == 'Windows Server 2022' ? '2022' : '2025'))
+    windowsVersion: windowsVersion
     zone: string((vm.index % 3) + 1)
     vmSize: vmSize
-  }
-}]
-
-resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = [for vm in flattenedVmList: {
-  name: '${vm.name}-nic01'  // NIC with a suffix of 01
-  location: location
-  properties: {
-    ipConfigurations: [
-      {
-        name: 'ipconfig1'
-        properties: {
-          subnet: {
-            id: vnet.properties.subnets[vm.index].id
-          }
-          privateIPAllocationMethod: 'Dynamic'
-        }
-      }
-    ]
+    publicIpAddressId: usePublicIP ? pip[vm.index].id : null  
   }
 }]
