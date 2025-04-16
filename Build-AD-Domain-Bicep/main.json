@@ -1,0 +1,350 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.34.44.8038",
+      "templateHash": "10142720790518248024"
+    }
+  },
+  "parameters": {
+    "windowsVersion": {
+      "type": "string",
+      "defaultValue": "2025",
+      "allowedValues": [
+        "2019",
+        "2022",
+        "2025"
+      ]
+    },
+    "orgId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 5
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "uksouth",
+      "allowedValues": [
+        "uksouth",
+        "ukwest",
+        "westeurope",
+        "northeurope"
+      ]
+    },
+    "domainControllerCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 0
+    },
+    "webServerCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 0
+    },
+    "appServerCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 0
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_B2s",
+      "allowedValues": [
+        "Standard_B2s",
+        "Standard_D2s_v3",
+        "Standard_D4s_v3",
+        "Standard_DS2_v2",
+        "Standard_DS3_v2",
+        "Standard_E2s_v3"
+      ]
+    }
+  },
+  "variables": {
+    "copy": [
+      {
+        "name": "dcVmList",
+        "count": "[length(range(0, parameters('domainControllerCount')))]",
+        "input": {
+          "name": "[format('vm{0}dc{1}', variables('prefix'), padLeft(string(add(range(0, parameters('domainControllerCount'))[copyIndex('dcVmList')], 1)), 2, '0'))]",
+          "type": "dc",
+          "subnetName": "snet-inf",
+          "index": "[range(0, parameters('domainControllerCount'))[copyIndex('dcVmList')]]"
+        }
+      },
+      {
+        "name": "webVmList",
+        "count": "[length(range(0, parameters('webServerCount')))]",
+        "input": {
+          "name": "[format('vm{0}web{1}', variables('prefix'), padLeft(string(add(range(0, parameters('webServerCount'))[copyIndex('webVmList')], 1)), 2, '0'))]",
+          "type": "web",
+          "subnetName": "snet-web",
+          "index": "[range(0, parameters('webServerCount'))[copyIndex('webVmList')]]"
+        }
+      },
+      {
+        "name": "appVmList",
+        "count": "[length(range(0, parameters('appServerCount')))]",
+        "input": {
+          "name": "[format('vm{0}app{1}', variables('prefix'), padLeft(string(add(range(0, parameters('appServerCount'))[copyIndex('appVmList')], 1)), 2, '0'))]",
+          "type": "app",
+          "subnetName": "snet-app",
+          "index": "[range(0, parameters('appServerCount'))[copyIndex('appVmList')]]"
+        }
+      }
+    ],
+    "prefix": "[toLower(parameters('orgId'))]",
+    "storageAccountName": "[toLower(format('sa{0}vmstore', variables('prefix')))]",
+    "vnetName": "[format('vnet-{0}', variables('prefix'))]",
+    "subnetConfig": [
+      {
+        "name": "snet-inf",
+        "prefix": "10.100.0.0/27",
+        "type": "inf"
+      },
+      {
+        "name": "snet-web",
+        "prefix": "10.100.0.32/27",
+        "type": "web"
+      },
+      {
+        "name": "snet-app",
+        "prefix": "10.100.0.64/27",
+        "type": "app"
+      },
+      {
+        "name": "snet-db",
+        "prefix": "10.100.0.96/27",
+        "type": "db"
+      }
+    ],
+    "vmTypes": [
+      {
+        "count": "[parameters('domainControllerCount')]",
+        "type": "dc",
+        "subnetName": "snet-inf"
+      },
+      {
+        "count": "[parameters('webServerCount')]",
+        "type": "web",
+        "subnetName": "snet-web"
+      },
+      {
+        "count": "[parameters('appServerCount')]",
+        "type": "app",
+        "subnetName": "snet-app"
+      }
+    ],
+    "flattenedVmList": "[concat(variables('dcVmList'), variables('webVmList'), variables('appVmList'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-01-01",
+      "name": "[variables('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {}
+    },
+    {
+      "copy": {
+        "name": "nsgs",
+        "count": "[length(variables('subnetConfig'))]"
+      },
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2023-02-01",
+      "name": "[format('nsg-{0}-{1}', variables('prefix'), variables('subnetConfig')[copyIndex()].type)]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'inf'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2023-02-01",
+      "name": "[variables('vnetName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "copy": [
+          {
+            "name": "subnets",
+            "count": "[length(variables('subnetConfig'))]",
+            "input": {
+              "name": "[variables('subnetConfig')[copyIndex('subnets')].name]",
+              "properties": {
+                "addressPrefix": "[variables('subnetConfig')[copyIndex('subnets')].prefix]",
+                "networkSecurityGroup": {
+                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('nsg-{0}-{1}', variables('prefix'), variables('subnetConfig')[copyIndex('subnets')].type))]"
+                }
+              }
+            }
+          }
+        ],
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.100.0.0/24"
+          ]
+        }
+      },
+      "dependsOn": [
+        "nsgs"
+      ]
+    },
+    {
+      "copy": {
+        "name": "vms",
+        "count": "[length(variables('flattenedVmList'))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('flattenedVmList')[copyIndex()].name]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('flattenedVmList')[copyIndex()].name]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetId": {
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[variables('flattenedVmList')[copyIndex()].index].id]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "windowsVersion": {
+            "value": "[parameters('windowsVersion')]"
+          },
+          "zone": {
+            "value": "[string(add(mod(variables('flattenedVmList')[copyIndex()].index, 3), 1))]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.34.44.8038",
+              "templateHash": "988126828014011381"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "subnetId": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "windowsVersion": {
+              "type": "string"
+            },
+            "zone": {
+              "type": "string"
+            },
+            "vmSize": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "imageVersionMap": {
+              "2019": "2019-Datacenter",
+              "2022": "2022-Datacenter",
+              "2025": "2025-Datacenter"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2023-02-01",
+              "name": "[format('{0}-nic', parameters('name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      },
+                      "privateIPAllocationMethod": "Dynamic"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "zones": [
+                "[parameters('zone')]"
+              ],
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('name')]",
+                  "adminUsername": "azureuser",
+                  "adminPassword": "P@ssword1234!"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "[variables('imageVersionMap')[parameters('windowsVersion')]]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                    }
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('name')))]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[format('https://{0}.blob.core.windows.net', parameters('storageAccountName'))]"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('name')))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+      ]
+    }
+  ]
+}
