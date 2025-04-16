@@ -42,7 +42,7 @@ var prefix = toLower(orgId)
 var randomSuffix = uniqueString(orgId) // Generate a random 5-character string
 var storageAccountName = toLower('sa${prefix}${randomSuffix}diag') // Storage account name with random suffix
 
-var vnetName = 'vnet-${prefix}'
+var vnetName = 'vnet-${prefix}-01'
 
 var subnetConfig = [
   { name: 'snet-inf', prefix: '10.100.0.0/27', type: 'inf' }
@@ -65,62 +65,56 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in s
   name: 'nsg-${prefix}-${s.type}'
   location: location
   properties: {
-    securityRules: concat([
-      {
-        name: 'Deny-All-Inbound'
-        properties: {
-          priority: 4096
-          direction: 'Inbound'
-          access: 'Deny'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
+    securityRules: concat([{
+      name: 'Deny-All-Inbound'
+      properties: {
+        priority: 4096
+        direction: 'Inbound'
+        access: 'Deny'
+        protocol: '*'
+        sourcePortRange: '*'
+        destinationPortRange: '*'
+        sourceAddressPrefix: '*'
+        destinationAddressPrefix: '*'
       }
-    ], s.type == 'inf' ? [
-      {
-        name: 'Allow-RDP'
-        properties: {
-          priority: 100
-          direction: 'Inbound'
-          access: 'Allow'
-          protocol: 'Tcp'
-          sourceAddressPrefix: '*'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '3389'
-        }
+    }], s.type == 'inf' ? [{
+      name: 'Allow-RDP'
+      properties: {
+        priority: 100
+        direction: 'Inbound'
+        access: 'Allow'
+        protocol: 'Tcp'
+        sourceAddressPrefix: '*'
+        sourcePortRange: '*'
+        destinationAddressPrefix: '*'
+        destinationPortRange: '3389'
       }
-    ] : s.type == 'web' ? [
-      {
-        name: 'Allow-HTTP'
-        properties: {
-          priority: 100
-          direction: 'Inbound'
-          access: 'Allow'
-          protocol: 'Tcp'
-          sourceAddressPrefix: '*'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '80'
-        }
+    }] : s.type == 'web' ? [{
+      name: 'Allow-HTTP'
+      properties: {
+        priority: 100
+        direction: 'Inbound'
+        access: 'Allow'
+        protocol: 'Tcp'
+        sourceAddressPrefix: '*'
+        sourcePortRange: '*'
+        destinationAddressPrefix: '*'
+        destinationPortRange: '80'
       }
-      {
-        name: 'Allow-HTTPS'
-        properties: {
-          priority: 110
-          direction: 'Inbound'
-          access: 'Allow'
-          protocol: 'Tcp'
-          sourceAddressPrefix: '*'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '443'
-        }
+    }
+    {
+      name: 'Allow-HTTPS'
+      properties: {
+        priority: 110
+        direction: 'Inbound'
+        access: 'Allow'
+        protocol: 'Tcp'
+        sourceAddressPrefix: '*'
+        sourcePortRange: '*'
+        destinationAddressPrefix: '*'
+        destinationPortRange: '443'
       }
-    ] : [])
+    }] : [])
   }
 }]
 
@@ -200,16 +194,21 @@ module vms 'vm.bicep' = [for vm in flattenedVmList: {
     vmSize: vmSize
   }
 }]
-/*
-// Handle Public IP Address separately for each VM (outside of the module's params block)
-resource vmPublicIP 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
-  name: 'pip-${vm.name}'
+
+resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = [for vm in flattenedVmList: {
+  name: '${vm.name}-nic01'  // NIC with a suffix of 01
   location: location
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
-    dnsSettings: {
-      domainNameLabel: 'pip-${vm.name}'
-    }
+    ipConfigurations: [
+      {
+        name: 'ipconfig1'
+        properties: {
+          subnet: {
+            id: vnet.properties.subnets[vm.index].id
+          }
+          privateIPAllocationMethod: 'Dynamic'
+        }
+      }
+    ]
   }
 }]
-*/
