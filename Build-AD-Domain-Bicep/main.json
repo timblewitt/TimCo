@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "3125287827894084680"
+      "templateHash": "11571429222244483059"
     }
   },
   "parameters": {
@@ -101,7 +101,7 @@
     "prefix": "[toLower(parameters('orgId'))]",
     "randomSuffix": "[uniqueString(parameters('orgId'))]",
     "storageAccountName": "[toLower(format('sa{0}{1}diag', variables('prefix'), variables('randomSuffix')))]",
-    "vnetName": "[format('vnet-{0}', variables('prefix'))]",
+    "vnetName": "[format('vnet-{0}-01', variables('prefix'))]",
     "subnetConfig": [
       {
         "name": "snet-inf",
@@ -220,6 +220,32 @@
           "domainNameLabel": "[format('pip-{0}', variables('flattenedVmList')[copyIndex()].name)]"
         }
       }
+    },
+    {
+      "copy": {
+        "name": "nic",
+        "count": "[length(variables('flattenedVmList'))]"
+      },
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2023-02-01",
+      "name": "[format('{0}-nic01', variables('flattenedVmList')[copyIndex()].name)]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[variables('flattenedVmList')[copyIndex()].index].id]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+      ]
     },
     {
       "copy": {
