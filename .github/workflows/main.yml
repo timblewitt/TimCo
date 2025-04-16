@@ -8,19 +8,6 @@ on:
   push:
     branches: [ none ]
   workflow_dispatch:
-      inputs:
-        orgRootMg:
-          type: string
-          description: 'Organisation root management group'
-          required: true
-          default: 'OrgRoot'
-        mgRegion:
-          type: choice
-          description: 'Management group region'
-          default: 'uksouth'
-          options:
-            - "uksouth"
-            - "ukwest"
 
 jobs:
   Convert-To-JSON:
