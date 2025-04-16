@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "11571429222244483059"
+      "templateHash": "16011928108862280755"
     }
   },
   "parameters": {
@@ -283,12 +283,13 @@
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "languageVersion": "2.0",
           "contentVersion": "1.0.0.0",
           "metadata": {
             "_generator": {
               "name": "bicep",
               "version": "0.34.44.8038",
-              "templateHash": "988126828014011381"
+              "templateHash": "2734863418526118416"
             }
           },
           "parameters": {
@@ -312,6 +313,10 @@
             },
             "vmSize": {
               "type": "string"
+            },
+            "publicIpAddressId": {
+              "type": "string",
+              "nullable": true
             }
           },
           "variables": {
@@ -321,11 +326,11 @@
               "2025": "2025-Datacenter"
             }
           },
-          "resources": [
-            {
+          "resources": {
+            "nic": {
               "type": "Microsoft.Network/networkInterfaces",
               "apiVersion": "2023-02-01",
-              "name": "[format('{0}-nic', parameters('name'))]",
+              "name": "[format('{0}-nic01', parameters('name'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "ipConfigurations": [
@@ -335,13 +340,14 @@
                       "subnet": {
                         "id": "[parameters('subnetId')]"
                       },
-                      "privateIPAllocationMethod": "Dynamic"
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
                     }
                   }
                 ]
               }
             },
-            {
+            "vm": {
               "type": "Microsoft.Compute/virtualMachines",
               "apiVersion": "2023-03-01",
               "name": "[parameters('name')]",
@@ -375,7 +381,7 @@
                 "networkProfile": {
                   "networkInterfaces": [
                     {
-                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('name')))]"
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
                     }
                   ]
                 },
@@ -387,10 +393,10 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('name')))]"
+                "nic"
               ]
             }
-          ]
+          }
         }
       },
       "dependsOn": [
