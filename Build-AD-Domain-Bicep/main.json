@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "16658245292878655400"
+      "templateHash": "3125287827894084680"
     }
   },
   "parameters": {
@@ -207,23 +207,6 @@
     {
       "copy": {
         "name": "pip",
-        "count": "[length(variables('flattenedVmList'))]"
-      },
-      "condition": "[parameters('usePublicIP')]",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-02-01",
-      "name": "[format('pip-{0}', variables('flattenedVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[format('pip-{0}', variables('flattenedVmList')[copyIndex()].name)]"
-        }
-      }
-    },
-    {
-      "copy": {
-        "name": "vmPublicIP",
         "count": "[length(variables('flattenedVmList'))]"
       },
       "condition": "[parameters('usePublicIP')]",
