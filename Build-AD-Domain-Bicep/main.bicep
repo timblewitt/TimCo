@@ -1,9 +1,9 @@
 @allowed([
-  '2019'
-  '2022'
-  '2025'
+  'Windows Server 2019'
+  'Windows Server 2022'
+  'Windows Server 2025'
 ])
-param windowsVersion string = '2025'
+param windowsVersion string = 'Windows Server 2025'
 
 @minLength(3)
 @maxLength(5)
@@ -15,7 +15,7 @@ param orgId string
   'westeurope'
   'northeurope'
 ])
-param location string = 'uksouth'
+param location string = 'uksouth'  // Default value set for location
 
 @minValue(0)
 param domainControllerCount int = 1
@@ -36,15 +36,19 @@ param appServerCount int = 2
 ])
 param vmSize string = 'Standard_B2s'
 
+param usePublicIP bool = false  // Default false, the user can choose this
+
 var prefix = toLower(orgId)
-var storageAccountName = toLower('sa${prefix}vmstore')
+var randomSuffix = uniqueString(orgId) // Generate a random 5-character string
+var storageAccountName = toLower('sa${prefix}${randomSuffix}diag') // Storage account name with random suffix
+
 var vnetName = 'vnet-${prefix}'
 
 var subnetConfig = [
   { name: 'snet-inf', prefix: '10.100.0.0/27', type: 'inf' }
   { name: 'snet-web', prefix: '10.100.0.32/27', type: 'web' }
   { name: 'snet-app', prefix: '10.100.0.64/27', type: 'app' }
-  { name: 'snet-db',  prefix: '10.100.0.96/27', type: 'db'  }
+  { name: 'snet-db',  prefix: '10.100.0.96/27', type: 'dbs'  }
 ]
 
 resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -142,28 +146,29 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
 }
 
 var vmTypes = [
-  { count: domainControllerCount, type: 'dc', subnetName: 'snet-inf' }
+  { count: domainControllerCount, type: 'adc', subnetName: 'snet-inf' }
   { count: webServerCount, type: 'web', subnetName: 'snet-web' }
   { count: appServerCount, type: 'app', subnetName: 'snet-app' }
+  { count: 0, type: 'dbs', subnetName: 'snet-db' }
 ]
 
 // Precompute the individual VM lists for each type
 var dcVmList = [for i in range(0, domainControllerCount): {
-  name: 'vm${prefix}dc${padLeft(string(i + 1), 2, '0')}'  // Corrected usage of '0' as a string
-  type: 'dc'
+  name: 'vm${prefix}adc${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'adc'
+  type: 'adc'
   subnetName: 'snet-inf'
   index: i
 }]
 
 var webVmList = [for i in range(0, webServerCount): {
-  name: 'vm${prefix}web${padLeft(string(i + 1), 2, '0')}'  // Corrected usage of '0' as a string
+  name: 'vm${prefix}web${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'web'
   type: 'web'
   subnetName: 'snet-web'
   index: i
 }]
 
 var appVmList = [for i in range(0, appServerCount): {
-  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}'  // Corrected usage of '0' as a string
+  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}'  // Standardized VM type to 'app'
   type: 'app'
   subnetName: 'snet-app'
   index: i
@@ -172,15 +177,38 @@ var appVmList = [for i in range(0, appServerCount): {
 // Combine all VM lists into one flattened list
 var flattenedVmList = concat(dcVmList, webVmList, appVmList)
 
+resource pip 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
 module vms 'vm.bicep' = [for vm in flattenedVmList: {
   name: vm.name
   params: {
     name: vm.name
     location: location
-    subnetId: vnet.properties.subnets[vm.index].id  // Directly use vm.index to access the correct subnet
+    subnetId: vnet.properties.subnets[vm.index].id
     storageAccountName: storageAccountName
-    windowsVersion: windowsVersion
+    windowsVersion: (windowsVersion == 'Windows Server 2019' ? '2019' : (windowsVersion == 'Windows Server 2022' ? '2022' : '2025'))
     zone: string((vm.index % 3) + 1)
     vmSize: vmSize
+  }
+}]
+
+// Handle Public IP Address separately for each VM (outside of the module's params block)
+resource vmPublicIP 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
   }
 }]
