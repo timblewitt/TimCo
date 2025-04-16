@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.34.44.8038",
-      "templateHash": "12771924716750089658"
+      "templateHash": "13401883914327107253"
     }
   },
   "parameters": {
@@ -107,7 +107,7 @@
         "count": "[length(range(0, parameters('databaseServerCount')))]",
         "input": {
           "name": "[format('vm{0}dbs{1}', variables('prefix'), padLeft(string(add(range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')], 1)), 2, '0'))]",
-          "type": "app",
+          "type": "dbs",
           "subnetName": "snet-dbs",
           "index": "[range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')]]"
         }
