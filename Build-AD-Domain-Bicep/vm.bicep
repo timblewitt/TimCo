@@ -5,7 +5,7 @@ param storageAccountName string
 param windowsVersion string
 param zone string
 param vmSize string
-param publicIpAddressId string
+param publicIpAddressId string = ''
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
   name: '${name}-nic01'  
@@ -19,9 +19,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
             id: subnetId
           }
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: publicIpAddressId != null ? {
+          publicIPAddress: empty(publicIpAddressId) ? null : {
             id: publicIpAddressId
-          } : null  
+          }
         }
       }
     ]
