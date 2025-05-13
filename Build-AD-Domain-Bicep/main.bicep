@@ -7,7 +7,7 @@ param windowsVersion string = '2025-Datacenter'
 
 @minLength(3)
 @maxLength(5)
-param orgId string
+param orgIdentifier string
 
 @allowed([
   'uksouth'
@@ -21,13 +21,13 @@ param location string = 'uksouth'
 param domainControllerCount int = 1
 
 @minValue(0)
-param webServerCount int = 2
+param webServerCount int = 1
 
 @minValue(0)
-param applicationServerCount int = 2
+param applicationServerCount int = 1
 
 @minValue(0)
-param databaseServerCount int = 2
+param databaseServerCount int = 1
 
 @allowed([
   'Standard_B2s'
@@ -41,17 +41,17 @@ param vmSize string = 'Standard_B2s'
 
 param usePublicIP bool = false 
 
-var prefix = toLower(orgId)
-var randomSuffix = uniqueString(orgId) 
-var storageAccountName = toLower('sa${prefix}${randomSuffix}diag') 
+var orgId = toLower(orgIdentifier)
+var randomString = uniqueString(orgId) 
+var storageAccountName = toLower('sa${orgId}${randomString}diag') 
 
-var vnetName = 'vnet-${prefix}-01'
+var vnetName = 'vnet-${orgId}-01'
 
 var subnetConfig = [
-  { name: 'snet-adc', prefix: '10.100.0.0/27', type: 'adc' }
-  { name: 'snet-web', prefix: '10.100.0.32/27', type: 'web' }
-  { name: 'snet-app', prefix: '10.100.0.64/27', type: 'app' }
-  { name: 'snet-dbs',  prefix: '10.100.0.96/27', type: 'dbs'  }
+  { name: 'snet-adc', orgId: '10.100.0.0/27', type: 'adc' }
+  { name: 'snet-web', orgId: '10.100.0.32/27', type: 'web' }
+  { name: 'snet-app', orgId: '10.100.0.64/27', type: 'app' }
+  { name: 'snet-dbs',  orgId: '10.100.0.96/27', type: 'dbs'  }
 ]
 
 resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -65,7 +65,7 @@ resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
 }
 
 resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in subnetConfig: {
-  name: 'nsg-${prefix}-${s.type}'
+  name: 'nsg-${orgId}-${s.type}'
   location: location
   properties: {
     securityRules: concat([{
@@ -132,7 +132,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
       for (s, index) in subnetConfig: {
         name: s.name
         properties: {
-          addressPrefix: s.prefix
+          addressPrefix: s.orgId
           networkSecurityGroup: {
             id: nsgs[index].id
           }
@@ -143,36 +143,35 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
 }
 
 var adcVmList = [for i in range(0, domainControllerCount): {
-  name: 'vm${prefix}adc${padLeft(string(i + 1), 2, '0')}'  
+  name: 'vm${orgId}adc${padLeft(string(i + 1), 2, '0')}'  
   type: 'adc'
   subnetName: 'snet-adc'
   index: i
 }]
 
 var webVmList = [for i in range(0, webServerCount): {
-  name: 'vm${prefix}web${padLeft(string(i + 1), 2, '0')}'  
+  name: 'vm${orgId}web${padLeft(string(i + 1), 2, '0')}'  
   type: 'web'
   subnetName: 'snet-web'
   index: i
 }]
 
 var appVmList = [for i in range(0, applicationServerCount): {
-  name: 'vm${prefix}app${padLeft(string(i + 1), 2, '0')}' 
+  name: 'vm${orgId}app${padLeft(string(i + 1), 2, '0')}' 
   type: 'app'
   subnetName: 'snet-app'
   index: i
 }]
 
 var dbsVmList = [for i in range(0, databaseServerCount): {
-  name: 'vm${prefix}dbs${padLeft(string(i + 1), 2, '0')}'  
+  name: 'vm${orgId}dbs${padLeft(string(i + 1), 2, '0')}'  
   type: 'dbs'
   subnetName: 'snet-dbs'
   index: i
 }]
 
-var flattenedVmList = concat(adcVmList, webVmList, appVmList, dbsVmList)
-
-resource pip 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flattenedVmList: if (usePublicIP) {
+// Public IPs for ADC VMs
+resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in adcVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
   location: location
   properties: {
@@ -183,16 +182,98 @@ resource pip 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for vm in flatt
   }
 }]
 
-module vms 'vm.bicep' = [for vm in flattenedVmList: {
+// Public IPs for Web VMs
+resource webPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in webVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
+// Public IPs for App VMs
+resource appPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in appVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
+// Public IPs for DBS VMs
+resource dbsPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in dbsVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
+// VMs for ADC
+module adcVms 'vm.bicep' = [for (vm, i) in adcVmList: {
   name: vm.name
   params: {
     name: vm.name
     location: location
-    subnetId: vnet.properties.subnets[vm.index].id
+    subnetId: vnet.properties.subnets[0].id
     storageAccountName: storageAccountName
     windowsVersion: windowsVersion
-    zone: string((vm.index % 3) + 1)
+    zone: string((i % 3) + 1)
     vmSize: vmSize
-    publicIpAddressId: usePublicIP ? pip[vm.index].id : null  
+    publicIpAddressId: usePublicIP ? adcPips[i].id : null
+  }
+}]
+
+// VMs for Web
+module webVms 'vm.bicep' = [for (vm, i) in webVmList: {
+  name: vm.name
+  params: {
+    name: vm.name
+    location: location
+    subnetId: vnet.properties.subnets[1].id
+    storageAccountName: storageAccountName
+    windowsVersion: windowsVersion
+    zone: string((i % 3) + 1)
+    vmSize: vmSize
+    publicIpAddressId: usePublicIP ? webPips[i].id : null
+  }
+}]
+
+// VMs for App
+module appVms 'vm.bicep' = [for (vm, i) in appVmList: {
+  name: vm.name
+  params: {
+    name: vm.name
+    location: location
+    subnetId: vnet.properties.subnets[2].id
+    storageAccountName: storageAccountName
+    windowsVersion: windowsVersion
+    zone: string((i % 3) + 1)
+    vmSize: vmSize
+    publicIpAddressId: usePublicIP ? appPips[i].id : null
+  }
+}]
+
+// VMs for DBS
+module dbsVms 'vm.bicep' = [for (vm, i) in dbsVmList: {
+  name: vm.name
+  params: {
+    name: vm.name
+    location: location
+    subnetId: vnet.properties.subnets[3].id
+    storageAccountName: storageAccountName
+    windowsVersion: windowsVersion
+    zone: string((i % 3) + 1)
+    vmSize: vmSize
+    publicIpAddressId: usePublicIP ? dbsPips[i].id : null
   }
 }]
