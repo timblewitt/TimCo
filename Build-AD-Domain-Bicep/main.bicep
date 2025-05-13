@@ -174,6 +174,7 @@ var dbsVmList = [for i in range(0, databaseServerCount): {
 resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in adcVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
   location: location
+  zones: [string((i % 3) + 1)]
   properties: {
     publicIPAllocationMethod: 'Dynamic'
     dnsSettings: {
@@ -181,11 +182,13 @@ resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
     }
   }
 }]
+
 
 // Public IPs for Web VMs
 resource webPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in webVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
   location: location
+  zones: [string((i % 3) + 1)]
   properties: {
     publicIPAllocationMethod: 'Dynamic'
     dnsSettings: {
@@ -194,10 +197,12 @@ resource webPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   }
 }]
 
+
 // Public IPs for App VMs
 resource appPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in appVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
   location: location
+  zones: [string((i % 3) + 1)]
   properties: {
     publicIPAllocationMethod: 'Dynamic'
     dnsSettings: {
@@ -210,6 +215,7 @@ resource appPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
 resource dbsPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in dbsVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
   location: location
+  zones: [string((i % 3) + 1)]
   properties: {
     publicIPAllocationMethod: 'Dynamic'
     dnsSettings: {
