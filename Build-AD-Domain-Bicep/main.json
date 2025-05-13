@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "16757226889382918304"
+      "templateHash": "8724672720540672607"
     }
   },
   "parameters": {
@@ -117,6 +117,7 @@
     "randomString": "[uniqueString(variables('orgId'))]",
     "storageAccountName": "[toLower(format('sa{0}{1}diag', variables('orgId'), variables('randomString')))]",
     "vnetName": "[format('vnet-{0}-01', variables('orgId'))]",
+    "vnetAddress1": "10.100.0.0/24",
     "subnetConfig": [
       {
         "name": "snet-adc",
@@ -188,7 +189,7 @@
         ],
         "addressSpace": {
           "addressPrefixes": [
-            "10.100.0.0/24"
+            "[variables('vnetAddress1')]"
           ]
         }
       },
@@ -332,7 +333,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "12243317125036466648"
+              "templateHash": "13283703263696856452"
             }
           },
           "parameters": {
@@ -358,7 +359,8 @@
               "type": "string"
             },
             "publicIpAddressId": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": ""
             }
           },
           "resources": [
@@ -376,7 +378,7 @@
                         "id": "[parameters('subnetId')]"
                       },
                       "privateIPAllocationMethod": "Dynamic",
-                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                      "publicIPAddress": "[if(empty(parameters('publicIpAddressId')), null(), createObject('id', parameters('publicIpAddressId')))]"
                     }
                   }
                 ]
@@ -483,7 +485,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "12243317125036466648"
+              "templateHash": "13283703263696856452"
             }
           },
           "parameters": {
@@ -509,7 +511,8 @@
               "type": "string"
             },
             "publicIpAddressId": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": ""
             }
           },
           "resources": [
@@ -527,7 +530,7 @@
                         "id": "[parameters('subnetId')]"
                       },
                       "privateIPAllocationMethod": "Dynamic",
-                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                      "publicIPAddress": "[if(empty(parameters('publicIpAddressId')), null(), createObject('id', parameters('publicIpAddressId')))]"
                     }
                   }
                 ]
@@ -634,7 +637,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "12243317125036466648"
+              "templateHash": "13283703263696856452"
             }
           },
           "parameters": {
@@ -660,7 +663,8 @@
               "type": "string"
             },
             "publicIpAddressId": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": ""
             }
           },
           "resources": [
@@ -678,7 +682,7 @@
                         "id": "[parameters('subnetId')]"
                       },
                       "privateIPAllocationMethod": "Dynamic",
-                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                      "publicIPAddress": "[if(empty(parameters('publicIpAddressId')), null(), createObject('id', parameters('publicIpAddressId')))]"
                     }
                   }
                 ]
@@ -785,7 +789,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "12243317125036466648"
+              "templateHash": "13283703263696856452"
             }
           },
           "parameters": {
@@ -811,7 +815,8 @@
               "type": "string"
             },
             "publicIpAddressId": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": ""
             }
           },
           "resources": [
@@ -829,7 +834,7 @@
                         "id": "[parameters('subnetId')]"
                       },
                       "privateIPAllocationMethod": "Dynamic",
-                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                      "publicIPAddress": "[if(empty(parameters('publicIpAddressId')), null(), createObject('id', parameters('publicIpAddressId')))]"
                     }
                   }
                 ]
