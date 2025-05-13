@@ -175,8 +175,11 @@ resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   name: 'pip-${vm.name}'
   location: location
   zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
+    publicIPAllocationMethod: 'Static'
     dnsSettings: {
       domainNameLabel: 'pip-${vm.name}'
     }
@@ -189,8 +192,11 @@ resource webPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   name: 'pip-${vm.name}'
   location: location
   zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
+    publicIPAllocationMethod: 'Static'
     dnsSettings: {
       domainNameLabel: 'pip-${vm.name}'
     }
@@ -203,8 +209,11 @@ resource appPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   name: 'pip-${vm.name}'
   location: location
   zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
+    publicIPAllocationMethod: 'Static'
     dnsSettings: {
       domainNameLabel: 'pip-${vm.name}'
     }
@@ -216,8 +225,11 @@ resource dbsPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   name: 'pip-${vm.name}'
   location: location
   zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
+    publicIPAllocationMethod: 'Static'
     dnsSettings: {
       domainNameLabel: 'pip-${vm.name}'
     }
