@@ -44,9 +44,8 @@ param usePublicIP bool = false
 var orgId = toLower(orgIdentifier)
 var randomString = uniqueString(orgId) 
 var storageAccountName = toLower('sa${orgId}${randomString}diag') 
-
 var vnetName = 'vnet-${orgId}-01'
-
+var vnetAddress1 = '10.100.0.0/24'
 var subnetConfig = [
   { name: 'snet-adc', orgId: '10.100.0.0/27', type: 'adc' }
   { name: 'snet-web', orgId: '10.100.0.32/27', type: 'web' }
@@ -126,7 +125,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
   location: location
   properties: {
     addressSpace: {
-      addressPrefixes: ['10.100.0.0/24']
+      addressPrefixes: [vnetAddress1]
     }
     subnets: [
       for (s, index) in subnetConfig: {
