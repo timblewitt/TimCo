@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.34.44.8038",
-      "templateHash": "13401883914327107253"
+      "version": "0.35.1.17967",
+      "templateHash": "18344213144936640864"
     }
   },
   "parameters": {
@@ -18,7 +18,7 @@
         "2025-Datacenter"
       ]
     },
-    "orgId": {
+    "orgIdentifier": {
       "type": "string",
       "minLength": 3,
       "maxLength": 5
@@ -40,17 +40,17 @@
     },
     "webServerCount": {
       "type": "int",
-      "defaultValue": 2,
+      "defaultValue": 1,
       "minValue": 0
     },
     "applicationServerCount": {
       "type": "int",
-      "defaultValue": 2,
+      "defaultValue": 1,
       "minValue": 0
     },
     "databaseServerCount": {
       "type": "int",
-      "defaultValue": 2,
+      "defaultValue": 1,
       "minValue": 0
     },
     "vmSize": {
@@ -76,7 +76,7 @@
         "name": "adcVmList",
         "count": "[length(range(0, parameters('domainControllerCount')))]",
         "input": {
-          "name": "[format('vm{0}adc{1}', variables('prefix'), padLeft(string(add(range(0, parameters('domainControllerCount'))[copyIndex('adcVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}adc{1}', variables('orgId'), padLeft(string(add(range(0, parameters('domainControllerCount'))[copyIndex('adcVmList')], 1)), 2, '0'))]",
           "type": "adc",
           "subnetName": "snet-adc",
           "index": "[range(0, parameters('domainControllerCount'))[copyIndex('adcVmList')]]"
@@ -86,7 +86,7 @@
         "name": "webVmList",
         "count": "[length(range(0, parameters('webServerCount')))]",
         "input": {
-          "name": "[format('vm{0}web{1}', variables('prefix'), padLeft(string(add(range(0, parameters('webServerCount'))[copyIndex('webVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}web{1}', variables('orgId'), padLeft(string(add(range(0, parameters('webServerCount'))[copyIndex('webVmList')], 1)), 2, '0'))]",
           "type": "web",
           "subnetName": "snet-web",
           "index": "[range(0, parameters('webServerCount'))[copyIndex('webVmList')]]"
@@ -96,7 +96,7 @@
         "name": "appVmList",
         "count": "[length(range(0, parameters('applicationServerCount')))]",
         "input": {
-          "name": "[format('vm{0}app{1}', variables('prefix'), padLeft(string(add(range(0, parameters('applicationServerCount'))[copyIndex('appVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}app{1}', variables('orgId'), padLeft(string(add(range(0, parameters('applicationServerCount'))[copyIndex('appVmList')], 1)), 2, '0'))]",
           "type": "app",
           "subnetName": "snet-app",
           "index": "[range(0, parameters('applicationServerCount'))[copyIndex('appVmList')]]"
@@ -106,40 +106,39 @@
         "name": "dbsVmList",
         "count": "[length(range(0, parameters('databaseServerCount')))]",
         "input": {
-          "name": "[format('vm{0}dbs{1}', variables('prefix'), padLeft(string(add(range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')], 1)), 2, '0'))]",
+          "name": "[format('vm{0}dbs{1}', variables('orgId'), padLeft(string(add(range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')], 1)), 2, '0'))]",
           "type": "dbs",
           "subnetName": "snet-dbs",
           "index": "[range(0, parameters('databaseServerCount'))[copyIndex('dbsVmList')]]"
         }
       }
     ],
-    "prefix": "[toLower(parameters('orgId'))]",
-    "randomSuffix": "[uniqueString(parameters('orgId'))]",
-    "storageAccountName": "[toLower(format('sa{0}{1}diag', variables('prefix'), variables('randomSuffix')))]",
-    "vnetName": "[format('vnet-{0}-01', variables('prefix'))]",
+    "orgId": "[toLower(parameters('orgIdentifier'))]",
+    "randomString": "[uniqueString(variables('orgId'))]",
+    "storageAccountName": "[toLower(format('sa{0}{1}diag', variables('orgId'), variables('randomString')))]",
+    "vnetName": "[format('vnet-{0}-01', variables('orgId'))]",
     "subnetConfig": [
       {
         "name": "snet-adc",
-        "prefix": "10.100.0.0/27",
+        "orgId": "10.100.0.0/27",
         "type": "adc"
       },
       {
         "name": "snet-web",
-        "prefix": "10.100.0.32/27",
+        "orgId": "10.100.0.32/27",
         "type": "web"
       },
       {
         "name": "snet-app",
-        "prefix": "10.100.0.64/27",
+        "orgId": "10.100.0.64/27",
         "type": "app"
       },
       {
         "name": "snet-dbs",
-        "prefix": "10.100.0.96/27",
+        "orgId": "10.100.0.96/27",
         "type": "dbs"
       }
-    ],
-    "flattenedVmList": "[concat(variables('adcVmList'), variables('webVmList'), variables('appVmList'), variables('dbsVmList'))]"
+    ]
   },
   "resources": [
     {
@@ -160,7 +159,7 @@
       },
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2023-02-01",
-      "name": "[format('nsg-{0}-{1}', variables('prefix'), variables('subnetConfig')[copyIndex()].type)]",
+      "name": "[format('nsg-{0}-{1}', variables('orgId'), variables('subnetConfig')[copyIndex()].type)]",
       "location": "[parameters('location')]",
       "properties": {
         "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
@@ -179,9 +178,9 @@
             "input": {
               "name": "[variables('subnetConfig')[copyIndex('subnets')].name]",
               "properties": {
-                "addressPrefix": "[variables('subnetConfig')[copyIndex('subnets')].prefix]",
+                "addressPrefix": "[variables('subnetConfig')[copyIndex('subnets')].orgId]",
                 "networkSecurityGroup": {
-                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('nsg-{0}-{1}', variables('prefix'), variables('subnetConfig')[copyIndex('subnets')].type))]"
+                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', format('nsg-{0}-{1}', variables('orgId'), variables('subnetConfig')[copyIndex('subnets')].type))]"
                 }
               }
             }
@@ -199,29 +198,80 @@
     },
     {
       "copy": {
-        "name": "pip",
-        "count": "[length(variables('flattenedVmList'))]"
+        "name": "adcPips",
+        "count": "[length(variables('adcVmList'))]"
       },
       "condition": "[parameters('usePublicIP')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2023-02-01",
-      "name": "[format('pip-{0}', variables('flattenedVmList')[copyIndex()].name)]",
+      "name": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[format('pip-{0}', variables('flattenedVmList')[copyIndex()].name)]"
+          "domainNameLabel": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]"
         }
       }
     },
     {
       "copy": {
-        "name": "vms",
-        "count": "[length(variables('flattenedVmList'))]"
+        "name": "webPips",
+        "count": "[length(variables('webVmList'))]"
+      },
+      "condition": "[parameters('usePublicIP')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2023-02-01",
+      "name": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]"
+        }
+      }
+    },
+    {
+      "copy": {
+        "name": "appPips",
+        "count": "[length(variables('appVmList'))]"
+      },
+      "condition": "[parameters('usePublicIP')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2023-02-01",
+      "name": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]"
+        }
+      }
+    },
+    {
+      "copy": {
+        "name": "dbsPips",
+        "count": "[length(variables('dbsVmList'))]"
+      },
+      "condition": "[parameters('usePublicIP')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2023-02-01",
+      "name": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]"
+        }
+      }
+    },
+    {
+      "copy": {
+        "name": "adcVms",
+        "count": "[length(variables('adcVmList'))]"
       },
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[variables('flattenedVmList')[copyIndex()].name]",
+      "name": "[variables('adcVmList')[copyIndex()].name]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -229,13 +279,13 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[variables('flattenedVmList')[copyIndex()].name]"
+            "value": "[variables('adcVmList')[copyIndex()].name]"
           },
           "location": {
             "value": "[parameters('location')]"
           },
           "subnetId": {
-            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[variables('flattenedVmList')[copyIndex()].index].id]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[0].id]"
           },
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
@@ -244,12 +294,12 @@
             "value": "[parameters('windowsVersion')]"
           },
           "zone": {
-            "value": "[string(add(mod(variables('flattenedVmList')[copyIndex()].index, 3), 1))]"
+            "value": "[string(add(mod(copyIndex(), 3), 1))]"
           },
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('flattenedVmList')[variables('flattenedVmList')[copyIndex()].index].name))), createObject('value', null()))]"
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('adcVmList')[copyIndex()].name))), createObject('value', null()))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -257,8 +307,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.34.44.8038",
-              "templateHash": "11483115922859074945"
+              "version": "0.35.1.17967",
+              "templateHash": "12243317125036466648"
             }
           },
           "parameters": {
@@ -361,7 +411,460 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('flattenedVmList')[variables('flattenedVmList')[copyIndex()].index].name))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('adcVmList')[copyIndex()].name))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "webVms",
+        "count": "[length(variables('webVmList'))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('webVmList')[copyIndex()].name]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('webVmList')[copyIndex()].name]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetId": {
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[1].id]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "windowsVersion": {
+            "value": "[parameters('windowsVersion')]"
+          },
+          "zone": {
+            "value": "[string(add(mod(copyIndex(), 3), 1))]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('webVmList')[copyIndex()].name))), createObject('value', null()))]"
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.35.1.17967",
+              "templateHash": "12243317125036466648"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "subnetId": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "windowsVersion": {
+              "type": "string"
+            },
+            "zone": {
+              "type": "string"
+            },
+            "vmSize": {
+              "type": "string"
+            },
+            "publicIpAddressId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2023-02-01",
+              "name": "[format('{0}-nic01', parameters('name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      },
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "zones": [
+                "[parameters('zone')]"
+              ],
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('name')]",
+                  "adminUsername": "azureuser",
+                  "adminPassword": "P@ssword1234!"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "[parameters('windowsVersion')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                    }
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[format('https://{0}.blob.core.windows.net', parameters('storageAccountName'))]"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('webVmList')[copyIndex()].name))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "appVms",
+        "count": "[length(variables('appVmList'))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('appVmList')[copyIndex()].name]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('appVmList')[copyIndex()].name]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetId": {
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[2].id]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "windowsVersion": {
+            "value": "[parameters('windowsVersion')]"
+          },
+          "zone": {
+            "value": "[string(add(mod(copyIndex(), 3), 1))]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('appVmList')[copyIndex()].name))), createObject('value', null()))]"
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.35.1.17967",
+              "templateHash": "12243317125036466648"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "subnetId": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "windowsVersion": {
+              "type": "string"
+            },
+            "zone": {
+              "type": "string"
+            },
+            "vmSize": {
+              "type": "string"
+            },
+            "publicIpAddressId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2023-02-01",
+              "name": "[format('{0}-nic01', parameters('name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      },
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "zones": [
+                "[parameters('zone')]"
+              ],
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('name')]",
+                  "adminUsername": "azureuser",
+                  "adminPassword": "P@ssword1234!"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "[parameters('windowsVersion')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                    }
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[format('https://{0}.blob.core.windows.net', parameters('storageAccountName'))]"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('appVmList')[copyIndex()].name))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "dbsVms",
+        "count": "[length(variables('dbsVmList'))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('dbsVmList')[copyIndex()].name]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('dbsVmList')[copyIndex()].name]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "subnetId": {
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[3].id]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "windowsVersion": {
+            "value": "[parameters('windowsVersion')]"
+          },
+          "zone": {
+            "value": "[string(add(mod(copyIndex(), 3), 1))]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('dbsVmList')[copyIndex()].name))), createObject('value', null()))]"
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.35.1.17967",
+              "templateHash": "12243317125036466648"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "subnetId": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "windowsVersion": {
+              "type": "string"
+            },
+            "zone": {
+              "type": "string"
+            },
+            "vmSize": {
+              "type": "string"
+            },
+            "publicIpAddressId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2023-02-01",
+              "name": "[format('{0}-nic01', parameters('name'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      },
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": "[if(not(equals(parameters('publicIpAddressId'), null())), createObject('id', parameters('publicIpAddressId')), null())]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "zones": [
+                "[parameters('zone')]"
+              ],
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                  "computerName": "[parameters('name')]",
+                  "adminUsername": "azureuser",
+                  "adminPassword": "P@ssword1234!"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "[parameters('windowsVersion')]",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                    }
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[format('https://{0}.blob.core.windows.net', parameters('storageAccountName'))]"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic01', parameters('name')))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('dbsVmList')[copyIndex()].name))]",
         "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
       ]
     }
