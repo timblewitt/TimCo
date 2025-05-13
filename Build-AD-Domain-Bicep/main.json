@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "9535945031759532686"
+      "templateHash": "16757226889382918304"
     }
   },
   "parameters": {
@@ -209,8 +209,11 @@
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
         "dnsSettings": {
           "domainNameLabel": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]"
         }
@@ -229,8 +232,11 @@
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
         "dnsSettings": {
           "domainNameLabel": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]"
         }
@@ -249,8 +255,11 @@
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
         "dnsSettings": {
           "domainNameLabel": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]"
         }
@@ -269,8 +278,11 @@
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
         "dnsSettings": {
           "domainNameLabel": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]"
         }
