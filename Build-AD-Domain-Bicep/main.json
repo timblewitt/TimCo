@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "18344213144936640864"
+      "templateHash": "9535945031759532686"
     }
   },
   "parameters": {
@@ -206,6 +206,9 @@
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]",
       "location": "[parameters('location')]",
+      "zones": [
+        "[string(add(mod(copyIndex(), 3), 1))]"
+      ],
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -223,6 +226,9 @@
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]",
       "location": "[parameters('location')]",
+      "zones": [
+        "[string(add(mod(copyIndex(), 3), 1))]"
+      ],
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -240,6 +246,9 @@
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]",
       "location": "[parameters('location')]",
+      "zones": [
+        "[string(add(mod(copyIndex(), 3), 1))]"
+      ],
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -257,6 +266,9 @@
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]",
       "location": "[parameters('location')]",
+      "zones": [
+        "[string(add(mod(copyIndex(), 3), 1))]"
+      ],
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
