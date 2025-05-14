@@ -6,7 +6,11 @@ name: Build-JSON-From-Bicep
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
+    paths: 
+      - 'Bicep-AD-Domain-Bicep/**'
+
   workflow_dispatch:
 
 jobs:
