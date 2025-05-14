@@ -6,11 +6,11 @@ param windowsVersion string
 param zone string
 param vmSize string
 param publicIpAddressId string = ''
-param adminUserName string
+param adminUserName string = 'azureadmin'
 @secure()
 param adminPassword string
 
-resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
+resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = {
   name: '${name}-nic01'  
   location: location
   properties: {
@@ -31,7 +31,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
   }
 }
 
-resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2024-11-01' = {
   name: name
   location: location
   zones: [zone]
@@ -43,6 +43,12 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
       computerName: name
       adminUsername: adminUserName
       adminPassword: adminPassword
+    }
+    securityProfile: {
+      uefiSettings: {
+        secureBootEnabled: true
+        vTpmEnabled: true
+      }
     }
     storageProfile: {
       imageReference: {

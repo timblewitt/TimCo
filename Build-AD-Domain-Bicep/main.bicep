@@ -1,15 +1,14 @@
-// Admin password
-// API latest versions
 // NSG rules
-// Max VM count
-// 
+// Load balancer
+// Bastion
+// VM Size list
+// VM generation/TPM
+//
 
-@description('Organisation Identifier (3-5 characters)')
 @minLength(3)
 @maxLength(5)
 param orgIdentifier string
 
-@description('Windows Operating System Version')
 @allowed([
   '2019-Datacenter'
   '2022-Datacenter'
@@ -17,33 +16,34 @@ param orgIdentifier string
 ])
 param windowsVersion string = '2025-Datacenter'
 
-@description('Azure Region')
 @allowed([
   'uksouth'
   'ukwest'
   'westeurope'
   'northeurope'
 ])
-param azureRegion string = 'uksouth'  
+param location string = 'uksouth'  
 
-@description('Username for the Virtual Machine.')
 param adminUsername string
 
-@description('Password for the Virtual Machine.')
 @minLength(12)
 @secure()
 param adminPassword string
 
 @minValue(0)
+@maxValue(2)
 param domainControllerCount int = 1
 
 @minValue(0)
+@maxValue(2)
 param webServerCount int = 1
 
 @minValue(0)
+@maxValue(2)
 param applicationServerCount int = 1
 
 @minValue(0)
+@maxValue(2)
 param databaseServerCount int = 1
 
 @allowed([
@@ -70,9 +70,9 @@ var subnetConfig = [
   { name: 'snet-dbs',  orgId: '10.100.0.96/27', type: 'dbs'  }
 ]
 
-resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+resource sa 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: storageAccountName
-  location: azureRegion
+  location: location
   sku: {
     name: 'Standard_LRS'
   }
@@ -80,9 +80,9 @@ resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   properties: {}
 }
 
-resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in subnetConfig: {
+resource nsgs 'Microsoft.Network/networkSecurityGroups@2024-05-01' = [for s in subnetConfig: {
   name: 'nsg-${orgId}-${s.type}'
-  location: azureRegion
+  location: location
   properties: {
     securityRules: concat([{
       name: 'Deny-All-Inbound'
@@ -137,9 +137,9 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2023-02-01' = [for s in s
   }
 }]
 
-resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: vnetName
-  location: azureRegion
+  location: location
   properties: {
     addressSpace: {
       addressPrefixes: [vnetAddress1]
@@ -158,6 +158,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
   }
 }
 
+// AD Domain Controllers
 var adcVmList = [for i in range(0, domainControllerCount): {
   name: 'vm${orgId}adc${padLeft(string(i + 1), 2, '0')}'  
   type: 'adc'
@@ -165,31 +166,9 @@ var adcVmList = [for i in range(0, domainControllerCount): {
   index: i
 }]
 
-var webVmList = [for i in range(0, webServerCount): {
-  name: 'vm${orgId}web${padLeft(string(i + 1), 2, '0')}'  
-  type: 'web'
-  subnetName: 'snet-web'
-  index: i
-}]
-
-var appVmList = [for i in range(0, applicationServerCount): {
-  name: 'vm${orgId}app${padLeft(string(i + 1), 2, '0')}' 
-  type: 'app'
-  subnetName: 'snet-app'
-  index: i
-}]
-
-var dbsVmList = [for i in range(0, databaseServerCount): {
-  name: 'vm${orgId}dbs${padLeft(string(i + 1), 2, '0')}'  
-  type: 'dbs'
-  subnetName: 'snet-dbs'
-  index: i
-}]
-
-// Public IPs for ADC VMs
-resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in adcVmList: if (usePublicIP) {
+resource adcPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i) in adcVmList: if (usePublicIP) {
   name: 'pip-${vm.name}'
-  location: azureRegion
+  location: location
   zones: [string((i % 3) + 1)]
   sku: {
     name: 'Standard'
@@ -202,62 +181,11 @@ resource adcPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i)
   }
 }]
 
-
-// Public IPs for Web VMs
-resource webPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in webVmList: if (usePublicIP) {
-  name: 'pip-${vm.name}'
-  location: azureRegion
-  zones: [string((i % 3) + 1)]
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-    dnsSettings: {
-      domainNameLabel: 'pip-${vm.name}'
-    }
-  }
-}]
-
-
-// Public IPs for App VMs
-resource appPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in appVmList: if (usePublicIP) {
-  name: 'pip-${vm.name}'
-  location: azureRegion
-  zones: [string((i % 3) + 1)]
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-    dnsSettings: {
-      domainNameLabel: 'pip-${vm.name}'
-    }
-  }
-}]
-
-// Public IPs for DBS VMs
-resource dbsPips 'Microsoft.Network/publicIPAddresses@2023-02-01' = [for (vm, i) in dbsVmList: if (usePublicIP) {
-  name: 'pip-${vm.name}'
-  location: azureRegion
-  zones: [string((i % 3) + 1)]
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-    dnsSettings: {
-      domainNameLabel: 'pip-${vm.name}'
-    }
-  }
-}]
-
-// VMs for ADC
 module adcVms 'vm.bicep' = [for (vm, i) in adcVmList: {
   name: vm.name
   params: {
     name: vm.name
-    location: azureRegion
+    location: location
     subnetId: vnet.properties.subnets[0].id
     storageAccountName: storageAccountName
     windowsVersion: windowsVersion
@@ -269,12 +197,34 @@ module adcVms 'vm.bicep' = [for (vm, i) in adcVmList: {
   }
 }]
 
-// VMs for Web
+// Web Servers
+var webVmList = [for i in range(0, webServerCount): {
+  name: 'vm${orgId}web${padLeft(string(i + 1), 2, '0')}'  
+  type: 'web'
+  subnetName: 'snet-web'
+  index: i
+}]
+
+resource webPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i) in webVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
 module webVms 'vm.bicep' = [for (vm, i) in webVmList: {
   name: vm.name
   params: {
     name: vm.name
-    location: azureRegion
+    location: location
     subnetId: vnet.properties.subnets[1].id
     storageAccountName: storageAccountName
     windowsVersion: windowsVersion
@@ -286,12 +236,34 @@ module webVms 'vm.bicep' = [for (vm, i) in webVmList: {
   }
 }]
 
-// VMs for App
+// App Servers
+var appVmList = [for i in range(0, applicationServerCount): {
+  name: 'vm${orgId}app${padLeft(string(i + 1), 2, '0')}' 
+  type: 'app'
+  subnetName: 'snet-app'
+  index: i
+}]
+
+resource appPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i) in appVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
 module appVms 'vm.bicep' = [for (vm, i) in appVmList: {
   name: vm.name
   params: {
     name: vm.name
-    location: azureRegion
+    location: location
     subnetId: vnet.properties.subnets[2].id
     storageAccountName: storageAccountName
     windowsVersion: windowsVersion
@@ -303,12 +275,34 @@ module appVms 'vm.bicep' = [for (vm, i) in appVmList: {
   }
 }]
 
-// VMs for DBS
+// Database Servers
+var dbsVmList = [for i in range(0, databaseServerCount): {
+  name: 'vm${orgId}dbs${padLeft(string(i + 1), 2, '0')}'  
+  type: 'dbs'
+  subnetName: 'snet-dbs'
+  index: i
+}]
+
+resource dbsPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i) in dbsVmList: if (usePublicIP) {
+  name: 'pip-${vm.name}'
+  location: location
+  zones: [string((i % 3) + 1)]
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+    dnsSettings: {
+      domainNameLabel: 'pip-${vm.name}'
+    }
+  }
+}]
+
 module dbsVms 'vm.bicep' = [for (vm, i) in dbsVmList: {
   name: vm.name
   params: {
     name: vm.name
-    location: azureRegion
+    location: location
     subnetId: vnet.properties.subnets[3].id
     storageAccountName: storageAccountName
     windowsVersion: windowsVersion
