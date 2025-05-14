@@ -180,7 +180,7 @@ resource adcPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i)
   }
 }]
 
-module adcVms 'vm.bicep' = [for (vm, i) in adcVmList: {
+module adcVms 'modules/vm.bicep' = [for (vm, i) in adcVmList: {
   name: vm.name
   params: {
     name: vm.name
@@ -219,7 +219,7 @@ resource webPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i)
   }
 }]
 
-module webVms 'vm.bicep' = [for (vm, i) in webVmList: {
+module webVms 'modules/vm.bicep' = [for (vm, i) in webVmList: {
   name: vm.name
   params: {
     name: vm.name
@@ -258,7 +258,7 @@ resource appPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i)
   }
 }]
 
-module appVms 'vm.bicep' = [for (vm, i) in appVmList: {
+module appVms 'modules/vm.bicep' = [for (vm, i) in appVmList: {
   name: vm.name
   params: {
     name: vm.name
@@ -297,7 +297,7 @@ resource dbsPips 'Microsoft.Network/publicIPAddresses@2024-05-01' = [for (vm, i)
   }
 }]
 
-module dbsVms 'vm.bicep' = [for (vm, i) in dbsVmList: {
+module dbsVms 'modules/vm.bicep' = [for (vm, i) in dbsVmList: {
   name: vm.name
   params: {
     name: vm.name
