@@ -6,7 +6,7 @@ param windowsVersion string
 param zone string
 param vmSize string
 param publicIpAddressId string = ''
-param adminUserName string = 'azureadmin'
+param adminUserName string
 @secure()
 param adminPassword string
 
@@ -45,6 +45,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-11-01' = {
       adminPassword: adminPassword
     }
     securityProfile: {
+      securityType: 'TrustedLaunch'
       uefiSettings: {
         secureBootEnabled: true
         vTpmEnabled: true

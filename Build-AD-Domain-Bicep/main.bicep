@@ -24,7 +24,7 @@ param windowsVersion string = '2025-Datacenter'
 ])
 param location string = 'uksouth'  
 
-param adminUsername string
+param adminUsername string = 'azureadmin'
 
 @minLength(12)
 @secure()
