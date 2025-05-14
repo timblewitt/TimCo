@@ -9,6 +9,11 @@ param publicIpAddressId string = ''
 param adminUserName string
 @secure()
 param adminPassword string
+@allowed([
+  'Standard'
+  'TrustedLaunch'
+])
+param securityType string = 'TrustedLaunch'
 
 resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = {
   name: '${name}-nic01'  
@@ -45,10 +50,13 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-11-01' = {
       adminPassword: adminPassword
     }
     securityProfile: {
-      securityType: 'TrustedLaunch'
-      uefiSettings: {
+      securityType: securityType
+      uefiSettings: securityType == 'TrustedLaunch' ? {
         secureBootEnabled: true
         vTpmEnabled: true
+      } : {
+        secureBootEnabled: false
+        vTpmEnabled: false
       }
     }
     storageProfile: {

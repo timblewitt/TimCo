@@ -2,7 +2,6 @@
 // Load balancer
 // Bastion
 // VM Size list
-// VM generation/TPM
 //
 
 @minLength(3)
@@ -10,6 +9,7 @@
 param orgIdentifier string
 
 @allowed([
+  '2019-Datacenter-Gensecond'
   '2022-Datacenter-Azure-Edition'
   '2025-Datacenter-Azure-Edition'
 ])
