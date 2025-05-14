@@ -5,10 +5,18 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "8724672720540672607"
+      "templateHash": "17007636107388996391"
     }
   },
   "parameters": {
+    "orgIdentifier": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 5,
+      "metadata": {
+        "description": "Organisation Identifier (3-5 characters)"
+      }
+    },
     "windowsVersion": {
       "type": "string",
       "defaultValue": "2025-Datacenter",
@@ -16,14 +24,12 @@
         "2019-Datacenter",
         "2022-Datacenter",
         "2025-Datacenter"
-      ]
+      ],
+      "metadata": {
+        "description": "Windows Operating System Version"
+      }
     },
-    "orgIdentifier": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 5
-    },
-    "location": {
+    "azureRegion": {
       "type": "string",
       "defaultValue": "uksouth",
       "allowedValues": [
@@ -31,7 +37,23 @@
         "ukwest",
         "westeurope",
         "northeurope"
-      ]
+      ],
+      "metadata": {
+        "description": "Azure Region"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 12,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
     },
     "domainControllerCount": {
       "type": "int",
@@ -146,7 +168,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2023-01-01",
       "name": "[variables('storageAccountName')]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "sku": {
         "name": "Standard_LRS"
       },
@@ -161,7 +183,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2023-02-01",
       "name": "[format('nsg-{0}-{1}', variables('orgId'), variables('subnetConfig')[copyIndex()].type)]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "properties": {
         "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
       }
@@ -170,7 +192,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2023-02-01",
       "name": "[variables('vnetName')]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "properties": {
         "copy": [
           {
@@ -206,7 +228,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -229,7 +251,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -252,7 +274,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -275,7 +297,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2023-02-01",
       "name": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]",
-      "location": "[parameters('location')]",
+      "location": "[parameters('azureRegion')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -307,7 +329,7 @@
             "value": "[variables('adcVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[parameters('azureRegion')]"
           },
           "subnetId": {
             "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[0].id]"
@@ -324,7 +346,13 @@
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('adcVmList')[copyIndex()].name))), createObject('value', null()))]"
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('adcVmList')[copyIndex()].name))), createObject('value', null()))]",
+          "adminUserName": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          }
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -333,7 +361,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "13283703263696856452"
+              "templateHash": "7046613554747794396"
             }
           },
           "parameters": {
@@ -361,6 +389,12 @@
             "publicIpAddressId": {
               "type": "string",
               "defaultValue": ""
+            },
+            "adminUserName": {
+              "type": "string"
+            },
+            "adminPassword": {
+              "type": "securestring"
             }
           },
           "resources": [
@@ -398,8 +432,8 @@
                 },
                 "osProfile": {
                   "computerName": "[parameters('name')]",
-                  "adminUsername": "azureuser",
-                  "adminPassword": "P@ssword1234!"
+                  "adminUsername": "[parameters('adminUserName')]",
+                  "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -459,7 +493,7 @@
             "value": "[variables('webVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[parameters('azureRegion')]"
           },
           "subnetId": {
             "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[1].id]"
@@ -476,7 +510,13 @@
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('webVmList')[copyIndex()].name))), createObject('value', null()))]"
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('webVmList')[copyIndex()].name))), createObject('value', null()))]",
+          "adminUserName": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          }
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -485,7 +525,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "13283703263696856452"
+              "templateHash": "7046613554747794396"
             }
           },
           "parameters": {
@@ -513,6 +553,12 @@
             "publicIpAddressId": {
               "type": "string",
               "defaultValue": ""
+            },
+            "adminUserName": {
+              "type": "string"
+            },
+            "adminPassword": {
+              "type": "securestring"
             }
           },
           "resources": [
@@ -550,8 +596,8 @@
                 },
                 "osProfile": {
                   "computerName": "[parameters('name')]",
-                  "adminUsername": "azureuser",
-                  "adminPassword": "P@ssword1234!"
+                  "adminUsername": "[parameters('adminUserName')]",
+                  "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -611,7 +657,7 @@
             "value": "[variables('appVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[parameters('azureRegion')]"
           },
           "subnetId": {
             "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[2].id]"
@@ -628,7 +674,13 @@
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('appVmList')[copyIndex()].name))), createObject('value', null()))]"
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('appVmList')[copyIndex()].name))), createObject('value', null()))]",
+          "adminUserName": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          }
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -637,7 +689,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "13283703263696856452"
+              "templateHash": "7046613554747794396"
             }
           },
           "parameters": {
@@ -665,6 +717,12 @@
             "publicIpAddressId": {
               "type": "string",
               "defaultValue": ""
+            },
+            "adminUserName": {
+              "type": "string"
+            },
+            "adminPassword": {
+              "type": "securestring"
             }
           },
           "resources": [
@@ -702,8 +760,8 @@
                 },
                 "osProfile": {
                   "computerName": "[parameters('name')]",
-                  "adminUsername": "azureuser",
-                  "adminPassword": "P@ssword1234!"
+                  "adminUsername": "[parameters('adminUserName')]",
+                  "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -763,7 +821,7 @@
             "value": "[variables('dbsVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[parameters('azureRegion')]"
           },
           "subnetId": {
             "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[3].id]"
@@ -780,7 +838,13 @@
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
-          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('dbsVmList')[copyIndex()].name))), createObject('value', null()))]"
+          "publicIpAddressId": "[if(parameters('usePublicIP'), createObject('value', resourceId('Microsoft.Network/publicIPAddresses', format('pip-{0}', variables('dbsVmList')[copyIndex()].name))), createObject('value', null()))]",
+          "adminUserName": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          }
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -789,7 +853,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "13283703263696856452"
+              "templateHash": "7046613554747794396"
             }
           },
           "parameters": {
@@ -817,6 +881,12 @@
             "publicIpAddressId": {
               "type": "string",
               "defaultValue": ""
+            },
+            "adminUserName": {
+              "type": "string"
+            },
+            "adminPassword": {
+              "type": "securestring"
             }
           },
           "resources": [
@@ -854,8 +924,8 @@
                 },
                 "osProfile": {
                   "computerName": "[parameters('name')]",
-                  "adminUsername": "azureuser",
-                  "adminPassword": "P@ssword1234!"
+                  "adminUsername": "[parameters('adminUserName')]",
+                  "adminPassword": "[parameters('adminPassword')]"
                 },
                 "storageProfile": {
                   "imageReference": {
