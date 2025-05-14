@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "2362329547563891363"
+      "templateHash": "13098256419966057364"
     }
   },
   "parameters": {
@@ -34,7 +34,8 @@
       ]
     },
     "adminUsername": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "azureadmin"
     },
     "adminPassword": {
       "type": "securestring",
@@ -350,7 +351,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7948665742405979575"
+              "templateHash": "10483711571521820987"
             }
           },
           "parameters": {
@@ -380,8 +381,7 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string",
-              "defaultValue": "azureadmin"
+              "type": "string"
             },
             "adminPassword": {
               "type": "securestring"
@@ -426,6 +426,7 @@
                   "adminPassword": "[parameters('adminPassword')]"
                 },
                 "securityProfile": {
+                  "securityType": "TrustedLaunch",
                   "uefiSettings": {
                     "secureBootEnabled": true,
                     "vTpmEnabled": true
@@ -521,7 +522,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7948665742405979575"
+              "templateHash": "10483711571521820987"
             }
           },
           "parameters": {
@@ -551,8 +552,7 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string",
-              "defaultValue": "azureadmin"
+              "type": "string"
             },
             "adminPassword": {
               "type": "securestring"
@@ -597,6 +597,7 @@
                   "adminPassword": "[parameters('adminPassword')]"
                 },
                 "securityProfile": {
+                  "securityType": "TrustedLaunch",
                   "uefiSettings": {
                     "secureBootEnabled": true,
                     "vTpmEnabled": true
@@ -692,7 +693,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7948665742405979575"
+              "templateHash": "10483711571521820987"
             }
           },
           "parameters": {
@@ -722,8 +723,7 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string",
-              "defaultValue": "azureadmin"
+              "type": "string"
             },
             "adminPassword": {
               "type": "securestring"
@@ -768,6 +768,7 @@
                   "adminPassword": "[parameters('adminPassword')]"
                 },
                 "securityProfile": {
+                  "securityType": "TrustedLaunch",
                   "uefiSettings": {
                     "secureBootEnabled": true,
                     "vTpmEnabled": true
@@ -863,7 +864,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7948665742405979575"
+              "templateHash": "10483711571521820987"
             }
           },
           "parameters": {
@@ -893,8 +894,7 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string",
-              "defaultValue": "azureadmin"
+              "type": "string"
             },
             "adminPassword": {
               "type": "securestring"
@@ -939,6 +939,7 @@
                   "adminPassword": "[parameters('adminPassword')]"
                 },
                 "securityProfile": {
+                  "securityType": "TrustedLaunch",
                   "uefiSettings": {
                     "secureBootEnabled": true,
                     "vTpmEnabled": true
