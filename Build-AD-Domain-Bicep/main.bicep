@@ -1,7 +1,6 @@
 // NSG rules
 // Load balancer
 // Bastion
-// VM Size list
 //
 
 @minLength(3)
@@ -47,11 +46,9 @@ param databaseServerCount int = 1
 
 @allowed([
   'Standard_B2s'
-  'Standard_D2s_v3'
-  'Standard_D4s_v3'
-  'Standard_DS2_v2'
-  'Standard_DS3_v2'
-  'Standard_E2s_v3'
+  'Standard_B2s_v2'
+  'Standard_D2s_v5'
+  'Standard_D4s_v5'
 ])
 param vmSize string = 'Standard_B2s'
 
