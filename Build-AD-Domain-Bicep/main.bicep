@@ -10,11 +10,11 @@
 param orgIdentifier string
 
 @allowed([
-  '2019-Datacenter'
-  '2022-Datacenter'
-  '2025-Datacenter'
+  '2019-Datacenter-G2'
+  '2022-Datacenter-G2'
+  '2025-Datacenter-G2'
 ])
-param windowsVersion string = '2025-Datacenter'
+param windowsVersion string = '2025-Datacenter-G2'
 
 @allowed([
   'uksouth'
