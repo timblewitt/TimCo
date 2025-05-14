@@ -6,6 +6,9 @@ param windowsVersion string
 param zone string
 param vmSize string
 param publicIpAddressId string = ''
+param adminUserName string
+@secure()
+param adminPassword string
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
   name: '${name}-nic01'  
@@ -38,8 +41,8 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
     }
     osProfile: {
       computerName: name
-      adminUsername: 'azureuser'
-      adminPassword: 'P@ssword1234!' // Use Key Vault in production
+      adminUsername: adminUserName
+      adminPassword: adminPassword
     }
     storageProfile: {
       imageReference: {
