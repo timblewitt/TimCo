@@ -5,17 +5,14 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "17007636107388996391"
+      "templateHash": "2362329547563891363"
     }
   },
   "parameters": {
     "orgIdentifier": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 5,
-      "metadata": {
-        "description": "Organisation Identifier (3-5 characters)"
-      }
+      "maxLength": 5
     },
     "windowsVersion": {
       "type": "string",
@@ -24,12 +21,9 @@
         "2019-Datacenter",
         "2022-Datacenter",
         "2025-Datacenter"
-      ],
-      "metadata": {
-        "description": "Windows Operating System Version"
-      }
+      ]
     },
-    "azureRegion": {
+    "location": {
       "type": "string",
       "defaultValue": "uksouth",
       "allowedValues": [
@@ -37,43 +31,38 @@
         "ukwest",
         "westeurope",
         "northeurope"
-      ],
-      "metadata": {
-        "description": "Azure Region"
-      }
+      ]
     },
     "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine."
-      }
+      "type": "string"
     },
     "adminPassword": {
       "type": "securestring",
-      "minLength": 12,
-      "metadata": {
-        "description": "Password for the Virtual Machine."
-      }
+      "minLength": 12
     },
     "domainControllerCount": {
       "type": "int",
       "defaultValue": 1,
-      "minValue": 0
+      "minValue": 0,
+      "maxValue": 2
     },
     "webServerCount": {
       "type": "int",
       "defaultValue": 1,
-      "minValue": 0
+      "minValue": 0,
+      "maxValue": 2
     },
     "applicationServerCount": {
       "type": "int",
       "defaultValue": 1,
-      "minValue": 0
+      "minValue": 0,
+      "maxValue": 2
     },
     "databaseServerCount": {
       "type": "int",
       "defaultValue": 1,
-      "minValue": 0
+      "minValue": 0,
+      "maxValue": 2
     },
     "vmSize": {
       "type": "string",
@@ -166,9 +155,9 @@
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2023-01-01",
+      "apiVersion": "2024-01-01",
       "name": "[variables('storageAccountName')]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "sku": {
         "name": "Standard_LRS"
       },
@@ -181,18 +170,18 @@
         "count": "[length(variables('subnetConfig'))]"
       },
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[format('nsg-{0}-{1}', variables('orgId'), variables('subnetConfig')[copyIndex()].type)]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "properties": {
         "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
       }
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[variables('vnetName')]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "properties": {
         "copy": [
           {
@@ -226,9 +215,9 @@
       },
       "condition": "[parameters('usePublicIP')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[format('pip-{0}', variables('adcVmList')[copyIndex()].name)]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -249,9 +238,9 @@
       },
       "condition": "[parameters('usePublicIP')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[format('pip-{0}', variables('webVmList')[copyIndex()].name)]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -272,9 +261,9 @@
       },
       "condition": "[parameters('usePublicIP')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[format('pip-{0}', variables('appVmList')[copyIndex()].name)]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -295,9 +284,9 @@
       },
       "condition": "[parameters('usePublicIP')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-02-01",
+      "apiVersion": "2024-05-01",
       "name": "[format('pip-{0}', variables('dbsVmList')[copyIndex()].name)]",
-      "location": "[parameters('azureRegion')]",
+      "location": "[parameters('location')]",
       "zones": [
         "[string(add(mod(copyIndex(), 3), 1))]"
       ],
@@ -329,10 +318,10 @@
             "value": "[variables('adcVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('azureRegion')]"
+            "value": "[parameters('location')]"
           },
           "subnetId": {
-            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[0].id]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2024-05-01').subnets[0].id]"
           },
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
@@ -361,7 +350,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7046613554747794396"
+              "templateHash": "7948665742405979575"
             }
           },
           "parameters": {
@@ -391,7 +380,8 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": "azureadmin"
             },
             "adminPassword": {
               "type": "securestring"
@@ -400,7 +390,7 @@
           "resources": [
             {
               "type": "Microsoft.Network/networkInterfaces",
-              "apiVersion": "2023-02-01",
+              "apiVersion": "2024-05-01",
               "name": "[format('{0}-nic01', parameters('name'))]",
               "location": "[parameters('location')]",
               "properties": {
@@ -420,7 +410,7 @@
             },
             {
               "type": "Microsoft.Compute/virtualMachines",
-              "apiVersion": "2023-03-01",
+              "apiVersion": "2024-11-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "zones": [
@@ -434,6 +424,12 @@
                   "computerName": "[parameters('name')]",
                   "adminUsername": "[parameters('adminUserName')]",
                   "adminPassword": "[parameters('adminPassword')]"
+                },
+                "securityProfile": {
+                  "uefiSettings": {
+                    "secureBootEnabled": true,
+                    "vTpmEnabled": true
+                  }
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -493,10 +489,10 @@
             "value": "[variables('webVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('azureRegion')]"
+            "value": "[parameters('location')]"
           },
           "subnetId": {
-            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[1].id]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2024-05-01').subnets[1].id]"
           },
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
@@ -525,7 +521,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7046613554747794396"
+              "templateHash": "7948665742405979575"
             }
           },
           "parameters": {
@@ -555,7 +551,8 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": "azureadmin"
             },
             "adminPassword": {
               "type": "securestring"
@@ -564,7 +561,7 @@
           "resources": [
             {
               "type": "Microsoft.Network/networkInterfaces",
-              "apiVersion": "2023-02-01",
+              "apiVersion": "2024-05-01",
               "name": "[format('{0}-nic01', parameters('name'))]",
               "location": "[parameters('location')]",
               "properties": {
@@ -584,7 +581,7 @@
             },
             {
               "type": "Microsoft.Compute/virtualMachines",
-              "apiVersion": "2023-03-01",
+              "apiVersion": "2024-11-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "zones": [
@@ -598,6 +595,12 @@
                   "computerName": "[parameters('name')]",
                   "adminUsername": "[parameters('adminUserName')]",
                   "adminPassword": "[parameters('adminPassword')]"
+                },
+                "securityProfile": {
+                  "uefiSettings": {
+                    "secureBootEnabled": true,
+                    "vTpmEnabled": true
+                  }
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -657,10 +660,10 @@
             "value": "[variables('appVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('azureRegion')]"
+            "value": "[parameters('location')]"
           },
           "subnetId": {
-            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[2].id]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2024-05-01').subnets[2].id]"
           },
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
@@ -689,7 +692,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7046613554747794396"
+              "templateHash": "7948665742405979575"
             }
           },
           "parameters": {
@@ -719,7 +722,8 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": "azureadmin"
             },
             "adminPassword": {
               "type": "securestring"
@@ -728,7 +732,7 @@
           "resources": [
             {
               "type": "Microsoft.Network/networkInterfaces",
-              "apiVersion": "2023-02-01",
+              "apiVersion": "2024-05-01",
               "name": "[format('{0}-nic01', parameters('name'))]",
               "location": "[parameters('location')]",
               "properties": {
@@ -748,7 +752,7 @@
             },
             {
               "type": "Microsoft.Compute/virtualMachines",
-              "apiVersion": "2023-03-01",
+              "apiVersion": "2024-11-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "zones": [
@@ -762,6 +766,12 @@
                   "computerName": "[parameters('name')]",
                   "adminUsername": "[parameters('adminUserName')]",
                   "adminPassword": "[parameters('adminPassword')]"
+                },
+                "securityProfile": {
+                  "uefiSettings": {
+                    "secureBootEnabled": true,
+                    "vTpmEnabled": true
+                  }
                 },
                 "storageProfile": {
                   "imageReference": {
@@ -821,10 +831,10 @@
             "value": "[variables('dbsVmList')[copyIndex()].name]"
           },
           "location": {
-            "value": "[parameters('azureRegion')]"
+            "value": "[parameters('location')]"
           },
           "subnetId": {
-            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2023-02-01').subnets[3].id]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('vnetName')), '2024-05-01').subnets[3].id]"
           },
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
@@ -853,7 +863,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7046613554747794396"
+              "templateHash": "7948665742405979575"
             }
           },
           "parameters": {
@@ -883,7 +893,8 @@
               "defaultValue": ""
             },
             "adminUserName": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": "azureadmin"
             },
             "adminPassword": {
               "type": "securestring"
@@ -892,7 +903,7 @@
           "resources": [
             {
               "type": "Microsoft.Network/networkInterfaces",
-              "apiVersion": "2023-02-01",
+              "apiVersion": "2024-05-01",
               "name": "[format('{0}-nic01', parameters('name'))]",
               "location": "[parameters('location')]",
               "properties": {
@@ -912,7 +923,7 @@
             },
             {
               "type": "Microsoft.Compute/virtualMachines",
-              "apiVersion": "2023-03-01",
+              "apiVersion": "2024-11-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "zones": [
@@ -926,6 +937,12 @@
                   "computerName": "[parameters('name')]",
                   "adminUsername": "[parameters('adminUserName')]",
                   "adminPassword": "[parameters('adminPassword')]"
+                },
+                "securityProfile": {
+                  "uefiSettings": {
+                    "secureBootEnabled": true,
+                    "vTpmEnabled": true
+                  }
                 },
                 "storageProfile": {
                   "imageReference": {
