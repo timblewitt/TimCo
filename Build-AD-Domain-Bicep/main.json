@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "16301523049405045938"
+      "templateHash": "7566015961746538996"
     }
   },
   "parameters": {
@@ -45,25 +45,25 @@
       "type": "int",
       "defaultValue": 1,
       "minValue": 0,
-      "maxValue": 2
+      "maxValue": 3
     },
     "webServerCount": {
       "type": "int",
       "defaultValue": 1,
       "minValue": 0,
-      "maxValue": 2
+      "maxValue": 3
     },
     "applicationServerCount": {
       "type": "int",
       "defaultValue": 1,
       "minValue": 0,
-      "maxValue": 2
+      "maxValue": 3
     },
     "databaseServerCount": {
       "type": "int",
       "defaultValue": 1,
       "minValue": 0,
-      "maxValue": 2
+      "maxValue": 3
     },
     "vmSize": {
       "type": "string",
