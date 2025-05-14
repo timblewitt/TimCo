@@ -114,7 +114,7 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2024-05-01' = [for s in s
         sourceAddressPrefix: '*'
         sourcePortRange: '*'
         destinationAddressPrefix: '*'
-        destinationPortRange: '80'
+        destinationPortRange: '80,443'
       }
     } 
     {
