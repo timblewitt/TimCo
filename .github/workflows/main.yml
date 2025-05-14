@@ -6,7 +6,7 @@ name: Build-JSON-From-Bicep
 
 on:
   push:
-    branches: [ none ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
