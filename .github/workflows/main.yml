@@ -7,7 +7,7 @@ name: Build-JSON-From-Bicep
 on:
   push:
     branches: 
-      - main
+      - master
     paths: 
       - 'Bicep-AD-Domain-Bicep/**'
 
