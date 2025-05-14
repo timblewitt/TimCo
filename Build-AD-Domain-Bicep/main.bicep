@@ -30,19 +30,19 @@ param adminUsername string = 'azureadmin'
 param adminPassword string
 
 @minValue(0)
-@maxValue(2)
+@maxValue(3)
 param domainControllerCount int = 1
 
 @minValue(0)
-@maxValue(2)
+@maxValue(3)
 param webServerCount int = 1
 
 @minValue(0)
-@maxValue(2)
+@maxValue(3)
 param applicationServerCount int = 1
 
 @minValue(0)
-@maxValue(2)
+@maxValue(3)
 param databaseServerCount int = 1
 
 @allowed([
