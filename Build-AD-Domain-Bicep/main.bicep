@@ -19,6 +19,7 @@ param windowsVersion string = '2025-Datacenter-Azure-Edition'
   'ukwest'
   'westeurope'
   'northeurope'
+  'westus'
 ])
 param location string = 'uksouth'  
 
