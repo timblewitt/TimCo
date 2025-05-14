@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "13098256419966057364"
+      "templateHash": "5570448361783179404"
     }
   },
   "parameters": {
@@ -16,11 +16,11 @@
     },
     "windowsVersion": {
       "type": "string",
-      "defaultValue": "2025-Datacenter",
+      "defaultValue": "2025-Datacenter-G2",
       "allowedValues": [
-        "2019-Datacenter",
-        "2022-Datacenter",
-        "2025-Datacenter"
+        "2019-Datacenter-G2",
+        "2022-Datacenter-G2",
+        "2025-Datacenter-G2"
       ]
     },
     "location": {
