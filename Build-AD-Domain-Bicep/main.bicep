@@ -68,7 +68,7 @@ var subnetConfig = [
   { name: 'snet-app', orgId: '10.100.0.64/27', type: 'app' }
   { name: 'snet-dbs',  orgId: '10.100.0.96/27', type: 'dbs'  }
 ]
-var dnsServers = '10.100.0.4,10.100.0.5'
+var dnsServers = '"10.100.0.4","10.100.0.5"'
 
 resource sa 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: storageAccountName
@@ -118,7 +118,7 @@ resource nsgs 'Microsoft.Network/networkSecurityGroups@2024-05-01' = [for s in s
         sourceAddressPrefix: '*'
         sourcePortRange: '*'
         destinationAddressPrefix: '*'
-        destinationPortRange: '80,443'
+        destinationPortRanges: '"80","443"'
       }
     } 
     {
