@@ -68,6 +68,7 @@ var subnetConfig = [
   { name: 'snet-app', orgId: '10.100.0.64/27', type: 'app' }
   { name: 'snet-dbs',  orgId: '10.100.0.96/27', type: 'dbs'  }
 ]
+var dnsServers = '10.100.0.4,10.100.0.5'
 
 resource sa 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: storageAccountName
@@ -154,6 +155,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
         }
       }
     ]
+    dhcpOptions: {
+      dnsServers: [dnsServers]
+    }
   }
 }
 
