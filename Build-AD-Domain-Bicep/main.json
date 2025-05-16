@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "5168138860096579583"
+      "templateHash": "1492400207360082017"
     }
   },
   "parameters": {
@@ -152,7 +152,8 @@
         "orgId": "10.100.0.96/27",
         "type": "dbs"
       }
-    ]
+    ],
+    "dnsServers": "10.100.0.4,10.100.0.5"
   },
   "resources": [
     {
@@ -203,6 +204,11 @@
         "addressSpace": {
           "addressPrefixes": [
             "[variables('vnetAddress1')]"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [
+            "[variables('dnsServers')]"
           ]
         }
       },
