@@ -9,7 +9,7 @@ on:
     branches: 
       - main
     paths: 
-      - 'Bicep-AD-Domain-Bicep/**'
+      - 'Build-AD-Domain-Bicep/**'
 
   workflow_dispatch:
 
