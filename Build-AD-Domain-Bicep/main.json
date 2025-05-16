@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "1492400207360082017"
+      "templateHash": "3707502134909277607"
     }
   },
   "parameters": {
@@ -153,7 +153,7 @@
         "type": "dbs"
       }
     ],
-    "dnsServers": "10.100.0.4,10.100.0.5"
+    "dnsServers": "\"10.100.0.4\",\"10.100.0.5\""
   },
   "resources": [
     {
@@ -177,7 +177,7 @@
       "name": "[format('nsg-{0}-{1}', variables('orgId'), variables('subnetConfig')[copyIndex()].type)]",
       "location": "[parameters('location')]",
       "properties": {
-        "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '80,443')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
+        "securityRules": "[concat(createArray(createObject('name', 'Deny-All-Inbound', 'properties', createObject('priority', 4096, 'direction', 'Inbound', 'access', 'Deny', 'protocol', '*', 'sourcePortRange', '*', 'destinationPortRange', '*', 'sourceAddressPrefix', '*', 'destinationAddressPrefix', '*'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'adc'), createArray(createObject('name', 'Allow-RDP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '3389'))), if(equals(variables('subnetConfig')[copyIndex()].type, 'web'), createArray(createObject('name', 'Allow-HTTP', 'properties', createObject('priority', 100, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRanges', '\"80\",\"443\"')), createObject('name', 'Allow-HTTPS', 'properties', createObject('priority', 110, 'direction', 'Inbound', 'access', 'Allow', 'protocol', 'Tcp', 'sourceAddressPrefix', '*', 'sourcePortRange', '*', 'destinationAddressPrefix', '*', 'destinationPortRange', '443'))), createArray())))]"
       }
     },
     {
