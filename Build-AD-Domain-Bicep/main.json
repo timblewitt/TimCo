@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.36.1.42791",
-      "templateHash": "4297896919411673901"
+      "templateHash": "10810708068503858858"
     }
   },
   "parameters": {
@@ -153,7 +153,10 @@
         "type": "dbs"
       }
     ],
-    "dnsServers": "\"10.100.0.4\",\"10.100.0.5\""
+    "dnsServers": [
+      "10.100.0.4",
+      "10.100.0.5"
+    ]
   },
   "resources": [
     {
